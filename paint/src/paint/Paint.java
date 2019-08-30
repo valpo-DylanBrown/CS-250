@@ -22,7 +22,7 @@ public class Paint extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
         
         Scene scene = new Scene(root, 300, 275);
-        stage.setTitle("FMXL Welcome");
+        stage.setTitle("Paint");
         stage.setScene(scene);
         stage.show();
     }

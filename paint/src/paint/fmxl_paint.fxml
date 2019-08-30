@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
-    <children>
-        <Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
-        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
-    </children>
-</AnchorPane>
+<VBox fx:id="vbox" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
+   <HBox prefHeight="6.0" prefWidth="200.0">
+      <children>
+          <!--
+          <padding>
+              <Insets top="25" right="25" bottom="25" left="25"/>
+          </padding>
+          -->
+              <MenuBar id="menuBar" focusTraversable="true">
+              <menus>
+                  <Menu text="File">
+                      <items>
+                          <MenuItem onAction="#openNewFile" text="Open" />
+                          <MenuItem onAction="#handleSave" text="Save" />
+                          <MenuItem onAction="#handleSaveAs" text="Save As" />
+                          <SeparatorMenuItem />
+                          <MenuItem onAction="#exitApplication" text="Exit" />
+                      </items>
+                  </Menu>
+                  <Menu text="Help">
+                      <items>
+                          <MenuItem disable="true" text="Search" />
+                          <SeparatorMenuItem />
+                          <MenuItem text="About" />
+                          <MenuItem text="Release Notes" />
+                      </items>
+                  </Menu>
+              </menus> 
+          </MenuBar>
+         <Pane prefHeight="28.0" prefWidth="65.0" HBox.hgrow="ALWAYS" />
+         <Button mnemonicParsing="false" prefHeight="11.0" prefWidth="27.0" 
+                 text="X" id="closeButton" onAction="#handleCloseButton" />
+      </children>
+   </HBox>
+    
+</VBox>
