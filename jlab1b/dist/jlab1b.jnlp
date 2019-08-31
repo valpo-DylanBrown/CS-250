@@ -8,11 +8,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="jlab1b.jar" size="3074" download="eager" />
+    <jar href="jlab1b.jar" size="113810" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="jlab1b" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="jlab1b.Jlab1b"  name="jlab1b" />
+  <jfx:javafx-desc  width="800" height="600" main-class="Jlab1b"  name="jlab1b" />
   <update check="always"/>
 </jnlp>

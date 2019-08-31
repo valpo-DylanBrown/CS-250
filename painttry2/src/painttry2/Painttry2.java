@@ -3,28 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package paint;
+package painttry2;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
  *
  * @author dylan
  */
-public class Paint extends Application {
+public class Painttry2 extends Application {
     
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
+    public void start(Stage primaryStage) {
+        BorderPane bp = new BorderPane();
+        VBox vbox = new VBox();
+        HBox hbox = new HBox();
         
-        Scene scene = new Scene(root, 950 , 800);
-        stage.setTitle("Paint");
-        stage.setScene(scene);
-        stage.show();
     }
 
     /**

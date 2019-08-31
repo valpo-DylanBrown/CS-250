@@ -8,6 +8,7 @@ package paint;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.stage.FileChooser;
@@ -15,9 +16,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.application.Platform;
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.net.URI;
+import javafx.scene.layout.*;
+import javafx.fxml.Initializable;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 /**
  *
  * @author dylan
@@ -29,15 +38,11 @@ public class FXMLPaintController {
     Desktop desktop = Desktop.getDesktop();
     
     @FXML
-    private Label label;
+    private Label selectedFile;
     private Button closeButton;
+    private ImageView imageID;
     
-    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+    private String imageFile;
     /*exitApplication()
     * FMXL
     * exitApplication is a menu option under File (File-->Exit)
@@ -55,8 +60,8 @@ public class FXMLPaintController {
     * Note to self: This needs to be wrapped in a try catch
     */
     @FXML
-    private void openNewFile(ActionEvent event){
-        final FileChooser fileChooser = new FileChooser();
+    private void openNewFile(ActionEvent event) throws IOException{
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Please Select an Image");
         
         fileChooser.getExtensionFilters().addAll(
@@ -70,13 +75,19 @@ public class FXMLPaintController {
                 "*.TIFF", "*.tif"),
             new FileChooser.ExtensionFilter("PDF", "*.pdf", "*.PDF")
             );
-        File file = fileChooser.showOpenDialog(new Stage());
+        File file = fileChooser.showOpenDialog(selectedFile.getScene().getWindow());
+        
         //change so it opens in program, but progress
         if(file!=null){
-            openFile(file);
+            imageFile = file.toURI().toURL().toString();
+            //System.out.println("file:"+fpath);
+            Image image = new Image(imageFile);
+            System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
+            //imageID.setImage(image);
+            
         }      
     }
-    /*handleSaveAs() (needs a rename)
+    /*handleSaveAs()
     * This has not been finished yet
     */
     @FXML
@@ -109,6 +120,7 @@ public class FXMLPaintController {
     * Catches IOException and logs it if the opening fails
     */
     private void openFile(File file){
+        
         try {
             desktop.open(file);
         } 
