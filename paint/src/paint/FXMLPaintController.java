@@ -39,8 +39,12 @@ public class FXMLPaintController {
     
     @FXML
     private Label selectedFile;
+    @FXML
     private Button closeButton;
+    @FXML
     private ImageView imageID;
+    @FXML
+    private AnchorPane anchorPane;
     
     private String imageFile;
     /*exitApplication()
@@ -79,12 +83,7 @@ public class FXMLPaintController {
         
         //change so it opens in program, but progress
         if(file!=null){
-            imageFile = file.toURI().toURL().toString();
-            //System.out.println("file:"+fpath);
-            Image image = new Image(imageFile);
-            System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
-            //imageID.setImage(image);
-            
+            loadFile(file);
         }      
     }
     /*handleSaveAs()
@@ -129,6 +128,20 @@ public class FXMLPaintController {
                 FXMLPaintController.class.getName()).log(
                     Level.SEVERE, null, ex
                 );
+        }
+    }
+    private void loadFile(File file){
+        
+        try {
+            imageFile = file.toURI().toURL().toString();
+            //System.out.println("file:"+fpath);
+            Image image = new Image(imageFile);
+            System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
+            imageID.setImage(image);
+            
+        } 
+        catch (Exception ex) {
+                System.out.println("RIP");
         }
     }
 }  
