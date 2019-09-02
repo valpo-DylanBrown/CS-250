@@ -40,6 +40,7 @@ public class FXMLPaintController implements Initializable {
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
     
+    @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
     }
