@@ -54,7 +54,6 @@
    <right>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="769.0" prefWidth="850.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="selectedFile" text="File" />
             <ImageView fx:id="imageID" >
                 
             </ImageView>
