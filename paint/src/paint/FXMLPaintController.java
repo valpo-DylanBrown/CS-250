@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package paint;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import javafx.scene.image.WritableImage;
 import java.io.File;
@@ -20,7 +19,6 @@ import javafx.scene.Node;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,22 +31,11 @@ import javax.imageio.ImageIO;
  * @author dylan
  */
 public class FXMLPaintController implements Initializable {
-    /*grabs desktop from computer
-    * used for pulling files from fileChooser
-    */
-    //Desktop desktop = Desktop.getDesktop();
-    
-    
-    @FXML private ImageView imageID;
-    
+    //intialize FMXL and JavaFX vars
     @FXML private AnchorPane anchorPane;
-    
-    @FXML private Canvas imageCanvas;
-    
+            
+    @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
-    
-    
-    
     
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
@@ -68,9 +55,11 @@ public class FXMLPaintController implements Initializable {
     }
     /*openNewFile()
     * FMXL
-    * Users then allowed to only choose image files (jpeg,png,tiff,pdf)
-    * If the file is not corrupted, the file will open
-    * Note to self: This needs to be wrapped in a try catch
+    * onEvent --> Menu->Open clicked
+    * configures fileChooser usig configureFileChooser()
+    * opens dialog from fileChooser
+    * if file is not null, calls loadFile
+    * TODO: Add alert if file is null
     */
     @FXML
     private void openNewFile(ActionEvent event) throws IOException{
@@ -78,81 +67,85 @@ public class FXMLPaintController implements Initializable {
         File file = fileChooser.showOpenDialog(anchorPane.getScene().getWindow());
         if(file!=null){
             loadFile(file);
-        }      
+        } 
     }
     /*handleSaveAs()
-    * This has not been finished yet
+    * onEvent --> Menu->Save As clicked
+    * configures fileChooser usig configureFileChooser()
+    * opens dialog from fileChooser
+    * if file is not null, calls saveFile
+    * TODO: Add alert if file is null
     */
     @FXML
     private void handleSaveAs(ActionEvent event) throws IOException{
         configureFileChooser(fileChooser, "Save File: ");
         File file = fileChooser.showSaveDialog(anchorPane.getScene().getWindow());
         if(file != null){
+                saveImage(file);
+        }
+    }
+    /*handleSave()
+    * onEvent --> Menu->Save clicked
+    * configures fileChooser usig configureFileChooser()
+    * opens dialog from fileChooser
+    * if file is not null, calls saveFile
+    * TODO: Add alert if file is null, change this so it works like a typical save
+    */
+    @FXML
+    private void handleSave(ActionEvent event){ //THIS NEEDS TO GET CHANGED TO ACT AS A REGULAR SAVE
+        configureFileChooser(fileChooser, "Save File: ");
+        File file = fileChooser.showSaveDialog(anchorPane.getScene().getWindow());
+        if(file != null){
             try{
-                String name = file.getName();
-                String extension = name.substring(1+name.lastIndexOf(".")).toLowerCase();
-                WritableImage writableImage = new WritableImage(843,761);
-                imageCanvas.snapshot(null, writableImage);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                ImageIO.write(renderedImage, extension, file);
+                saveImage(file);
             }
             catch(Exception e){
                System.out.println("An Error has Occured While Saving.");
             }
         }
     }
-    /*handleSave() (needs a rename)
-    * This has not been finished yet
+    /*handleCloseButton() 
+    * closes program
     */
-    @FXML
-    private void handleSave(ActionEvent event){
-        System.out.println("save as pressed");
-        
-    }
     @FXML
     private void handleCloseButton(ActionEvent event){
-       /* This should close the current stage open, 
-        * as opposed to the whole program
-        * Close whole program : Platform.exit();
-       */
        closeStage(event);
     }
-    
-    /*openFile()
-    * Controller Function
-    * Tries opening the file using desktop object
-    * Catches IOException and logs it if the opening fails
-    */
-    /*
-    private void openFile(File file){
-        
-        try {
-            desktop.open(file);
-        } 
-        catch (IOException ex) {
-                Logger.getLogger(
-                FXMLPaintController.class.getName()).log(
-                    Level.SEVERE, null, ex
-                );
-        }
-    }
+    /*loadFile()
+    * Called from openNewFile()
+    * Get string for filepath
+    * create an image off of the file path
+    * Requests 850x760, size of current canvas, keeps ratio, and smooths
+    * Print out width and height for debug
+    * Calcualte midpoint to place picture
+    * Draw picture onto imageCanvas in the middle
+    * TODO: 
     */
     private void loadFile(File file){
         
         try {
             imageFile = file.toURI().toURL().toString();
-            //System.out.println("file:"+fpath);
-            Image image = new Image(imageFile);
+            //System.out.println("file:"+fpath);    
+            Image image = new Image(imageFile, 850, 760, true, true);
             System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
-            gcImage.drawImage(image,0,0);
+            double x = (double) imageCanvas.getWidth()/2 - image.getWidth()/2;
+            double y = (double) imageCanvas.getHeight()/2 - image.getHeight()/2;
+            gcImage.drawImage(image,x,y);
             
         } 
         catch (Exception ex) {
                 System.out.println("An Error Has Occured While Loading Image");
         }
     }
+    
+    /*configureFileChooser()
+    * Called from multiple functions()
+    * Sets Title to String passed
+    * Sets Extension Filters
+    * TODO: Add BMP and GIF, possibly take away PDF
+    */
     private void configureFileChooser(FileChooser fileChooser, String title){
-        fileChooser.setTitle("Please Select an Image");
+        fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("All Files", "*.jpeg", "*.jpg",
                 "*.png", "*.tiff", "*.tif", "*.pdf", "*.JPEG", "*.JPG","*.PNG",
@@ -165,23 +158,39 @@ public class FXMLPaintController implements Initializable {
             new FileChooser.ExtensionFilter("PDF", "*.pdf", "*.PDF")
             );
     }
+    /*closeStage()
+    * get source node
+    * get the current stage for that node
+    * close the stage
+    * TODO: Do I even need this?
+    */
     private void closeStage(ActionEvent event){
        Node source = (Node) event.getSource();
        Stage stage = (Stage) source.getScene().getWindow();
        
        stage.close();
     }
-    private Image getImage(){
-        return imageID.getImage();
-    }
-    private void saveImage(File file, BufferedImage bImage, Image loadedImage){
+    /*saveFile()
+    * Called from handleSaveAs() & handleSave()
+    * Creates WritableImage object 
+    * Takes a snapshot of the canvas and writes it to writableImage
+    * Converts writableImage to RenderedImage
+    * Writes file out
+    * TODO: Explore "png" and why that only seems to work
+    */
+    private void saveImage(File file){
+        /*
             String name = file.getName();
             String extension = name.substring(1+name.lastIndexOf(".")).toLowerCase();
             System.out.println("name: "+ name +"\nextension:"+extension);
-            System.out.println("height:"+loadedImage.getHeight()+"\nWidth:"+loadedImage.getWidth());
+        */
         try {
-            ImageIO.write(bImage, extension, file);
-        } catch (IOException ex) {
+            WritableImage writableImage = new WritableImage(850,760);
+            imageCanvas.snapshot(null, writableImage);
+            RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+            ImageIO.write(renderedImage, "png", file);
+        } 
+        catch (IOException ex) {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
