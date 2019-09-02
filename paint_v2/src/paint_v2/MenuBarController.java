@@ -3,18 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package paint;
+package paint_v2;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import javafx.scene.image.WritableImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.application.Platform;
@@ -24,38 +19,25 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
-
 /**
  *
  * @author dylan
  */
-public class FXMLPaintController implements Initializable {
+public class MenuBarController {
     /*grabs desktop from computer
     * used for pulling files from fileChooser
     */
     //Desktop desktop = Desktop.getDesktop();
     
-    
-    @FXML private ImageView imageID;
-    
-    @FXML private AnchorPane anchorPane;
-    
-    @FXML private Canvas imageCanvas;
-    
-    private GraphicsContext gcImage;
-    
-    
-    
+    @FXML
+    private ImageView imageID;
+    @FXML
+    private AnchorPane anchorPane;
     
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
-    
-    public void initialize(URL location, ResourceBundle resources){
-        gcImage = imageCanvas.getGraphicsContext2D();
-    }
     /*exitApplication()
     * FMXL
     * exitApplication is a menu option under File (File-->Exit)
@@ -87,18 +69,10 @@ public class FXMLPaintController implements Initializable {
     private void handleSaveAs(ActionEvent event) throws IOException{
         configureFileChooser(fileChooser, "Save File: ");
         File file = fileChooser.showSaveDialog(anchorPane.getScene().getWindow());
+        Image loadedImage = getImage();
+        BufferedImage bImage = SwingFXUtils.fromFXImage(loadedImage,null);
         if(file != null){
-            try{
-                String name = file.getName();
-                String extension = name.substring(1+name.lastIndexOf(".")).toLowerCase();
-                WritableImage writableImage = new WritableImage(843,761);
-                imageCanvas.snapshot(null, writableImage);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                ImageIO.write(renderedImage, extension, file);
-            }
-            catch(Exception e){
-               System.out.println("An Error has Occured While Saving.");
-            }
+            saveImage(file, bImage, loadedImage);
         }
     }
     /*handleSave() (needs a rename)
@@ -144,11 +118,11 @@ public class FXMLPaintController implements Initializable {
             //System.out.println("file:"+fpath);
             Image image = new Image(imageFile);
             System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
-            gcImage.drawImage(image,0,0);
+            imageID.setImage(image);
             
         } 
         catch (Exception ex) {
-                System.out.println("An Error Has Occured While Loading Image");
+                System.out.println("RIP");
         }
     }
     private void configureFileChooser(FileChooser fileChooser, String title){
@@ -182,7 +156,7 @@ public class FXMLPaintController implements Initializable {
         try {
             ImageIO.write(bImage, extension, file);
         } catch (IOException ex) {
-            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MenuBarController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }  

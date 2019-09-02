@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="6.0" prefWidth="200.0" fx:id="MenuBar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="paint_v2.MenuBarController">
+    <children>
+        <!--
+        <padding>
+            <Insets top="25" right="25" bottom="25" left="25"/>
+        </padding>
+        -->
+        <MenuBar id="menuBar" focusTraversable="true">
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem onAction="#openNewFile" text="Open" />
+                        <MenuItem onAction="#handleSave" text="Save" />
+                        <MenuItem onAction="#handleSaveAs" text="Save As" />
+                        <SeparatorMenuItem />
+                        <MenuItem onAction="#exitApplication" text="Exit" />
+                    </items>
+                </Menu>
+                <Menu text="Help">
+                    <items>
+                        <MenuItem disable="true" text="Search" />
+                        <SeparatorMenuItem />
+                        <MenuItem text="About" />
+                        <MenuItem text="Release Notes" />
+                    </items>
+                </Menu>
+            </menus> 
+        </MenuBar>
+    <Pane prefHeight="28.0" prefWidth="65.0" HBox.hgrow="ALWAYS" />
+    <Button id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="11.0" prefWidth="27.0" text="X" />
+    </children>
+</HBox>

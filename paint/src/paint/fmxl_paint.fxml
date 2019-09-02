@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.canvas.GraphicsContext?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane fx:id="BorderPane" prefHeight="800.0" prefWidth="950.0" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
     <top>
-        <VBox fx:id="vbox" prefWidth="543.0">
-            <HBox prefHeight="6.0" prefWidth="200.0">
-                <children>
-                    <!--
-                    <padding>
-                        <Insets top="25" right="25" bottom="25" left="25"/>
-                    </padding>
-                    -->
-                    <MenuBar id="menuBar" focusTraversable="true">
-                        <menus>
-                            <Menu text="File">
-                                <items>
-                                    <MenuItem onAction="#openNewFile" text="Open" />
-                                    <MenuItem onAction="#handleSave" text="Save" />
-                                    <MenuItem onAction="#handleSaveAs" text="Save As" />
-                                    <SeparatorMenuItem />
-                                    <MenuItem onAction="#exitApplication" text="Exit" />
-                                </items>
-                            </Menu>
-                            <Menu text="Help">
-                                <items>
-                                    <MenuItem disable="true" text="Search" />
-                                    <SeparatorMenuItem />
-                                    <MenuItem text="About" />
-                                    <MenuItem text="Release Notes" />
-                                </items>
-                            </Menu>
-                        </menus> 
-                    </MenuBar>
-                <Pane prefHeight="28.0" prefWidth="65.0" HBox.hgrow="ALWAYS" />
-                <Button id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="11.0" prefWidth="27.0" text="X" />
-                </children>
-            </HBox>
-        </VBox>  
+        <HBox prefHeight="6.0" prefWidth="200.0">
+            <children>
+                <!--
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+                -->
+                <MenuBar id="menuBar" focusTraversable="true">
+                    <menus>
+                        <Menu text="File">
+                            <items>
+                                <MenuItem onAction="#openNewFile" text="Open" />
+                                <MenuItem onAction="#handleSave" text="Save" />
+                                <MenuItem onAction="#handleSaveAs" text="Save As" />
+                                <SeparatorMenuItem />
+                                <MenuItem onAction="#exitApplication" text="Exit" />
+                            </items>
+                        </Menu>
+                        <Menu text="Help">
+                            <items>
+                                <MenuItem disable="true" text="Search" />
+                                <SeparatorMenuItem />
+                                <MenuItem text="About" />
+                                <MenuItem text="Release Notes" />
+                            </items>
+                        </Menu>
+                    </menus> 
+                </MenuBar>
+            <Pane prefHeight="28.0" prefWidth="65.0" HBox.hgrow="ALWAYS" />
+            <Button id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="11.0" prefWidth="27.0" text="X" />
+            </children>
+        </HBox>
     </top>
    <right>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="769.0" prefWidth="850.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageID" >
-                
-            </ImageView>
+             <StackPane fx:id="stackPane" prefHeight="769.0" prefWidth="850.0">
+                 <children>
+                    <Canvas fx:id="imageCanvas" height="761.0" width="843.0">
+                        
+                    </Canvas>
+                 </children>
+             </StackPane>
          </children>
         </AnchorPane>
    </right>
