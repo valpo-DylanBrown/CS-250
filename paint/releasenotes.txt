@@ -1,22 +1,24 @@
 RELEASE NOTES FOR PAINT BY DYLAN BROWN
 
 
-Version 1.0
+Version 1.0									09/03/2019				
 New Features:
 	- Created MenuBar
 		- Create File Option
 			- Added Open, save, save as, and exit options
 		- Created Help Option
-			- Added About and Release Notes Option 
+			- Added About and Release Notes Option
+				- These have not been finished yet, only there for aesthetically purpose
 	- Created Close Button
 	- Added support for opening image files (jpg,png,tiff)
 	- Added support for saving images
 	- Places images into canvas
-Known Issues:
-	-Save sometimes doesnt go through (very rarely)
-	-snapshot extension hardcoded as PNG (possibly)
+Known/Possible Issues:
+	- Snapshot extension hardcoded as PNG
+	- Using SwingFXUtils to save files
 Upcoming: 
-	-Create tools and toolbar
+	- Create tools and toolbar
 	- Add support for tools
 		- Line, rectangle, circle, etc
 	- Draw on canvas
+	-UNDO/REDO
