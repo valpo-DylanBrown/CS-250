@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package paint;
+import java.awt.Desktop;
 import java.awt.image.RenderedImage;
 import javafx.scene.image.WritableImage;
 import java.io.File;
@@ -23,8 +24,15 @@ import javafx.scene.layout.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
+import javafx.scene.paint.Color;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import java.text.NumberFormat;
 
 /**
  *
@@ -32,17 +40,23 @@ import javax.imageio.ImageIO;
  */
 public class FXMLPaintController implements Initializable {
     //intialize FMXL and JavaFX vars
-    @FXML private AnchorPane anchorPane;
-            
+    @FXML public BorderPane borderPane;
     @FXML public Canvas imageCanvas;
+    @FXML private Slider slider;
+    @FXML private TextField sliderText;
     private GraphicsContext gcImage;
     
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
+    File file;
     
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
+        slider.setValue(50);
+        sliderText.setText(new Integer(50).toString());
+        sliderText.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getNumberInstance());
+
     }
     /*exitApplication()
     * FMXL
@@ -65,7 +79,7 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void openNewFile(ActionEvent event) throws IOException{
         configureFileChooser(fileChooser, "Please Select an Image:");
-        File file = fileChooser.showOpenDialog(anchorPane.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
         if(file!=null){
             loadFile(file);
         } 
@@ -80,7 +94,7 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void handleSaveAs(ActionEvent event) throws IOException{
         configureFileChooser(fileChooser, "Save File: ");
-        File file = fileChooser.showSaveDialog(anchorPane.getScene().getWindow());
+        setImagePath();
         if(file != null){
                 saveImage(file);
         }
@@ -95,15 +109,27 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void handleSave(ActionEvent event){ //THIS NEEDS TO GET CHANGED TO ACT AS A REGULAR SAVE
         configureFileChooser(fileChooser, "Save File: ");
-        File file = fileChooser.showSaveDialog(anchorPane.getScene().getWindow());
         if(file != null){
-            try{
-                saveImage(file);
-            }
-            catch(Exception e){
-               System.out.println("An Error has Occured While Saving.");
-            }
+            saveImage(file);
         }
+        else{
+            setImagePath();
+            saveImage(file);
+        }
+    }
+    @FXML
+    private void handleAbout(ActionEvent event){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("About PAIN(T) by Dylan Brown");
+        alert.setContentText("This program attempts (poorly) to "
+                + "recreate MS Paint.\nPray for me");
+        alert.showAndWait();
+    }
+    @FXML
+    private void handleReleaseNotes(ActionEvent event) throws IOException{
+        File rn = new File("releasenotes.txt");
+        Desktop.getDesktop().open(rn);
     }
     /*handleCloseButton() 
     * closes program
@@ -112,7 +138,7 @@ public class FXMLPaintController implements Initializable {
     private void handleCloseButton(ActionEvent event){
        closeStage(event);
     }
-    /*loadFile()
+        /*loadFile()
     * Called from openNewFile()
     * Get string for filepath
     * create an image off of the file path
@@ -127,10 +153,12 @@ public class FXMLPaintController implements Initializable {
         try {
             imageFile = file.toURI().toURL().toString();
             //System.out.println("file:"+fpath);    
-            Image image = new Image(imageFile, 850, 760, true, true);
+            Image image = new Image(imageFile);
             System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
             double x = (double) imageCanvas.getWidth()/2 - image.getWidth()/2;
             double y = (double) imageCanvas.getHeight()/2 - image.getHeight()/2;
+            imageCanvas.setWidth(image.getWidth());
+            imageCanvas.setHeight(image.getHeight());
             gcImage.drawImage(image,x,y);
             
         } 
@@ -192,6 +220,23 @@ public class FXMLPaintController implements Initializable {
             ImageIO.write(renderedImage, "png", file);
         } 
         catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        /*saveFile()
+    * Called from handleSaveAs() & handleSave()
+    * Creates WritableImage object 
+    * Takes a snapshot of the canvas and writes it to writableImage
+    * Converts writableImage to RenderedImage
+    * Writes file out
+    * TODO: Explore "png" and why that only seems to work
+    */
+    private void setImagePath(){
+        try {
+            file = fileChooser.showSaveDialog(borderPane.getScene().getWindow());
+        } 
+        catch (Exception ex) {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

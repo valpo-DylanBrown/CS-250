@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import java.net.URL?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="BorderPane" prefHeight="800.0" prefWidth="950.0" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
+
     <top>
-        <HBox prefHeight="6.0" prefWidth="200.0">
+        <HBox alignment="CENTER" prefHeight="6.0" prefWidth="200.0" spacing="2.0">
             <children>
-                <!--
-                <padding>
-                    <Insets top="25" right="25" bottom="25" left="25"/>
-                </padding>
-                -->
                 <MenuBar id="menuBar" focusTraversable="true">
                     <menus>
                         <Menu text="File">
@@ -33,34 +35,75 @@
                                 <MenuItem onAction="#exitApplication" text="Exit" />
                             </items>
                         </Menu>
+                        <Menu text="Edit">
+                            <items>
+                            </items>
+                        </Menu>
+                        <Menu text="View">
+                            <items>
+                            </items>
+                        </Menu>
                         <Menu text="Help">
                             <items>
                                 <MenuItem disable="true" text="Search" />
                                 <SeparatorMenuItem />
-                                <MenuItem text="About" />
-                                <MenuItem text="Release Notes" />
+                                <MenuItem onAction="#handleAbout" text="About" />
+                                <MenuItem onAction="#handleReleaseNotes" text="Release Notes" />
                             </items>
                         </Menu>
                     </menus> 
                 </MenuBar>
-            <Pane prefHeight="28.0" prefWidth="65.0" HBox.hgrow="ALWAYS" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label text="Line Width" />
+            <HBox alignment="CENTER" prefHeight="6.0" prefWidth="200.0" spacing = "2.0">
+                <Slider fx:id="slider" max="50" min="1" />
+                <TextField fx:id="sliderText" prefHeight="50" prefWidth="50" /> 
+            </HBox>
+            <ColorPicker id="colorPicker" fx:id="colorPicker" /> 
+
+            <Pane HBox.hgrow="ALWAYS" />
             <Button id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="11.0" prefWidth="27.0" text="X" />
             </children>
         </HBox>
     </top>
-   <right>
-        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="769.0" prefWidth="871.0" BorderPane.alignment="CENTER">
-         <children>
-             <StackPane fx:id="stackPane" prefHeight="760.0" prefWidth="850.0">
-                 <children>
-                    <Canvas fx:id="imageCanvas" height="760.0" width="850.0">
-                        
-                    </Canvas>
-                 </children>
-             </StackPane>
-         </children>
-        </AnchorPane>
-   </right>
+    <left>
+        <VBox id="toolBox" fx:id="toolBox" alignment="CENTER" spacing="10.0">
+            
+            <fx:define>
+                <ToggleGroup fx:id="toolGroup" />
+            </fx:define>
+            
+            <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw">
+            </ToggleButton>
+            <ToggleButton fx:id="lineButton" prefWidth="55.0" text="Line" toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="fillButton" prefWidth="55.0" text="Fill" toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="eraseButton" prefWidth="55.0" text="Erase" toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="rectButton" prefWidth="55.0" text="Rect." toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="ovalButton" prefWidth="55.0" text="Oval" toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="textButton" prefWidth="55.0" text="Text" toggleGroup="$toolGroup">
+            </ToggleButton>
+            <ToggleButton fx:id="zoomButton" prefWidth="55.0" text="Zoom" toggleGroup="$toolGroup">
+            </ToggleButton>
+            
+        </VBox>
+    </left>
+    <center>
+    <StackPane id="stackPane" fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <children>
+            
+            <Canvas id="imageCanvas" fx:id="imageCanvas" height="760.0" width="850.0">
+
+           </Canvas>
+            
+        </children>
+    </StackPane>
+   </center>
+  
 
     <stylesheets>
         <URL value="@paint.css" />

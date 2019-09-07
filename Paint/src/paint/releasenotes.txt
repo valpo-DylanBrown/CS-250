@@ -1,0 +1,22 @@
+RELEASE NOTES FOR PAINT BY DYLAN BROWN
+
+
+Version 1.0
+New Features:
+	- Created MenuBar
+		- Create File Option
+			- Added Open, save, save as, and exit options
+		- Created Help Option
+			- Added About and Release Notes Option 
+	- Created Close Button
+	- Added support for opening image files (jpg,png,tiff)
+	- Added support for saving images
+	- Places images into canvas
+Known Issues:
+	-Save sometimes doesnt go through (very rarely)
+	-snapshot extension hardcoded as PNG (possibly)
+Upcoming: 
+	-Create tools and toolbar
+	- Add support for tools
+		- Line, rectangle, circle, etc
+	- Draw on canvas
