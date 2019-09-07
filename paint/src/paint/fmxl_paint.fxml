@@ -73,7 +73,7 @@
                 <ToggleGroup fx:id="toolGroup" />
             </fx:define>
             
-            <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw">
+            <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw"  toggleGroup="$toolGroup">
             </ToggleButton>
             <ToggleButton fx:id="lineButton" prefWidth="55.0" text="Line" toggleGroup="$toolGroup">
             </ToggleButton>
