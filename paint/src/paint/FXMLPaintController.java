@@ -5,6 +5,7 @@
  */
 package paint;
 import java.awt.Desktop;
+import javafx.scene.input.MouseEvent;
 import java.awt.image.RenderedImage;
 import javafx.scene.image.WritableImage;
 import java.io.File;
@@ -15,8 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.stage.Stage;
-import javafx.scene.Node;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -33,81 +32,131 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import java.text.NumberFormat;
+import java.util.Optional;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.shape.Line;
 
 /**
- *
+ * <p>
+ * FXMLPaintController is the base class for the whole program.
+ * This class is the controller for pain(t). It implements all functions needed to create a functioning
+ * version of MS Paint. 
+ * This class references all tags created in the .fxml file and creates local variables to store data in.
+ * This class also references all actions created in the .fxml file. 
+ * </p>
  * @author dylan
+ * @version 2.1
+ * @since 1.0
  */
 public class FXMLPaintController implements Initializable {
     //intialize FMXL and JavaFX vars
+
     @FXML public BorderPane borderPane;
-    @FXML public Canvas imageCanvas;
+    
     @FXML private Slider slider;
     @FXML private TextField sliderText;
+    
+    @FXML private ToggleButton drawButton;
+    @FXML private ToggleButton lineButton;
+    @FXML private ToggleButton fillButton;
+    @FXML private ToggleButton eraseButton;
+    @FXML private ToggleButton rectButton;
+    @FXML private ToggleButton ovalButton;
+    @FXML private ToggleButton textButton;
+    @FXML private ToggleButton zoomButton;
+    
+    @FXML private ColorPicker colorPicker;
+   
+    @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
     
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
     File file;
     
+    Line line = new Line();
+    
+    /**
+     * This function currently sets things that need to be controlled after the FXML has been loaded into the program.
+     * Sets GraphicsContext gc for imageCanvas.
+     * Sets slider value and also uses a text field to control it.
+     * The text field function still uses doubles, instead of integers
+     * @param location this is necessary for the initialize function, but it is not currently used.
+     * @param resources this is necessary for the initialize function, but it is not currently used.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
         slider.setValue(50);
-        sliderText.setText(new Integer(50).toString());
+        sliderText.setText(Integer.toString(50));
         sliderText.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getNumberInstance());
 
     }
-    /*exitApplication()
-    * FMXL
-    * exitApplication is a menu option under File (File-->Exit)
-    * This closes the program
+    /**
+    * FMXL Function to close application from File-&gt;Exit.
+    * If a save location is set, this function asks you if you would like to save
+    * before exiting. If yes, the closeStage() method is called. Otherwise, 
+    * the program exits.
+    * @see closeStage()
     */
     @FXML
-    private void exitApplication(ActionEvent event){
-        Platform.exit();
+    private void exitApplication(){
+        // change this to check file modification
+        if(file!=null){
+            closeStage();
+        }
+        else{
+            Platform.exit();
+        }
         
     }
-    /*openNewFile()
-    * FMXL
-    * onEvent --> Menu->Open clicked
-    * configures fileChooser usig configureFileChooser()
-    * opens dialog from fileChooser
-    * if file is not null, calls loadFile
-    * TODO: Add alert if file is null
-    */
+    /**
+    * FXML Function from File-&gt;Open.
+    * This function calls configureFileChooser() to configure the file chooser 
+    * with the correct extentions and title. It then shows the open dialog. It 
+    * then loads the file if one has been chosen. 
+    * @see configureFileChooser(FileChooser,String)
+    * @see loadFile(File)
+     */
     @FXML
-    private void openNewFile(ActionEvent event) throws IOException{
+    private void openNewFile(){
         configureFileChooser(fileChooser, "Please Select an Image:");
-        File file = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
-        if(file!=null){
-            loadFile(file);
+        File loadFile = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
+        if(loadFile!=null){
+            loadFile(loadFile);
         } 
     }
-    /*handleSaveAs()
-    * onEvent --> Menu->Save As clicked
-    * configures fileChooser usig configureFileChooser()
-    * opens dialog from fileChooser
-    * if file is not null, calls saveFile
-    * TODO: Add alert if file is null
-    */
+    /**
+     * FXML Function from File-&gt;Save As.
+     * This function calls configureFileChooser() to configure the file chooser 
+     * with the correct extentions and title. It then shows the save dialog. It 
+     * then saves the file if one has been chosen. 
+     * @see configureFileChooser(FileChooser,String)
+     * @see setImagePath()
+     * @see saveImage(File)
+     */
     @FXML
-    private void handleSaveAs(ActionEvent event) throws IOException{
+    private void handleSaveAs(){
         configureFileChooser(fileChooser, "Save File: ");
         setImagePath();
         if(file != null){
                 saveImage(file);
         }
     }
-    /*handleSave()
-    * onEvent --> Menu->Save clicked
-    * configures fileChooser usig configureFileChooser()
-    * opens dialog from fileChooser
-    * if file is not null, calls saveFile
-    * TODO: Add alert if file is null, change this so it works like a typical save
-    */
+    /**
+     * FXML Function from File-&gt;Save.
+     * This function calls configureFileChooser() to configure the file chooser 
+     * with the correct extentions and title. It then checks if a file has already
+     * been saved. If it has, it will save it to the same location. Otherwise,
+     * It then shows the save dialog and save it to the path chosen.
+     * @see configureFileChooser(FileChooser,String)
+     * @see setImagePath()
+     * @see saveImage(File)
+     */
     @FXML
-    private void handleSave(ActionEvent event){ //THIS NEEDS TO GET CHANGED TO ACT AS A REGULAR SAVE
+    private void handleSave(){ 
         configureFileChooser(fileChooser, "Save File: ");
         if(file != null){
             saveImage(file);
@@ -117,8 +166,13 @@ public class FXMLPaintController implements Initializable {
             saveImage(file);
         }
     }
+    /**
+     * FXML Function from Help-&gt;About.
+     * This function sends an information dialog to the user. The dialog
+     * informs the user of the program.
+     */
     @FXML
-    private void handleAbout(ActionEvent event){
+    private void handleAbout(){
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("About");
         alert.setHeaderText("About PAIN(T) by Dylan Brown");
@@ -126,28 +180,122 @@ public class FXMLPaintController implements Initializable {
                 + "recreate MS Paint.\nPray for me");
         alert.showAndWait();
     }
+    /**
+     * FXML from Help-&gt;Release Notes.
+     * This function opens the release notes for the user on their default .txt
+     * editor. 
+     * @throws IOException if file cannot be read.
+     */
     @FXML
-    private void handleReleaseNotes(ActionEvent event) throws IOException{
-        File rn = new File("releasenotes.txt");
-        Desktop.getDesktop().open(rn);
+    private void handleReleaseNotes() throws IOException{
+        File releaseNotes = new File("releasenotes.txt");
+        Desktop.getDesktop().open(releaseNotes);
     }
-    /*handleCloseButton() 
-    * closes program
-    */
+    /**
+     * FMXL Function to close application from close button.
+     * If a save location is set, this function asks you if you would like to save
+     * before exiting. If yes, the closeStage() method is called. Otherwise, 
+     * the program exits.
+     * @see closeStage() 
+     */
     @FXML
-    private void handleCloseButton(ActionEvent event){
-       closeStage(event);
+    private void handleCloseButton(){
+        // change this to check file modification
+        if(file!=null){
+            closeStage();
+        }
+        else{
+            Platform.exit();
+        }
     }
-        /*loadFile()
-    * Called from openNewFile()
-    * Get string for filepath
-    * create an image off of the file path
-    * Requests 850x760, size of current canvas, keeps ratio, and smooths
-    * Print out width and height for debug
-    * Calcualte midpoint to place picture
-    * Draw picture onto imageCanvas in the middle
-    * TODO: 
-    */
+    /** 
+     * Will JavaDoc later.
+     * @param e 
+     */
+    @FXML 
+    private void setOnMousePressed(MouseEvent e){
+        if(drawButton.isSelected()){
+            
+        }
+        else if(lineButton.isSelected()){
+            gcImage.setStroke(colorPicker.getValue());
+            gcImage.setLineWidth(2.0);
+            line.setStartX(e.getX());
+            line.setStartY(e.getY());
+        }
+        else if(fillButton.isSelected()){
+            
+        }
+        else if(eraseButton.isSelected()){
+            
+        }
+        else if(rectButton.isSelected()){
+            
+        }
+        else if(ovalButton.isSelected()){
+            
+        }
+        else if(textButton.isSelected()){
+            
+        }
+        else if(zoomButton.isSelected()){
+            
+        }
+    }
+    /**
+     * Will JavaDoc later.
+     * @param e 
+     */
+    @FXML
+    private void setOnMouseDragged(MouseEvent e){
+        
+    }
+    /**
+     * Will JavaDoc later.
+     * @param e 
+     */
+    @FXML
+    private void setOnMouseReleased(MouseEvent e){
+        if(drawButton.isSelected()){
+            
+        }
+        else if(lineButton.isSelected()){
+            line.setEndX(e.getX());
+            line.setEndY(e.getY());
+            
+            gcImage.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+        }
+        else if(fillButton.isSelected()){
+            
+        }
+        else if(eraseButton.isSelected()){
+            
+        }
+        else if(rectButton.isSelected()){
+            
+        }
+        else if(ovalButton.isSelected()){
+            
+        }
+        else if(textButton.isSelected()){
+            
+        }
+        else if(zoomButton.isSelected()){
+            
+        }  
+    }
+    /**
+     * Controller function to load a new file into the canvas.
+     * This functions takes the file parameter and converts it to a string. 
+     * The function then creates an image using the file path, and outputs its
+     * height and width for debugging. The canvas's width and height are set
+     * to the images width and height, and outputs the canvas's height and 
+     * width for debugging. The GraphicsContext for the canvas draws the image
+     * onto the canvas. The function catches any exceptions and prints them to
+     * the console, this needs to be logged to a file at a later date.
+     * @param file file to be loaded onto canvas
+     * Called from {@link openNewFile()}
+     */
     private void loadFile(File file){
         
         try {
@@ -155,11 +303,10 @@ public class FXMLPaintController implements Initializable {
             //System.out.println("file:"+fpath);    
             Image image = new Image(imageFile);
             System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
-            double x = (double) imageCanvas.getWidth()/2 - image.getWidth()/2;
-            double y = (double) imageCanvas.getHeight()/2 - image.getHeight()/2;
             imageCanvas.setWidth(image.getWidth());
             imageCanvas.setHeight(image.getHeight());
-            gcImage.drawImage(image,x,y);
+            System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
+            gcImage.drawImage(image,0,0);
             
         } 
         catch (Exception ex) {
@@ -167,7 +314,8 @@ public class FXMLPaintController implements Initializable {
         }
     }
     
-    /*configureFileChooser()
+    /**
+    * configureFileChooser()
     * Called from multiple functions()
     * Sets Title to String passed
     * Sets Extension Filters
@@ -187,20 +335,27 @@ public class FXMLPaintController implements Initializable {
             new FileChooser.ExtensionFilter("PDF", "*.pdf", "*.PDF")
             );
     }
-    /*closeStage()
+    /**
     * get source node
     * get the current stage for that node
     * close the stage
     * TODO: Do I even need this?
     */
-    private void closeStage(ActionEvent event){
-       Node source = (Node) event.getSource();
-       Stage stage = (Stage) source.getScene().getWindow();
-       
-       stage.close();
+    private void closeStage() {
+        /* This needs to be modified, but it is not required for now
+        * Need to somehow check if the canvas has been modified since last save
+        if(file != null){
+            Platform.exit();
+        }
+        else{
+        setCloseAlerts();
+        }
+        */ 
+        setCloseAlerts();
     }
-    /*saveFile()
-    * Called from handleSaveAs() & handleSave()
+    /**
+     * saveFile()
+    * Called from handleSaveAs(), handleSave()
     * Creates WritableImage object 
     * Takes a snapshot of the canvas and writes it to writableImage
     * Converts writableImage to RenderedImage
@@ -214,18 +369,27 @@ public class FXMLPaintController implements Initializable {
             System.out.println("name: "+ name +"\nextension:"+extension);
         */
         try {
-            WritableImage writableImage = new WritableImage(850,760);
-            imageCanvas.snapshot(null, writableImage);
-            RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-            ImageIO.write(renderedImage, "png", file);
+            if(file!=null){
+                WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+                SnapshotParameters params = new SnapshotParameters();
+                params.setFill(Color.TRANSPARENT);
+                imageCanvas.snapshot(params, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", file);
+            }
+            else{
+                return;
+            }
+            
         } 
         catch (IOException ex) {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-        /*saveFile()
-    * Called from handleSaveAs() & handleSave()
+    /**
+    saveFile()
+    * Called from handleSaveAs(), handleSave()
     * Creates WritableImage object 
     * Takes a snapshot of the canvas and writes it to writableImage
     * Converts writableImage to RenderedImage
@@ -239,5 +403,33 @@ public class FXMLPaintController implements Initializable {
         catch (Exception ex) {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    private void setCloseAlerts(){
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Warning!");
+        alert.setHeaderText("Your file is not currently saved. Would you "
+                + "like to save it?");
+        alert.setContentText("Please choose an option");
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+        ButtonType cancelButton = new ButtonType("Cancel");
+        
+        alert.getButtonTypes().setAll(yesButton,noButton,cancelButton);
+        
+        Optional<ButtonType> result = alert.showAndWait();
+            if(result.get()==yesButton){
+                if(file != null){
+                    saveImage(file);
+                }
+                else{
+                    setImagePath();
+                    saveImage(file);
+                }    
+            } 
+            else if(result.get()==noButton){
+                Platform.exit();
+            }
+            else if(result.get() == cancelButton){
+            }
     }
 }  
