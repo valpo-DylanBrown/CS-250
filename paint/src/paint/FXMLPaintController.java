@@ -20,7 +20,6 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -99,7 +98,7 @@ public class FXMLPaintController implements Initializable {
     * If a save location is set, this function asks you if you would like to save
     * before exiting. If yes, the closeStage() method is called. Otherwise, 
     * the program exits.
-    * @see closeStage()
+    * @see #closeStage()
     */
     @FXML
     private void exitApplication(){
@@ -117,8 +116,8 @@ public class FXMLPaintController implements Initializable {
     * This function calls configureFileChooser() to configure the file chooser 
     * with the correct extentions and title. It then shows the open dialog. It 
     * then loads the file if one has been chosen. 
-    * @see configureFileChooser(FileChooser,String)
-    * @see loadFile(File)
+    * @see #configureFileChooser(FileChooser,String)
+    * @see #loadFile(File)
      */
     @FXML
     private void openNewFile(){
@@ -133,9 +132,9 @@ public class FXMLPaintController implements Initializable {
      * This function calls configureFileChooser() to configure the file chooser 
      * with the correct extentions and title. It then shows the save dialog. It 
      * then saves the file if one has been chosen. 
-     * @see configureFileChooser(FileChooser,String)
-     * @see setImagePath()
-     * @see saveImage(File)
+     * @see #configureFileChooser(FileChooser,String)
+     * @see #setImagePath()
+     * @see #saveImage(File)
      */
     @FXML
     private void handleSaveAs(){
@@ -151,9 +150,9 @@ public class FXMLPaintController implements Initializable {
      * with the correct extentions and title. It then checks if a file has already
      * been saved. If it has, it will save it to the same location. Otherwise,
      * It then shows the save dialog and save it to the path chosen.
-     * @see configureFileChooser(FileChooser,String)
-     * @see setImagePath()
-     * @see saveImage(File)
+     * @see #configureFileChooser(FileChooser,String)
+     * @see #setImagePath()
+     * @see #saveImage(File)
      */
     @FXML
     private void handleSave(){ 
@@ -196,7 +195,7 @@ public class FXMLPaintController implements Initializable {
      * If a save location is set, this function asks you if you would like to save
      * before exiting. If yes, the closeStage() method is called. Otherwise, 
      * the program exits.
-     * @see closeStage() 
+     * @see #closeStage() 
      */
     @FXML
     private void handleCloseButton(){
@@ -210,18 +209,18 @@ public class FXMLPaintController implements Initializable {
     }
     /** 
      * Will JavaDoc later.
-     * @param e 
+     * @param event to do
      */
     @FXML 
-    private void setOnMousePressed(MouseEvent e){
+    private void setOnMousePressed(MouseEvent event){
         if(drawButton.isSelected()){
             
         }
         else if(lineButton.isSelected()){
             gcImage.setStroke(colorPicker.getValue());
             gcImage.setLineWidth(2.0);
-            line.setStartX(e.getX());
-            line.setStartY(e.getY());
+            line.setStartX(event.getX());
+            line.setStartY(event.getY());
         }
         else if(fillButton.isSelected()){
             
@@ -244,24 +243,24 @@ public class FXMLPaintController implements Initializable {
     }
     /**
      * Will JavaDoc later.
-     * @param e 
+     * @param event to do
      */
     @FXML
-    private void setOnMouseDragged(MouseEvent e){
+    private void setOnMouseDragged(MouseEvent event){
         
     }
     /**
      * Will JavaDoc later.
-     * @param e 
+     * @param event to do
      */
     @FXML
-    private void setOnMouseReleased(MouseEvent e){
+    private void setOnMouseReleased(MouseEvent event){
         if(drawButton.isSelected()){
             
         }
         else if(lineButton.isSelected()){
-            line.setEndX(e.getX());
-            line.setEndY(e.getY());
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
             
             gcImage.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
         }
@@ -293,8 +292,9 @@ public class FXMLPaintController implements Initializable {
      * width for debugging. The GraphicsContext for the canvas draws the image
      * onto the canvas. The function catches any exceptions and prints them to
      * the console, this needs to be logged to a file at a later date.
+     * Called from {@link #openNewFile()}
      * @param file file to be loaded onto canvas
-     * Called from {@link openNewFile()}
+     * 
      */
     private void loadFile(File file){
         
@@ -315,12 +315,15 @@ public class FXMLPaintController implements Initializable {
     }
     
     /**
-    * configureFileChooser()
-    * Called from multiple functions()
-    * Sets Title to String passed
-    * Sets Extension Filters
-    * TODO: Add BMP and GIF, possibly take away PDF
-    */
+     * Configures the File Chooser.
+     * This function configures the file chooser. The function passes the string
+     * to the title of the window and adds extension filters to filter images in.
+     * Called from {@link #openNewFile()}, {@link #handleSaveAs()}, and
+     * {@link #handleSave()} 
+     * @param fileChooser  file chooser to edit
+     * @param title string to set title of the window
+     * 
+     */
     private void configureFileChooser(FileChooser fileChooser, String title){
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(
@@ -336,14 +339,18 @@ public class FXMLPaintController implements Initializable {
             );
     }
     /**
-    * get source node
-    * get the current stage for that node
-    * close the stage
-    * TODO: Do I even need this?
-    */
+     * Function to close the program.
+     * This function calls setCloseAlerts() before closing the application 
+     * 
+     * TODO: This function still needs to implement checking if a file has been
+     * modified. If the file has been modified since last save, it will call
+     * setCloseAlerts(), otherwise it will call an exit. 
+     * 
+     * Called from {@link #handleCloseButton()} and {@link #exitApplication()}
+     */
     private void closeStage() {
         /* This needs to be modified, but it is not required for now
-        * Need to somehow check if the canvas has been modified since last save
+         * Need to somehow check if the canvas has been modified since last save
         if(file != null){
             Platform.exit();
         }
@@ -354,14 +361,17 @@ public class FXMLPaintController implements Initializable {
         setCloseAlerts();
     }
     /**
-     * saveFile()
-    * Called from handleSaveAs(), handleSave()
-    * Creates WritableImage object 
-    * Takes a snapshot of the canvas and writes it to writableImage
-    * Converts writableImage to RenderedImage
-    * Writes file out
-    * TODO: Explore "png" and why that only seems to work
-    */
+     * Function that writes image to file out.
+     * This function creates a writable image with the dimensions of the canvas.
+     * It then sets snapshot parameters to set the canvas snapshot to transparent.
+     * Then, the function takes a snapshot of the canvas and writes it to
+     * a WritableImage. It converts the writable image to a rendered image,
+     * and writes the image to a file.
+     * Called from {@link #handleSaveAs()} and {@link #handleSave()}
+     * @param file location of desired save
+     * 
+     * 
+     */
     private void saveImage(File file){
         /*
             String name = file.getName();
@@ -386,16 +396,12 @@ public class FXMLPaintController implements Initializable {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     /**
-    saveFile()
-    * Called from handleSaveAs(), handleSave()
-    * Creates WritableImage object 
-    * Takes a snapshot of the canvas and writes it to writableImage
-    * Converts writableImage to RenderedImage
-    * Writes file out
-    * TODO: Explore "png" and why that only seems to work
-    */
+     * Function to set path of desired save location. 
+     * This function opens the save dialog and sets the location under file.
+     * 
+     * Called from {@link #handleSaveAs()} and {@link #handleSave()}
+     */
     private void setImagePath(){
         try {
             file = fileChooser.showSaveDialog(borderPane.getScene().getWindow());
@@ -404,6 +410,15 @@ public class FXMLPaintController implements Initializable {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to create alerts before closing the window with an unsaved file.
+     * This function creates a new warning dialog. The window prompts the user
+     * if they would like to save their file. It then shows the user the options,
+     * saves the image if they would like, closes the program, or closes the
+     * dialog window. 
+     * 
+     * Called from {@link #exitApplication()}, {@link #handleCloseButton()}
+     */
     private void setCloseAlerts(){
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Warning!");

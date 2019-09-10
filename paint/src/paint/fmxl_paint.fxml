@@ -4,11 +4,11 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
@@ -19,9 +19,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
-
+<?import javafx.scene.paint.Color?> 
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" >
     <top>
         <HBox alignment="CENTER" prefHeight="6.0" prefWidth="200.0" spacing="2.0">
             <children>
@@ -60,9 +59,9 @@
                 <Slider fx:id="slider" max="50" min="1" />
                 <TextField fx:id="sliderText" prefHeight="50" prefWidth="50" /> 
             </HBox>
-            <ColorPicker id="colorPicker" fx:id="colorPicker" >
+            <ColorPicker id="colorPicker" fx:id="colorPicker">
                 <value>
-                    <Color red="0.0" blue="0.0" green="0.0"/>
+                    <Color blue="0.0" green="0.0" red="0.0" />
                 </value>
             </ColorPicker>
 
@@ -72,13 +71,13 @@
         </HBox>
     </top>
     <left>
-        <VBox id="toolBox" fx:id="toolBox" alignment="CENTER" spacing="10.0">
+        <VBox id="toolBox" fx:id="toolBox" alignment="CENTER" prefHeight="286.0" prefWidth="100.0" spacing="10.0">
             
             <fx:define>
                 <ToggleGroup fx:id="toolGroup" />
             </fx:define>
             
-            <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw" toggleGroup = "$toolGroup">
+            <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw" toggleGroup="$toolGroup">
             </ToggleButton>
             <ToggleButton fx:id="lineButton" prefWidth="55.0" text="Line" toggleGroup="$toolGroup">
             </ToggleButton>
@@ -98,18 +97,18 @@
         </VBox>
     </left>
     <center>
-    <StackPane id="stackPane" fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-        <children>
-            
-            <Canvas id="imageCanvas" fx:id="imageCanvas" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased">
-           </Canvas>
-            
-        </children>
-    </StackPane>
+        <ScrollPane id="scrollPane" fx:id="scrollPane">
+            <content>
+                <StackPane id="stackPane" fx:id="stackPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                    <children>
+                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased">
+                        </Canvas>
+                    </children>
+                </StackPane>
+            </content>
+        </ScrollPane>
    </center>
-  
-
-    <stylesheets>
-        <URL value="@paint.css" />
+   <stylesheets>
+    <URL value="@paint.css" />
     </stylesheets> 
 </BorderPane>

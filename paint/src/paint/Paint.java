@@ -5,6 +5,8 @@
  */
 package paint;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,10 +22,13 @@ public class Paint extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
-        
-        Scene scene = new Scene(root, 950 , 800);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+        Scene scene = new Scene(root, width , height);
         stage.setTitle("Paint");
         stage.setScene(scene);
+        //stage.setMaximized(true);
         stage.show();
     }
 
