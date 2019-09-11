@@ -88,9 +88,9 @@ public class FXMLPaintController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
-        slider.setValue(50);
-        sliderText.setText(Integer.toString(50));
-        sliderText.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getNumberInstance());
+        //slider.setValue(3.0);
+        //sliderText.setText(Integer.toString(50));
+        //sliderText.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getNumberInstance());
 
     }
     /**
@@ -103,12 +103,12 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void exitApplication(){
         // change this to check file modification
-        if(file!=null){
+        //if(file!=null){
             closeStage();
-        }
-        else{
-            Platform.exit();
-        }
+        //}
+        //else{
+            //Platform.exit();
+        //}
         
     }
     /**
@@ -200,12 +200,12 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void handleCloseButton(){
         // change this to check file modification
-        if(file!=null){
+        //if(file!=null){
             closeStage();
-        }
-        else{
-            Platform.exit();
-        }
+        //}
+        //else{
+            //Platform.exit();
+        //}
     }
     /** 
      * Will JavaDoc later.
@@ -218,7 +218,7 @@ public class FXMLPaintController implements Initializable {
         }
         else if(lineButton.isSelected()){
             gcImage.setStroke(colorPicker.getValue());
-            gcImage.setLineWidth(2.0);
+            gcImage.setLineWidth(slider.getValue());
             line.setStartX(event.getX());
             line.setStartY(event.getY());
         }
