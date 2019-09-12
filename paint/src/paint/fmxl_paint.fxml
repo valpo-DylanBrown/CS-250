@@ -79,13 +79,13 @@
     <left>
         <ScrollPane id="toolbarScollPane" fx:id="toolbarScollPane">
             <content>
-               <VBox id="toolBox" fx:id="toolBox" alignment="CENTER" prefHeight="286.0" prefWidth="100.0" spacing="10.0">
+               <VBox id="toolBox" fx:id="toolBox" alignment="CENTER"  spacing="10.0">
                     
                    <fx:define>
                         <ToggleGroup fx:id="toolGroup" />
                     </fx:define>
                     
-                    <Pane VBox.vgrow="ALWAYS" />
+                    <Pane VBox.vgrow="ALWAYS" prefHeight="150" />
                     
                     <ToggleButton fx:id="drawButton" prefWidth="55.0" text="Draw" toggleGroup="$toolGroup">
                     </ToggleButton>
@@ -103,8 +103,6 @@
                     </ToggleButton>
                     <ToggleButton fx:id="zoomButton" prefWidth="55.0" text="Zoom" toggleGroup="$toolGroup">
                     </ToggleButton>
-                    
-                    <Pane VBox.vgrow="ALWAYS" />
                 </VBox> 
             </content>
         </ScrollPane>
