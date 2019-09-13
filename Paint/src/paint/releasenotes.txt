@@ -1,22 +1,55 @@
 RELEASE NOTES FOR PAINT BY DYLAN BROWN
 
+Version 2.0									09/13/2019
 
-Version 1.0
+New Features:
+	- Lines can now be created on the canvas
+	- Added about section under the File->Help menu
+	- Added Release Notes section to open release notes through the application
+	- Added save option
+	- Documented all functions using Javadoc
+	- Canvas now resizes to the image
+	- Alerts users before closing application to save the file
+	- Added scroll bars to canvas
+	- Added scroll bars to tool window
+	- Restricted users from sizing the window small enough to hide menu items
+	- Added color picker that influences the line
+	- Added line width slider that influences the line
+	- Added buttons to implement other functionalities in the future
+	- Opened application to maximized
+            - Un-maximized default set to 1024x760.
+	- Cleaned up GUI
+Known/Possible Issues:
+	- Alert before exiting does not currently check if the file needs to be saved
+		- Will be exploring using a bool to keep track of saved items.
+	- No other known issues.
+Upcoming: 
+	- Circle, rectangle, zoom, erase functions
+	- Undo/Redo functions
+	- Layers for the canvas
+	- Creating custom canvas sizes
+	- Check when file has been modified and needs to save
+	- Add functionality for more image types
+		- Take away PDF
+
+Version 1.0									09/03/2019				
 New Features:
 	- Created MenuBar
 		- Create File Option
 			- Added Open, save, save as, and exit options
 		- Created Help Option
-			- Added About and Release Notes Option 
+			- Added About and Release Notes Option
+				- These have not been finished yet, only there for aesthetically purpose
 	- Created Close Button
 	- Added support for opening image files (jpg,png,tiff)
 	- Added support for saving images
 	- Places images into canvas
-Known Issues:
-	-Save sometimes doesnt go through (very rarely)
-	-snapshot extension hardcoded as PNG (possibly)
+Known/Possible Issues:
+	- Snapshot extension hardcoded as PNG
+	- Using SwingFXUtils to save files
 Upcoming: 
-	-Create tools and toolbar
+	- Create tools and toolbar
 	- Add support for tools
 		- Line, rectangle, circle, etc
 	- Draw on canvas
+	-UNDO/REDO

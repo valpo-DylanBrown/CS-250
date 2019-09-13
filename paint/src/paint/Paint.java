@@ -38,15 +38,15 @@ public class Paint extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-        Scene scene = new Scene(root, width , height);
+        //GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        //int width = gd.getDisplayMode().getWidth();
+        //int height = gd.getDisplayMode().getHeight();
+        Scene scene = new Scene(root, 1024 , 760);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
         stage.setMinWidth(MIN_PROGRAM_WIDTH);
         stage.setMinHeight(MIN_PROGRAM_HEIGHT);
-        //stage.setMaximized(true);
+        stage.setMaximized(true);
         stage.show();
     }
 
