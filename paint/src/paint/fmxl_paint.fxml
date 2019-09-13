@@ -68,7 +68,7 @@
                             <Slider fx:id="slider" blockIncrement="1.0" cache="true" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
                         </HBox>
                     </VBox>
-                    <VBox alignment="TOP_CENTER">
+                    <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Color" alignment="CENTER" />
                         <ColorPicker id="colorPicker" fx:id="colorPicker">
                             <value>
