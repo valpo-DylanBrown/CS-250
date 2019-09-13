@@ -1,5 +1,7 @@
 package paint;
 
+
+//clean this up possibly/ask if this is good/bad practice
 import java.awt.Desktop;
 import javafx.scene.input.MouseEvent;
 import java.awt.image.RenderedImage;
@@ -25,8 +27,6 @@ import javax.imageio.ImageIO;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import java.text.NumberFormat;
 import java.util.Optional;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
@@ -51,7 +51,6 @@ public class FXMLPaintController implements Initializable {
     @FXML public BorderPane borderPane;
     
     @FXML private Slider slider;
-    @FXML private TextField sliderText;
     
     @FXML private ToggleButton drawButton;
     @FXML private ToggleButton lineButton;
@@ -298,10 +297,10 @@ public class FXMLPaintController implements Initializable {
             imageFile = file.toURI().toURL().toString();
             //System.out.println("file:"+fpath);    
             Image image = new Image(imageFile);
-            System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
+            //System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
             imageCanvas.setWidth(image.getWidth());
             imageCanvas.setHeight(image.getHeight());
-            System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
+            //System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
             gcImage.drawImage(image,0,0);
             
         } 
