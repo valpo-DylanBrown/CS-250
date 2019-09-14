@@ -20,4 +20,65 @@
 .menu-bar {
   -fx-padding: 0 1 0 1;
   -fx-spacing: 1;
-};
+}
+
+#drawButton {          
+    -fx-background-image: url("pencil.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#lineButton {          
+    -fx-background-image: url("line.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#fillButton {          
+    -fx-background-image: url("fill.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#eraseButton {          
+    -fx-background-image: url("eraser.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#rectButton {          
+    -fx-background-image: url("rectangle.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#squareButton {          
+    -fx-background-image: url("square.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#ovalButton {          
+    -fx-background-image: url("ellipse.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#circleButton {          
+    -fx-background-image: url("circle.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#textButton {          
+    -fx-background-image: url("text.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#zoomButton {          
+    -fx-background-image: url("zoom.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}

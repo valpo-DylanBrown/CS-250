@@ -28,10 +28,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import java.util.Optional;
+import javafx.geometry.Insets;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
+import javafx.util.Pair;
 
 /**
  * <p>
@@ -57,11 +66,14 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton fillButton;
     @FXML private ToggleButton eraseButton;
     @FXML private ToggleButton rectButton;
+    @FXML private ToggleButton squareButton;
     @FXML private ToggleButton ovalButton;
+    @FXML private ToggleButton circleButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton zoomButton;
     
-    @FXML private ColorPicker colorPicker;
+    @FXML private ColorPicker fillColorPicker;
+    @FXML private ColorPicker strokeColorPicker;
    
     @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
@@ -70,7 +82,13 @@ public class FXMLPaintController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     File file;
     
+    private boolean hasBeenModified = false;
+    
     Line line = new Line();
+    Rectangle rect = new Rectangle();
+    Rectangle sqr = new Rectangle();
+    Circle circ = new Circle();
+    Ellipse ellipse = new Ellipse();
     
     /**
      * This function currently sets things that need to be controlled after the FXML has been loaded into the program.
@@ -98,12 +116,12 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void exitApplication(){
         // change this to check file modification
-        //if(file!=null){
-            closeStage();
-        //}
-        //else{
-            //Platform.exit();
-        //}
+        if(hasBeenModified==true){
+            setCloseAlerts();
+        }
+        else{
+            Platform.exit();
+        }
         
     }
     /**
@@ -121,6 +139,7 @@ public class FXMLPaintController implements Initializable {
         if(loadFile!=null){
             loadFile(loadFile);
         } 
+        hasBeenModified = true;
     }
     /**
      * FXML Function from File-&gt;Save As.
@@ -137,6 +156,7 @@ public class FXMLPaintController implements Initializable {
         setImagePath();
         if(file != null){
                 saveImage(file);
+                hasBeenModified = false;
         }
     }
     /**
@@ -159,7 +179,52 @@ public class FXMLPaintController implements Initializable {
             setImagePath();
             saveImage(file);
         }
+        hasBeenModified = false;
     }
+    
+    @FXML
+    private void handleResizeCanvas(){
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Resize Canvas");
+
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField width = new TextField();
+        width.setPromptText("Width:");
+        TextField height = new TextField();
+        height.setPromptText("Height");
+
+        gridPane.add(new Label("Width:"), 0, 0);
+        gridPane.add(width, 1, 0);
+        gridPane.add(new Label("Height"), 2, 0);
+        gridPane.add(height, 3, 0);
+
+        dialog.getDialogPane().setContent(gridPane);
+
+        // Request focus on the username field by default.
+        Platform.runLater(() -> width.requestFocus());
+        /*double dw = Double.parseDouble(width.toString());
+        double dh = Double.parseDouble(height.toString());
+        imageCanvas.setWidth(dw);
+        imageCanvas.setHeight(dh);*/
+        
+        dialog.showAndWait();
+        
+        
+        double dw = Double.parseDouble(width.toString());
+        double dh = Double.parseDouble(height.toString());
+        imageCanvas.setWidth(dw);
+        imageCanvas.setHeight(dh);
+        //Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        }
     /**
      * FXML Function from Help-&gt;About.
      * This function sends an information dialog to the user. The dialog
@@ -195,12 +260,12 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void handleCloseButton(){
         // change this to check file modification
-        //if(file!=null){
-            closeStage();
-        //}
-        //else{
-            //Platform.exit();
-        //}
+        if(hasBeenModified==true){
+            setCloseAlerts();
+        }
+        else{
+            Platform.exit();
+        }
     }
     /** 
      * Will JavaDoc later.
@@ -209,11 +274,16 @@ public class FXMLPaintController implements Initializable {
     @FXML 
     private void setOnMousePressed(MouseEvent event){
         if(drawButton.isSelected()){
-            
+            gcImage.setStroke(fillColorPicker.getValue());
+            gcImage.setLineWidth(slider.getValue());
+        
+            gcImage.beginPath();
+            gcImage.lineTo(event.getX(),event.getY()); 
         }
         else if(lineButton.isSelected()){
-            gcImage.setStroke(colorPicker.getValue());
+            gcImage.setStroke(fillColorPicker.getValue());
             gcImage.setLineWidth(slider.getValue());
+            
             line.setStartX(event.getX());
             line.setStartY(event.getY());
         }
@@ -224,11 +294,38 @@ public class FXMLPaintController implements Initializable {
             
         }
         else if(rectButton.isSelected()){
+            gcImage.setStroke(strokeColorPicker.getValue());
+            gcImage.setLineWidth(slider.getValue());
+            gcImage.setFill(fillColorPicker.getValue());
             
+            rect.setX(event.getX());                
+            rect.setY(event.getY());
+        }
+        else if(squareButton.isSelected()){
+            gcImage.setStroke(strokeColorPicker.getValue());
+            gcImage.setLineWidth(slider.getValue());
+            gcImage.setFill(fillColorPicker.getValue());
+            
+            sqr.setX(event.getX());                
+            sqr.setY(event.getY());
+        }
+        else if(circleButton.isSelected()){
+            gcImage.setStroke(strokeColorPicker.getValue());
+            gcImage.setLineWidth(slider.getValue());
+            gcImage.setFill(fillColorPicker.getValue());
+            
+            circ.setCenterX(event.getX());
+            circ.setCenterY(event.getY());
         }
         else if(ovalButton.isSelected()){
+            gcImage.setStroke(strokeColorPicker.getValue());
+            gcImage.setLineWidth(slider.getValue());
+            gcImage.setFill(fillColorPicker.getValue());
             
+            ellipse.setCenterX(event.getX());
+            ellipse.setCenterY(event.getY());
         }
+        
         else if(textButton.isSelected()){
             
         }
@@ -242,7 +339,10 @@ public class FXMLPaintController implements Initializable {
      */
     @FXML
     private void setOnMouseDragged(MouseEvent event){
-        
+        if(drawButton.isSelected()){
+            gcImage.lineTo(event.getX(), event.getY());
+            gcImage.stroke();
+        }
     }
     /**
      * Will JavaDoc later.
@@ -251,7 +351,10 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void setOnMouseReleased(MouseEvent event){
         if(drawButton.isSelected()){
+            gcImage.lineTo(event.getX(), event.getY());
+            gcImage.stroke();
             
+            gcImage.closePath();
         }
         else if(lineButton.isSelected()){
             line.setEndX(event.getX());
@@ -266,17 +369,65 @@ public class FXMLPaintController implements Initializable {
             
         }
         else if(rectButton.isSelected()){
-            
+            rect.setWidth(Math.abs((event.getX() - rect.getX())));
+            rect.setHeight(Math.abs((event.getY() - rect.getY())));
+            if(rect.getX() > event.getX()) {
+                rect.setX(event.getX());
+            }
+            if(rect.getY() > event.getY()) {
+                rect.setY(event.getY());
+            }
+
+            gcImage.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+            gcImage.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+        }
+        else if(squareButton.isSelected()){
+            sqr.setWidth(Math.abs((event.getX() - sqr.getX())));
+            sqr.setHeight(sqr.getWidth());
+            if(sqr.getX() > event.getX()) {
+                sqr.setX(event.getX());
+            }
+            if(sqr.getY() > event.getY()) {
+                sqr.setY(event.getY());
+            }
+
+            gcImage.fillRect(sqr.getX(), sqr.getY(), sqr.getWidth(), sqr.getHeight());
+            gcImage.strokeRect(sqr.getX(), sqr.getY(), sqr.getWidth(), sqr.getHeight());
+        }
+        else if(circleButton.isSelected()){
+            circ.setRadius((Math.abs(event.getX() - circ.getCenterX()) + Math.abs(event.getY() - circ.getCenterY())) / 2);
+
+            if(circ.getCenterX() > event.getX()) {
+                circ.setCenterX(event.getX());
+            }
+            if(circ.getCenterY() > event.getY()) {
+                circ.setCenterY(event.getY());
+            }
+
+            gcImage.fillOval(circ.getCenterX(), circ.getCenterY(), circ.getRadius(), circ.getRadius());
+            gcImage.strokeOval(circ.getCenterX(), circ.getCenterY(), circ.getRadius(), circ.getRadius());
         }
         else if(ovalButton.isSelected()){
-            
+            ellipse.setRadiusX((Math.abs(event.getX() - ellipse.getCenterX())));
+            ellipse.setRadiusY((Math.abs(event.getY() - ellipse.getCenterY())));
+            if(ellipse.getCenterX() > event.getX()) {
+                ellipse.setCenterX(event.getX());
+            }
+            if(ellipse.getCenterY() > event.getY()) {
+                ellipse.setCenterY(event.getY());
+            }
+
+            gcImage.fillOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
+             gcImage.strokeOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
         }
         else if(textButton.isSelected()){
             
         }
         else if(zoomButton.isSelected()){
             
-        }  
+        } 
+        else{}
+        hasBeenModified = true;
     }
     /**
      * Controller function to load a new file into the canvas.

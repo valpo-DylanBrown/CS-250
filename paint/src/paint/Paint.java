@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -46,6 +47,7 @@ public class Paint extends Application {
         stage.setScene(scene);
         stage.setMinWidth(MIN_PROGRAM_WIDTH);
         stage.setMinHeight(MIN_PROGRAM_HEIGHT);
+        stage.getIcons().add(new Image("file:icon.png"));
         stage.setMaximized(true);
         stage.show();
     }
