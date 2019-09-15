@@ -218,12 +218,21 @@ public class FXMLPaintController implements Initializable {
         dialog.showAndWait();
         
         
-        double dw = Double.parseDouble(width.toString());
-        double dh = Double.parseDouble(height.toString());
-        imageCanvas.setWidth(dw);
-        imageCanvas.setHeight(dh);
+        
+        System.out.println(width.getText());
+        System.out.println(height.getText());
+        double dw = Double.parseDouble(width.getText());
+        double dh = Double.parseDouble(height.getText());
+        //figure out scaling
+        /*
+        Image image = new Image(imageFile,dw,dh,false,true);
+            //System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
+        imageCanvas.setWidth(image.getWidth());
+        imageCanvas.setHeight(image.getHeight());
+        System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
+        gcImage.drawImage(image,0,0);
         //Optional<Pair<String, String>> result = dialog.showAndWait();
-
+        */
         }
     /**
      * FXML Function from Help-&gt;About.
