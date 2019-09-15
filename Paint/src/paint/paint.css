@@ -2,8 +2,8 @@
    
 }
 
-.menu-item{
-    -fx-padding:1 5 1 1;
+.menu-item > .accelerator-text {
+    -fx-padding: 0 0 0 30px;
 }
 .menu { 
     -fx-padding: 1 5 1 5; 
@@ -81,4 +81,7 @@
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
+}
+#stackPane{
+    -fx-border-color: black;
 }

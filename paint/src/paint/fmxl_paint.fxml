@@ -30,30 +30,30 @@
                     <children>
                         <MenuBar id="menuBar" fx:id="menuBar" focusTraversable="true" prefHeight="27.0" prefWidth="149.0">
                             <menus>
-                                <Menu text="File">
+                                <Menu text="_File" mnemonicParsing="true">
                                     <items>
-                                        <MenuItem onAction="#openNewFile" text="Open" />
-                                        <MenuItem onAction="#handleSave" text="Save" />
-                                        <MenuItem onAction="#handleSaveAs" text="Save As" />
+                                        <MenuItem onAction="#openNewFile" text="Open" mnemonicParsing="false" accelerator="Shortcut+O"/>
+                                        <MenuItem onAction="#handleSave" text="Save" mnemonicParsing="false" accelerator="Shortcut+S"/>
+                                        <MenuItem onAction="#handleSaveAs" text="Save As" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
                                         <SeparatorMenuItem />
-                                        <MenuItem onAction="#exitApplication" text="Exit" />
+                                        <MenuItem onAction="#exitApplication" text="Exit" mnemonicParsing="false" accelerator="Alt+F4" />
                                     </items>
                                 </Menu>
-                                <Menu text="Edit">
+                                <Menu text="_Edit" mnemonicParsing="true">
                                     <items>
                                     </items>
                                 </Menu>
-                                <Menu text="View">
+                                <Menu text="_View" mnemonicParsing="true">
                                     <items>
                                         <MenuItem onAction="#handleResizeCanvas" text="Resize" />
                                     </items>
                                 </Menu>
-                                <Menu text="Help">
+                                <Menu text="_Help" mnemonicParsing="true">
                                     <items>
                                         <MenuItem disable="true" text="Search" />
                                         <SeparatorMenuItem />
-                                        <MenuItem onAction="#handleAbout" text="About" />
-                                        <MenuItem onAction="#handleReleaseNotes" text="Release Notes" />
+                                        <MenuItem onAction="#handleAbout" text="About" mnemonicParsing="false" accelerator="Alt+A"/>
+                                        <MenuItem onAction="#handleReleaseNotes" text="Release Notes" mnemonicParsing="false" accelerator="Alt+R" />
                                     </items>
                                 </Menu>
                             </menus> 

@@ -1,7 +1,5 @@
 package paint;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +24,7 @@ public class Paint extends Application {
     static final double MIN_PROGRAM_HEIGHT = 150;
     static final String PROGRAM_NAME = "PAIN(t)";
     
+    
     /**
      * This function initializes the root and scene for the program.
      * The function first loads the FXML document into the parent. It then uses
@@ -38,20 +37,23 @@ public class Paint extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
-        //GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        //int width = gd.getDisplayMode().getWidth();
-        //int height = gd.getDisplayMode().getHeight();
+        Parent root = FXMLLoader.load(FXMLPaintController.class.getResource("fmxl_paint.fxml"));
+        
         Scene scene = new Scene(root, 1024 , 760);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
         stage.setMinWidth(MIN_PROGRAM_WIDTH);
         stage.setMinHeight(MIN_PROGRAM_HEIGHT);
-        stage.getIcons().add(new Image("file:icon.png"));
+        /* If you need to disable the windows Min, Max, and Close
+         * do this
+         * stage.initStyle(StageStyle.UNDECORATED);
+        */
+        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
+        stage.getIcons().add(icon);
         stage.setMaximized(true);
         stage.show();
     }
-
+   
     /**
      * This function launches the arguments
      * @param args the command line arguments

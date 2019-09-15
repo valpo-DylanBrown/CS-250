@@ -40,6 +40,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 /**
@@ -152,7 +154,7 @@ public class FXMLPaintController implements Initializable {
      */
     @FXML
     private void handleSaveAs(){
-        configureFileChooser(fileChooser, "Save File: ");
+        configureFileChooser(fileChooser, "Save File As: ");
         setImagePath();
         if(file != null){
                 saveImage(file);
@@ -574,7 +576,7 @@ public class FXMLPaintController implements Initializable {
      * 
      * Called from {@link #exitApplication()}, {@link #handleCloseButton()}
      */
-    private void setCloseAlerts(){
+    public void setCloseAlerts(){
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Warning!");
         alert.setHeaderText("Your file is not currently saved. Would you "
