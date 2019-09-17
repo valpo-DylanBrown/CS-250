@@ -1,6 +1,6 @@
 package paint;
 
-
+//BIG TODO SPLIT THINGS UP INTO FUNCTIONS AND DIFFERENT FILES
 //clean this up possibly/ask if this is good/bad practice
 import java.awt.Desktop;
 import javafx.scene.input.MouseEvent;
@@ -28,20 +28,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import java.util.Optional;
+import java.util.Stack;
 import javafx.geometry.Insets;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.PixelReader;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
 /**
@@ -73,13 +75,16 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton zoomButton;
-    
+    @FXML private ToggleButton eyedropperButton;
+    @FXML private Button undoButton;
+    @FXML private Button redoButton;
     @FXML private ColorPicker fillColorPicker;
     @FXML private ColorPicker strokeColorPicker;
    
     @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
     
+    private File openedFile;
     private String imageFile;
     FileChooser fileChooser = new FileChooser();
     File file;
@@ -92,6 +97,9 @@ public class FXMLPaintController implements Initializable {
     Circle circ = new Circle();
     Ellipse ellipse = new Ellipse();
     
+    Stack<Shape> undoHistory = new Stack();
+    Stack<Shape> redoHistory = new Stack();
+    
     /**
      * This function currently sets things that need to be controlled after the FXML has been loaded into the program.
      * Sets GraphicsContext gc for imageCanvas.
@@ -103,10 +111,6 @@ public class FXMLPaintController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
-        //slider.setValue(3.0);
-        //sliderText.setText(Integer.toString(50));
-        //sliderText.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getNumberInstance());
-
     }
     /**
     * FMXL Function to close application from File-&gt;Exit.
@@ -117,13 +121,7 @@ public class FXMLPaintController implements Initializable {
     */
     @FXML
     private void exitApplication(){
-        // change this to check file modification
-        if(hasBeenModified==true){
-            setCloseAlerts();
-        }
-        else{
-            Platform.exit();
-        }
+        closeStage();
         
     }
     /**
@@ -137,9 +135,9 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void openNewFile(){
         configureFileChooser(fileChooser, "Please Select an Image:");
-        File loadFile = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
-        if(loadFile!=null){
-            loadFile(loadFile);
+        openedFile = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
+        if(openedFile!=null){
+            loadFile(openedFile);
         } 
         hasBeenModified = true;
     }
@@ -157,8 +155,8 @@ public class FXMLPaintController implements Initializable {
         configureFileChooser(fileChooser, "Save File As: ");
         setImagePath();
         if(file != null){
-                saveImage(file);
-                hasBeenModified = false;
+            saveImage(file);
+            hasBeenModified = false;
         }
     }
     /**
@@ -261,6 +259,137 @@ public class FXMLPaintController implements Initializable {
         File releaseNotes = new File("releasenotes.txt");
         Desktop.getDesktop().open(releaseNotes);
     }
+    @FXML 
+    private void handleUndoButton(){
+        if(!undoHistory.empty()){
+            gcImage.clearRect(0,0,imageCanvas.getWidth(), imageCanvas.getHeight());
+            Shape removedShape = undoHistory.lastElement();
+            
+            if(removedShape.getClass() == Line.class){
+                Line temp = (Line) removedShape;
+                temp.setFill(gcImage.getFill());
+                temp.setStroke(gcImage.getStroke());
+                temp.setStrokeWidth(gcImage.getLineWidth());
+                
+                redoHistory.push(new Line(temp.getStartX(), temp.getStartY(), temp.getEndX(), temp.getEndY()));
+            }
+            else if(removedShape.getClass() == Rectangle.class){
+                Rectangle temp = (Rectangle) removedShape;
+                temp.setFill(gcImage.getFill());
+                temp.setStroke(gcImage.getStroke());
+                temp.setStrokeWidth(gcImage.getLineWidth());
+                
+                redoHistory.push(new Rectangle(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight()));
+            }
+            else if(removedShape.getClass() == Circle.class){
+                Circle temp = (Circle) removedShape;
+                temp.setFill(gcImage.getFill());
+                temp.setStroke(gcImage.getStroke());
+                temp.setStrokeWidth(gcImage.getLineWidth());
+                
+                redoHistory.push(new Circle(temp.getCenterX(), temp.getCenterY(), temp.getRadius()));
+            }
+            else if(removedShape.getClass() == Ellipse.class){
+                Ellipse temp = (Ellipse) removedShape;
+                temp.setFill(gcImage.getFill());
+                temp.setStroke(gcImage.getStroke());
+                temp.setStrokeWidth(gcImage.getLineWidth());
+                
+                redoHistory.push(new Ellipse(temp.getCenterX(), temp.getCenterY(), temp.getRadiusX(), temp.getRadiusY()));
+            }
+            Shape lastRedo = redoHistory.lastElement();
+            lastRedo.setFill(removedShape.getFill());
+            lastRedo.setStroke(removedShape.getStroke());
+            lastRedo.setStrokeWidth(removedShape.getStrokeWidth());
+            undoHistory.pop();
+            loadFile(openedFile);
+            
+            
+            for(int i=0; i < undoHistory.size(); i++) {
+                Shape shape = undoHistory.elementAt(i);
+                if(shape.getClass() == Line.class) {
+                    Line temp = (Line) shape;
+                    gcImage.setLineWidth(temp.getStrokeWidth());
+                    gcImage.setStroke(temp.getStroke());
+                    gcImage.setFill(temp.getFill());
+                    gcImage.strokeLine(temp.getStartX(), temp.getStartY(), temp.getEndX(), temp.getEndY());
+                }
+                else if(shape.getClass() == Rectangle.class) {
+                    Rectangle temp = (Rectangle) shape;
+                    gcImage.setLineWidth(temp.getStrokeWidth());
+                    gcImage.setStroke(temp.getStroke());
+                    gcImage.setFill(temp.getFill());
+                    gcImage.fillRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
+                    gcImage.strokeRect(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight());
+                }
+                else if(shape.getClass() == Circle.class) {
+                    Circle temp = (Circle) shape;
+                    gcImage.setLineWidth(temp.getStrokeWidth());
+                    gcImage.setStroke(temp.getStroke());
+                    gcImage.setFill(temp.getFill());
+                    gcImage.fillOval(temp.getCenterX(), temp.getCenterY(), temp.getRadius(), temp.getRadius());
+                    gcImage.strokeOval(temp.getCenterX(), temp.getCenterY(), temp.getRadius(), temp.getRadius());
+                }
+                else if(shape.getClass() == Ellipse.class) {
+                    Ellipse temp = (Ellipse) shape;
+                    gcImage.setLineWidth(temp.getStrokeWidth());
+                    gcImage.setStroke(temp.getStroke());
+                    gcImage.setFill(temp.getFill());
+                    gcImage.fillOval(temp.getCenterX(), temp.getCenterY(), temp.getRadiusX(), temp.getRadiusY());
+                    gcImage.strokeOval(temp.getCenterX(), temp.getCenterY(), temp.getRadiusX(), temp.getRadiusY());
+                }
+            }
+        }
+        else{
+            System.out.println("nothing to undo");
+        }
+    }
+    @FXML 
+    private void handleRedoButton(){
+        if(!redoHistory.empty()){
+            if(!redoHistory.empty()) {
+                Shape shape = redoHistory.lastElement();
+                gcImage.setLineWidth(shape.getStrokeWidth());
+                gcImage.setStroke(shape.getStroke());
+                gcImage.setFill(shape.getFill());
+                    
+                redoHistory.pop();
+                if(shape.getClass() == Line.class) {
+                    Line tempLine = (Line) shape;
+                    gcImage.strokeLine(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY());
+                    undoHistory.push(new Line(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY()));
+                }
+                else if(shape.getClass() == Rectangle.class) {
+                    Rectangle tempRect = (Rectangle) shape;
+                    gcImage.fillRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+                    gcImage.strokeRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+                    
+                    undoHistory.push(new Rectangle(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight()));
+                }
+                else if(shape.getClass() == Circle.class) {
+                    Circle tempCirc = (Circle) shape;
+                    gcImage.fillOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+                    gcImage.strokeOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+                    
+                    undoHistory.push(new Circle(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius()));
+                }
+                else if(shape.getClass() == Ellipse.class) {
+                    Ellipse tempElps = (Ellipse) shape;
+                    gcImage.fillOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+                    gcImage.strokeOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+                    
+                    undoHistory.push(new Ellipse(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY()));
+                }
+                Shape lastUndo = undoHistory.lastElement();
+                lastUndo.setFill(gcImage.getFill());
+                lastUndo.setStroke(gcImage.getStroke());
+                lastUndo.setStrokeWidth(gcImage.getLineWidth());
+            }
+        }
+        else{
+            System.out.println("nothing to redo");
+        }
+    }
     /**
      * FMXL Function to close application from close button.
      * If a save location is set, this function asks you if you would like to save
@@ -271,12 +400,14 @@ public class FXMLPaintController implements Initializable {
     @FXML
     private void handleCloseButton(){
         // change this to check file modification
-        if(hasBeenModified==true){
-            setCloseAlerts();
-        }
-        else{
-            Platform.exit();
-        }
+        closeStage();
+    }
+    @FXML
+    private void swapColors(){
+        Color tempColor = fillColorPicker.getValue();
+        fillColorPicker.setValue(strokeColorPicker.getValue());
+        strokeColorPicker.setValue(tempColor);
+        tempColor = null; //destroy tempColor to save memory
     }
     /** 
      * Will JavaDoc later.
@@ -285,14 +416,14 @@ public class FXMLPaintController implements Initializable {
     @FXML 
     private void setOnMousePressed(MouseEvent event){
         if(drawButton.isSelected()){
-            gcImage.setStroke(fillColorPicker.getValue());
+            gcImage.setStroke(strokeColorPicker.getValue());
             gcImage.setLineWidth(slider.getValue());
         
             gcImage.beginPath();
             gcImage.lineTo(event.getX(),event.getY()); 
         }
         else if(lineButton.isSelected()){
-            gcImage.setStroke(fillColorPicker.getValue());
+            gcImage.setStroke(strokeColorPicker.getValue());
             gcImage.setLineWidth(slider.getValue());
             
             line.setStartX(event.getX());
@@ -343,6 +474,7 @@ public class FXMLPaintController implements Initializable {
         else if(zoomButton.isSelected()){
             
         }
+        else{}
     }
     /**
      * Will JavaDoc later.
@@ -366,12 +498,15 @@ public class FXMLPaintController implements Initializable {
             gcImage.stroke();
             
             gcImage.closePath();
+            undoHistory.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
         }
         else if(lineButton.isSelected()){
             line.setEndX(event.getX());
             line.setEndY(event.getY());
             
             gcImage.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+            
+            undoHistory.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
         }
         else if(fillButton.isSelected()){
             
@@ -391,6 +526,8 @@ public class FXMLPaintController implements Initializable {
 
             gcImage.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
             gcImage.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+            
+            undoHistory.push(new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight()));
         }
         else if(squareButton.isSelected()){
             sqr.setWidth(Math.abs((event.getX() - sqr.getX())));
@@ -404,6 +541,9 @@ public class FXMLPaintController implements Initializable {
 
             gcImage.fillRect(sqr.getX(), sqr.getY(), sqr.getWidth(), sqr.getHeight());
             gcImage.strokeRect(sqr.getX(), sqr.getY(), sqr.getWidth(), sqr.getHeight());
+            
+            undoHistory.push(new Rectangle(sqr.getX(), sqr.getY(), sqr.getWidth(), sqr.getHeight()));
+            
         }
         else if(circleButton.isSelected()){
             circ.setRadius((Math.abs(event.getX() - circ.getCenterX()) + Math.abs(event.getY() - circ.getCenterY())) / 2);
@@ -417,6 +557,9 @@ public class FXMLPaintController implements Initializable {
 
             gcImage.fillOval(circ.getCenterX(), circ.getCenterY(), circ.getRadius(), circ.getRadius());
             gcImage.strokeOval(circ.getCenterX(), circ.getCenterY(), circ.getRadius(), circ.getRadius());
+            
+            undoHistory.push(new Circle(circ.getCenterX(), circ.getCenterY(), circ.getRadius()));
+
         }
         else if(ovalButton.isSelected()){
             ellipse.setRadiusX((Math.abs(event.getX() - ellipse.getCenterX())));
@@ -429,13 +572,24 @@ public class FXMLPaintController implements Initializable {
             }
 
             gcImage.fillOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
-             gcImage.strokeOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
+            gcImage.strokeOval(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY());
+            
+            undoHistory.push(new Ellipse(ellipse.getCenterX(), ellipse.getCenterY(), ellipse.getRadiusX(), ellipse.getRadiusY()));
         }
         else if(textButton.isSelected()){
             
         }
         else if(zoomButton.isSelected()){
             
+        }
+        else if(eyedropperButton.isSelected()){
+            int xPosistion = new Double(event.getX()).intValue();
+            int yPosistion = new Double(event.getY()).intValue();
+            Image image = new Image(imageFile);
+            PixelReader pixelReader = image.getPixelReader();
+            Color pixelClicked = pixelReader.getColor(xPosistion, yPosistion);
+            
+            fillColorPicker.setValue(pixelClicked);
         } 
         else{}
         hasBeenModified = true;
@@ -486,7 +640,7 @@ public class FXMLPaintController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("All Files", "*.jpeg", "*.jpg",
                 "*.png", "*.tiff", "*.tif", "*.pdf", "*.JPEG", "*.JPG","*.PNG",
-                "*.TIFF","*.TIF", "*.PDF"),
+                "*.TIFF","*.TIF"),
             new FileChooser.ExtensionFilter("JPEG", "*.jpeg", "*.jpg",
                 "*.JPEG", "*.JPG"),
             new FileChooser.ExtensionFilter("PNG", "*.png", "*.PNG"),
@@ -506,16 +660,12 @@ public class FXMLPaintController implements Initializable {
      * Called from {@link #handleCloseButton()} and {@link #exitApplication()}
      */
     private void closeStage() {
-        /* This needs to be modified, but it is not required for now
-         * Need to somehow check if the canvas has been modified since last save
-        if(file != null){
-            Platform.exit();
+        if(hasBeenModified==true){
+            setCloseAlerts();
         }
         else{
-        setCloseAlerts();
+            Platform.exit();
         }
-        */ 
-        setCloseAlerts();
     }
     /**
      * Function that writes image to file out.
@@ -530,11 +680,6 @@ public class FXMLPaintController implements Initializable {
      * 
      */
     private void saveImage(File file){
-        /*
-            String name = file.getName();
-            String extension = name.substring(1+name.lastIndexOf(".")).toLowerCase();
-            System.out.println("name: "+ name +"\nextension:"+extension);
-        */
         try {
             if(file!=null){
                 WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
@@ -544,9 +689,7 @@ public class FXMLPaintController implements Initializable {
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 ImageIO.write(renderedImage, "png", file);
             }
-            else{
-                return;
-            }
+            else{}
             
         } 
         catch (IOException ex) {
@@ -576,19 +719,27 @@ public class FXMLPaintController implements Initializable {
      * 
      * Called from {@link #exitApplication()}, {@link #handleCloseButton()}
      */
-    public void setCloseAlerts(){
+    private void setCloseAlerts(){
+        Alert alert = createCloseAlertDialog();
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+        ButtonType cancelButton = new ButtonType("Cancel");
+                
+        alert.getButtonTypes().setAll(yesButton,noButton,cancelButton);
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        handleButtonTypeLogic(result, yesButton, noButton, cancelButton);
+    }
+    private Alert createCloseAlertDialog(){
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Warning!");
         alert.setHeaderText("Your file is not currently saved. Would you "
                 + "like to save it?");
         alert.setContentText("Please choose an option");
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
-        ButtonType cancelButton = new ButtonType("Cancel");
-        
-        alert.getButtonTypes().setAll(yesButton,noButton,cancelButton);
-        
-        Optional<ButtonType> result = alert.showAndWait();
+        return alert;
+    }
+    private void handleButtonTypeLogic(Optional<ButtonType> result, 
+            ButtonType yesButton, ButtonType noButton, ButtonType cancelButton ){
             if(result.get()==yesButton){
                 if(file != null){
                     saveImage(file);

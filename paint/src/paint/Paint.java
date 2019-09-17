@@ -23,6 +23,8 @@ public class Paint extends Application {
     static final double MIN_PROGRAM_WIDTH = 400;
     static final double MIN_PROGRAM_HEIGHT = 150;
     static final String PROGRAM_NAME = "PAIN(t)";
+    static final double DEFAULT_WIDTH = 1024;
+    static final double DEFAULT_HEIGHT = 760;
     
     
     /**
@@ -39,7 +41,7 @@ public class Paint extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(FXMLPaintController.class.getResource("fmxl_paint.fxml"));
         
-        Scene scene = new Scene(root, 1024 , 760);
+        Scene scene = new Scene(root, DEFAULT_WIDTH , DEFAULT_HEIGHT);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
         stage.setMinWidth(MIN_PROGRAM_WIDTH);

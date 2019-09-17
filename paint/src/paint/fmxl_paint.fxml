@@ -63,6 +63,9 @@
                     </children>
                 </HBox>
                 <ToolBar>
+                    <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButton" text="UNDO" />
+                    <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" onAction="#handleRedoButton" text="REDO" />
+
                     <Pane HBox.hgrow="ALWAYS" />
                     <VBox alignment="CENTER">
                         <Label text="Width" alignment="CENTER" />
@@ -71,18 +74,19 @@
                         </HBox>
                     </VBox>
                     <VBox alignment="TOP_CENTER" spacing="4.0">
-                        <Label text="Fill" alignment="CENTER" />
-                        <ColorPicker id="fillColorPicker" fx:id="fillColorPicker">
+                        <Label text="Stroke" alignment="CENTER" />
+                        <ColorPicker id="strokeColorPicker" fx:id="strokeColorPicker">
                             <value>
                                 <Color blue="0.0" green="0.0" red="0.0" />
                             </value>
                         </ColorPicker>
                     </VBox>
+                    <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#swapColors" prefWidth="35.0"  />
                     <VBox alignment="TOP_CENTER" spacing="4.0">
-                        <Label text="Stroke" alignment="CENTER" />
-                        <ColorPicker id="strokeColorPicker" fx:id="strokeColorPicker">
+                        <Label text="Fill" alignment="CENTER" />
+                        <ColorPicker id="fillColorPicker" fx:id="fillColorPicker">
                             <value>
-                                <Color blue="0.0" green="0.0" red="0.0" />
+                                <Color blue="0.0" green="0.0" red="0.0" opacity = "0.0"/>
                             </value>
                         </ColorPicker>
                     </VBox>
@@ -150,6 +154,11 @@
                     <ToggleButton fx:id="zoomButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Zoom"/>
+                        </tooltip>
+                    </ToggleButton>
+                    <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                        <tooltip>
+                            <Tooltip text="Eyedropper"/>
                         </tooltip>
                     </ToggleButton>
                 </VBox> 
