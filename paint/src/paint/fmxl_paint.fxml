@@ -22,7 +22,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController">
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" onScroll="#handleZoom">
     <top>
         <VBox>
             <children>

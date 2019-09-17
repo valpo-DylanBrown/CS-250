@@ -29,16 +29,22 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import java.util.Optional;
 import java.util.Stack;
+import javafx.event.ActionEvent;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.PixelReader;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
@@ -62,7 +68,7 @@ public class FXMLPaintController implements Initializable {
     //intialize FMXL and JavaFX vars
 
     @FXML public BorderPane borderPane;
-    
+    @FXML public ScrollPane scrollPane;
     @FXML private Slider slider;
     
     @FXML private ToggleButton drawButton;
@@ -100,6 +106,11 @@ public class FXMLPaintController implements Initializable {
     Stack<Shape> undoHistory = new Stack();
     Stack<Shape> redoHistory = new Stack();
     
+    /*
+    Region target = scrollPane;
+    Group group = new Group(target);
+    */
+    
     /**
      * This function currently sets things that need to be controlled after the FXML has been loaded into the program.
      * Sets GraphicsContext gc for imageCanvas.
@@ -111,6 +122,42 @@ public class FXMLPaintController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
+    }
+    @FXML
+    private void handleZoom(ScrollEvent e){
+        if(e.isShortcutDown()){
+            e.consume();
+            onScroll(e.getTextDeltaY(), new Point2D(e.getX(), e.getY()));
+        }
+        
+        
+                
+    }
+    
+    private void onScroll(double wheelDelta, Point2D mousePoint){
+        /*
+        double zoomIntensity = 0.02;
+        double scaleValue = 0.7;
+        final double zoomFactor = Math.exp(wheelDelta * zoomIntensity);
+        
+        Bounds groupBounds = group.getLayoutBounds();
+        final Bounds viewportBounds = scrollPane.getViewportBounds();
+        double valX = scrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
+        double valY = scrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
+        scaleValue = scaleValue * zoomFactor;
+        updateScale(scaleValue);
+        scrollPane.layout();
+        Point2D posInZoom = target.parentToLocal(group.parentToLocal(mousePoint));
+        Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoom.multiply(zoomFactor - 1));
+        
+        groupBounds = group.getLayoutBounds();
+        scrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
+        scrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
+    } 
+    private void updateScale(double scaleValue) {
+        target.setScaleX(scaleValue);
+        target.setScaleY(scaleValue);
+        */
     }
     /**
     * FMXL Function to close application from File-&gt;Exit.
@@ -311,7 +358,7 @@ public class FXMLPaintController implements Initializable {
                     Line temp = (Line) shape;
                     gcImage.setLineWidth(temp.getStrokeWidth());
                     gcImage.setStroke(temp.getStroke());
-                    gcImage.setFill(temp.getFill());
+                    //gcImage.setFill(temp.getFill());
                     gcImage.strokeLine(temp.getStartX(), temp.getStartY(), temp.getEndX(), temp.getEndY());
                 }
                 else if(shape.getClass() == Rectangle.class) {
@@ -347,44 +394,42 @@ public class FXMLPaintController implements Initializable {
     @FXML 
     private void handleRedoButton(){
         if(!redoHistory.empty()){
-            if(!redoHistory.empty()) {
-                Shape shape = redoHistory.lastElement();
-                gcImage.setLineWidth(shape.getStrokeWidth());
-                gcImage.setStroke(shape.getStroke());
-                gcImage.setFill(shape.getFill());
-                    
-                redoHistory.pop();
-                if(shape.getClass() == Line.class) {
-                    Line tempLine = (Line) shape;
-                    gcImage.strokeLine(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY());
-                    undoHistory.push(new Line(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY()));
-                }
-                else if(shape.getClass() == Rectangle.class) {
-                    Rectangle tempRect = (Rectangle) shape;
-                    gcImage.fillRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
-                    gcImage.strokeRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
-                    
-                    undoHistory.push(new Rectangle(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight()));
-                }
-                else if(shape.getClass() == Circle.class) {
-                    Circle tempCirc = (Circle) shape;
-                    gcImage.fillOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
-                    gcImage.strokeOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
-                    
-                    undoHistory.push(new Circle(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius()));
-                }
-                else if(shape.getClass() == Ellipse.class) {
-                    Ellipse tempElps = (Ellipse) shape;
-                    gcImage.fillOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
-                    gcImage.strokeOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
-                    
-                    undoHistory.push(new Ellipse(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY()));
-                }
-                Shape lastUndo = undoHistory.lastElement();
-                lastUndo.setFill(gcImage.getFill());
-                lastUndo.setStroke(gcImage.getStroke());
-                lastUndo.setStrokeWidth(gcImage.getLineWidth());
+            Shape shape = redoHistory.lastElement();
+            gcImage.setLineWidth(shape.getStrokeWidth());
+            gcImage.setStroke(shape.getStroke());
+            gcImage.setFill(shape.getFill());
+
+            redoHistory.pop();
+            if(shape.getClass() == Line.class) {
+                Line tempLine = (Line) shape;
+                gcImage.strokeLine(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY());
+                undoHistory.push(new Line(tempLine.getStartX(), tempLine.getStartY(), tempLine.getEndX(), tempLine.getEndY()));
             }
+            else if(shape.getClass() == Rectangle.class) {
+                Rectangle tempRect = (Rectangle) shape;
+                gcImage.fillRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+                gcImage.strokeRect(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight());
+
+                undoHistory.push(new Rectangle(tempRect.getX(), tempRect.getY(), tempRect.getWidth(), tempRect.getHeight()));
+            }
+            else if(shape.getClass() == Circle.class) {
+                Circle tempCirc = (Circle) shape;
+                gcImage.fillOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+                gcImage.strokeOval(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius(), tempCirc.getRadius());
+
+                undoHistory.push(new Circle(tempCirc.getCenterX(), tempCirc.getCenterY(), tempCirc.getRadius()));
+            }
+            else if(shape.getClass() == Ellipse.class) {
+                Ellipse tempElps = (Ellipse) shape;
+                gcImage.fillOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+                gcImage.strokeOval(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY());
+
+                undoHistory.push(new Ellipse(tempElps.getCenterX(), tempElps.getCenterY(), tempElps.getRadiusX(), tempElps.getRadiusY()));
+            }
+            Shape lastUndo = undoHistory.lastElement();
+            lastUndo.setFill(gcImage.getFill());
+            lastUndo.setStroke(gcImage.getStroke());
+            lastUndo.setStrokeWidth(gcImage.getLineWidth());
         }
         else{
             System.out.println("nothing to redo");
@@ -498,7 +543,6 @@ public class FXMLPaintController implements Initializable {
             gcImage.stroke();
             
             gcImage.closePath();
-            undoHistory.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
         }
         else if(lineButton.isSelected()){
             line.setEndX(event.getX());
@@ -593,6 +637,11 @@ public class FXMLPaintController implements Initializable {
         } 
         else{}
         hasBeenModified = true;
+        redoHistory.clear();
+        Shape lastUndo = undoHistory.lastElement();
+        lastUndo.setFill(gcImage.getFill());
+        lastUndo.setStroke(gcImage.getStroke());
+        lastUndo.setStrokeWidth(gcImage.getLineWidth());
     }
     /**
      * Controller function to load a new file into the canvas.
