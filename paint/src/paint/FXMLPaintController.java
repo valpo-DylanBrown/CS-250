@@ -1,6 +1,11 @@
 package paint;
 
 //BIG TODO SPLIT THINGS UP INTO FUNCTIONS AND DIFFERENT FILES
+/*KNOWN BUGS:
+    * Scroll canvas is gone, jave a big scroll above border and use that one
+    * Figure out undo/redo on path element
+        * if in a pitch, use a line for undo and it will do the job decently for now
+*/
 //clean this up possibly/ask if this is good/bad practice
 import java.awt.Desktop;
 import javafx.scene.input.MouseEvent;
@@ -49,6 +54,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 
@@ -68,7 +75,7 @@ public class FXMLPaintController implements Initializable {
     //intialize FMXL and JavaFX vars
 
     @FXML public BorderPane borderPane;
-    @FXML public ScrollPane scrollPane;
+    @FXML public ScrollPane canvasScrollPane;
     @FXML private Slider slider;
     
     @FXML private ToggleButton drawButton;
@@ -86,6 +93,7 @@ public class FXMLPaintController implements Initializable {
     @FXML private Button redoButton;
     @FXML private ColorPicker fillColorPicker;
     @FXML private ColorPicker strokeColorPicker;
+    @FXML private Group group;
    
     @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
@@ -103,11 +111,13 @@ public class FXMLPaintController implements Initializable {
     Circle circ = new Circle();
     Ellipse ellipse = new Ellipse();
     
+    Path path = new Path();
+    
     Stack<Shape> undoHistory = new Stack();
     Stack<Shape> redoHistory = new Stack();
     
     /*
-    Region target = scrollPane;
+    Region target = canvasScrollPane;
     Group group = new Group(target);
     */
     
@@ -127,7 +137,7 @@ public class FXMLPaintController implements Initializable {
     private void handleZoom(ScrollEvent e){
         if(e.isShortcutDown()){
             e.consume();
-            onScroll(e.getTextDeltaY(), new Point2D(e.getX(), e.getY()));
+            onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
         }
         
         
@@ -135,29 +145,34 @@ public class FXMLPaintController implements Initializable {
     }
     
     private void onScroll(double wheelDelta, Point2D mousePoint){
-        /*
+        
         double zoomIntensity = 0.02;
         double scaleValue = 0.7;
-        final double zoomFactor = Math.exp(wheelDelta * zoomIntensity);
+        final double zoomFactor = wheelDelta > 0 ? 1.2 : 1/1.2;
         
         Bounds groupBounds = group.getLayoutBounds();
-        final Bounds viewportBounds = scrollPane.getViewportBounds();
-        double valX = scrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
-        double valY = scrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
-        scaleValue = scaleValue * zoomFactor;
-        updateScale(scaleValue);
-        scrollPane.layout();
-        Point2D posInZoom = target.parentToLocal(group.parentToLocal(mousePoint));
-        Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoom.multiply(zoomFactor - 1));
+        final Bounds viewportBounds = canvasScrollPane.getViewportBounds();
+        double valX = canvasScrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
+        double valY = canvasScrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
+        
+        Point2D posInZoom = canvasScrollPane.parentToLocal(group.parentToLocal(mousePoint));
+        Point2D adjustment = canvasScrollPane.getLocalToParentTransform().deltaTransform(posInZoom.multiply(zoomFactor - 1));
+        
+        //scaleValue = scaleValue * zoomFactor;
+        //updateScale(zoomFactor*canvasScrollPane);
+        
+        canvasScrollPane.setScaleX(zoomFactor*canvasScrollPane.getScaleX());
+        canvasScrollPane.setScaleY(zoomFactor*canvasScrollPane.getScaleY());
+        canvasScrollPane.layout();
         
         groupBounds = group.getLayoutBounds();
-        scrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
-        scrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
+        canvasScrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
+        canvasScrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
     } 
     private void updateScale(double scaleValue) {
-        target.setScaleX(scaleValue);
-        target.setScaleY(scaleValue);
-        */
+        canvasScrollPane.setScaleX(scaleValue);
+        canvasScrollPane.setScaleY(scaleValue);
+        
     }
     /**
     * FMXL Function to close application from File-&gt;Exit.
@@ -328,6 +343,16 @@ public class FXMLPaintController implements Initializable {
                 
                 redoHistory.push(new Rectangle(temp.getX(), temp.getY(), temp.getWidth(), temp.getHeight()));
             }
+            /*
+            else if(removedShape.getClass() == Path.class){
+                Path temp = (Path) removedShape;
+                temp.setFill(gcImage.getFill());
+                temp.setStroke(gcImage.getStroke());
+                temp.setStrokeWidth(gcImage.getLineWidth());
+                
+                redoHistory.push(path);
+            }
+            */
             else if(removedShape.getClass() == Circle.class){
                 Circle temp = (Circle) removedShape;
                 temp.setFill(gcImage.getFill());
@@ -465,7 +490,8 @@ public class FXMLPaintController implements Initializable {
             gcImage.setLineWidth(slider.getValue());
         
             gcImage.beginPath();
-            gcImage.lineTo(event.getX(),event.getY()); 
+            gcImage.lineTo(event.getX(),event.getY());
+            //path.getElements().add(new LineTo(event.getX(), event.getY()));
         }
         else if(lineButton.isSelected()){
             gcImage.setStroke(strokeColorPicker.getValue());
@@ -529,6 +555,7 @@ public class FXMLPaintController implements Initializable {
     private void setOnMouseDragged(MouseEvent event){
         if(drawButton.isSelected()){
             gcImage.lineTo(event.getX(), event.getY());
+            //path.getElements().add(new LineTo(event.getX(), event.getY()));
             gcImage.stroke();
         }
     }
@@ -540,9 +567,12 @@ public class FXMLPaintController implements Initializable {
     private void setOnMouseReleased(MouseEvent event){
         if(drawButton.isSelected()){
             gcImage.lineTo(event.getX(), event.getY());
+            //path.getElements().add(new LineTo(event.getX(), event.getY()));
             gcImage.stroke();
             
             gcImage.closePath();
+            //undoHistory.push(path);
+            //undoHistory.push(new Line(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY()));
         }
         else if(lineButton.isSelected()){
             line.setEndX(event.getX());
