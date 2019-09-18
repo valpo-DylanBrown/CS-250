@@ -91,6 +91,8 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton ovalButton;
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton textButton;
+    @FXML private ToggleButton zoomInButton;
+    @FXML private ToggleButton zoomOutButton;
     
     @FXML private ToggleButton eyedropperButton;
     @FXML private Button undoButton;
@@ -98,7 +100,9 @@ public class FXMLPaintController implements Initializable {
     @FXML private ColorPicker fillColorPicker;
     @FXML private ColorPicker strokeColorPicker;
     @FXML private Group group;
-   
+    
+
+    
     @FXML public Canvas imageCanvas;
     private GraphicsContext gcImage;
     
@@ -123,6 +127,7 @@ public class FXMLPaintController implements Initializable {
     Stack<Shape> undoHistory = new Stack();
     Stack<Shape> redoHistory = new Stack();
     
+    
     //Stage stage = (Stage) borderPane.getScene().getWindow();
     
     /*
@@ -141,17 +146,16 @@ public class FXMLPaintController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
+        //stage = (Stage) borderPane.getScene().getWindow();
     }
     
     @FXML
-    private void handleZoom(ScrollEvent e){
-        if(e.isShortcutDown()){
-            //e.consume();
-            //onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
-        }
-        
-        
-                
+    private void handleZoomInMenu(){
+        zoomInButton.fire();           
+    }
+    @FXML
+    private void handleZoomOutMenu(){
+        zoomOutButton.fire();           
     }
      /*
     private void onScroll(double wheelDelta, Point2D mousePoint){
@@ -213,7 +217,7 @@ public class FXMLPaintController implements Initializable {
         if(openedFile!=null){
             loadFile(openedFile);
         } 
-        hasBeenModified = true;
+        //hasBeenModified = true;
     }
     /**
      * FXML Function from File-&gt;Save As.
@@ -498,19 +502,28 @@ public class FXMLPaintController implements Initializable {
         xScale *= 1.05;
         yScale *= 1.05;
         
-        WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+        /*WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         imageCanvas.snapshot(params, writableImage);
+        */
         
         stackPane.getTransforms().add(scale);
+        
+        
         if(imageCanvas.getWidth()*xScale > canvasScrollPane.getWidth() || imageCanvas.getHeight()*yScale > canvasScrollPane.getHeight()){
-            stackPane.setMinWidth(imageCanvas.getWidth()*xScale + canvasScrollPane.getWidth());
-            stackPane.setMinHeight(imageCanvas.getHeight()*yScale + canvasScrollPane.getHeight());
+            
+            stackPane.setMinWidth(imageCanvas.getWidth()*xScale);
+            stackPane.setMinHeight(imageCanvas.getHeight()*yScale );
+            //+ canvasScrollPane.getWidth() + canvasScrollPane.getHeight()
         }else{
-            //stackPane.setMinWidth(stage.getWidth());
-            //stackPane.setMinHeight(stage.getHeight());
+            stackPane.setMinWidth(borderPane.getWidth());
+            stackPane.setMinHeight(borderPane.getHeight());
         } 
+        
+        
+        
+        
     }
     @FXML
     private void handleZoomOutButton(){
@@ -519,7 +532,16 @@ public class FXMLPaintController implements Initializable {
         xScale *= 0.95;
         yScale *= 0.95;
         
-        stackPane.getTransforms().add(scale);
+        stackPane.getTransforms().add(scale);        
+        if(imageCanvas.getWidth()*xScale > canvasScrollPane.getWidth() || imageCanvas.getHeight()*yScale > canvasScrollPane.getHeight()){
+            stackPane.setMinWidth(imageCanvas.getWidth()*xScale);
+            stackPane.setMinHeight(imageCanvas.getHeight()*yScale );
+        }else{
+            //stackPane.setMinWidth(borderPane.getWidth());
+            //stackPane.setMinHeight(borderPane.getHeight());
+        }
+        canvasScrollPane.setHvalue(canvasScrollPane.getHmin());
+        canvasScrollPane.setVvalue(canvasScrollPane.getVmin());
     }
     /** 
      * Will JavaDoc later.
@@ -733,6 +755,7 @@ public class FXMLPaintController implements Initializable {
             //System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
             imageCanvas.setWidth(image.getWidth());
             imageCanvas.setHeight(image.getHeight());
+            stackPane.setPrefSize(imageCanvas.getWidth(), imageCanvas.getHeight());
             //System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
             gcImage.drawImage(image,0,0);
             

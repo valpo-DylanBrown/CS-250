@@ -76,8 +76,14 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
-#zoomButton {          
-    -fx-background-image: url("zoom.png");
+#zoomInButton {          
+    -fx-background-image: url("zoomIn.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#zoomOutButton {          
+    -fx-background-image: url("zoomOut.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   

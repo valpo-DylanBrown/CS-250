@@ -16,6 +16,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -23,7 +24,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" onScroll="#handleZoom" >
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" >
     <top>
         <VBox>
             <children>
@@ -47,6 +48,8 @@
                                 <Menu text="_View" mnemonicParsing="true">
                                     <items>
                                         <MenuItem onAction="#handleResizeCanvas" text="Resize" />
+                                        <MenuItem onAction="#handleZoomInMenu" text="Zoom In" mnemonicParsing="false" accelerator="Shortcut+="/>
+                                        <MenuItem onAction="#handleZoomOutMenu" text="Zoom Out" mnemonicParsing="false" accelerator="Shortcut+-" />
                                     </items>
                                 </Menu>
                                 <Menu text="_Help" mnemonicParsing="true">
@@ -172,22 +175,21 @@
         </ScrollPane>
     </left>
     <center>
-        
+     
         <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane">
             <content>
+                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" >    
                 <StackPane id="stackPane" fx:id="stackPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <children>
-                        <Pane fx:id="canvasPane">
-                            <children>
-                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" >
+                        
+                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" >
                         </Canvas>
                             </children>
-                        </Pane>
-                    </children>
+                        
                 </StackPane>
+                </AnchorPane>      
             </content>
         </ScrollPane>
-
     </center>
     <stylesheets>
         <URL value="@paint.css" />
