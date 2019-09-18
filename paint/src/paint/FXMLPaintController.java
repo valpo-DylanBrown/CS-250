@@ -5,6 +5,7 @@ package paint;
     * Scroll canvas is gone, jave a big scroll above border and use that one
     * Figure out undo/redo on path element
         * if in a pitch, use a line for undo and it will do the job decently for now
+    * Cancel the above statement, use a image undo/redo stack
 */
 //clean this up possibly/ask if this is good/bad practice
 import java.awt.Desktop;
@@ -57,6 +58,8 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
@@ -76,6 +79,7 @@ public class FXMLPaintController implements Initializable {
 
     @FXML public BorderPane borderPane;
     @FXML public ScrollPane canvasScrollPane;
+    @FXML public StackPane stackPane;
     @FXML private Slider slider;
     
     @FXML private ToggleButton drawButton;
@@ -87,7 +91,7 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton ovalButton;
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton textButton;
-    @FXML private ToggleButton zoomButton;
+    
     @FXML private ToggleButton eyedropperButton;
     @FXML private Button undoButton;
     @FXML private Button redoButton;
@@ -103,6 +107,9 @@ public class FXMLPaintController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     File file;
     
+    private double xScale = 1.0;
+    private double yScale = 1.0;
+    
     private boolean hasBeenModified = false;
     
     Line line = new Line();
@@ -115,6 +122,8 @@ public class FXMLPaintController implements Initializable {
     
     Stack<Shape> undoHistory = new Stack();
     Stack<Shape> redoHistory = new Stack();
+    
+    //Stage stage = (Stage) borderPane.getScene().getWindow();
     
     /*
     Region target = canvasScrollPane;
@@ -133,47 +142,50 @@ public class FXMLPaintController implements Initializable {
     public void initialize(URL location, ResourceBundle resources){
         gcImage = imageCanvas.getGraphicsContext2D();
     }
+    
     @FXML
     private void handleZoom(ScrollEvent e){
         if(e.isShortcutDown()){
-            e.consume();
-            onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
+            //e.consume();
+            //onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
         }
         
         
                 
     }
-    
+     /*
     private void onScroll(double wheelDelta, Point2D mousePoint){
-        
+       
         double zoomIntensity = 0.02;
         double scaleValue = 0.7;
         final double zoomFactor = wheelDelta > 0 ? 1.2 : 1/1.2;
         
         Bounds groupBounds = group.getLayoutBounds();
-        final Bounds viewportBounds = canvasScrollPane.getViewportBounds();
-        double valX = canvasScrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
-        double valY = canvasScrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
+        final Bounds viewportBounds = toolbarScrollPane.getViewportBounds();
+        double valX = toolbarScrollPane.getHvalue() * (groupBounds.getWidth() - viewportBounds.getWidth());
+        double valY = toolbarScrollPane.getVvalue() * (groupBounds.getHeight() - viewportBounds.getHeight());
         
-        Point2D posInZoom = canvasScrollPane.parentToLocal(group.parentToLocal(mousePoint));
-        Point2D adjustment = canvasScrollPane.getLocalToParentTransform().deltaTransform(posInZoom.multiply(zoomFactor - 1));
+        Point2D posInZoom = toolbarScrollPane.parentToLocal(group.parentToLocal(mousePoint));
+        Point2D adjustment = toolbarScrollPane.getLocalToParentTransform().deltaTransform(posInZoom.multiply(zoomFactor - 1));
         
         //scaleValue = scaleValue * zoomFactor;
         //updateScale(zoomFactor*canvasScrollPane);
         
-        canvasScrollPane.setScaleX(zoomFactor*canvasScrollPane.getScaleX());
-        canvasScrollPane.setScaleY(zoomFactor*canvasScrollPane.getScaleY());
-        canvasScrollPane.layout();
+        toolbarScrollPane.setScaleX(zoomFactor*toolbarScrollPane.getScaleX());
+        toolbarScrollPane.setScaleY(zoomFactor*toolbarScrollPane.getScaleY());
+        toolbarScrollPane.layout();
         
         groupBounds = group.getLayoutBounds();
-        canvasScrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
-        canvasScrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
-    } 
+        toolbarScrollPane.setHvalue((valX + adjustment.getX()) / (groupBounds.getWidth() - viewportBounds.getWidth()));
+        toolbarScrollPane.setVvalue((valY + adjustment.getY()) / (groupBounds.getHeight() - viewportBounds.getHeight()));
+    
+        } 
     private void updateScale(double scaleValue) {
         canvasScrollPane.setScaleX(scaleValue);
         canvasScrollPane.setScaleY(scaleValue);
         
     }
+        */
     /**
     * FMXL Function to close application from File-&gt;Exit.
     * If a save location is set, this function asks you if you would like to save
@@ -479,6 +491,36 @@ public class FXMLPaintController implements Initializable {
         strokeColorPicker.setValue(tempColor);
         tempColor = null; //destroy tempColor to save memory
     }
+    @FXML
+    private void handleZoomInButton(){
+         Scale scale = new Scale(1.07, 1.07);
+        
+        xScale *= 1.05;
+        yScale *= 1.05;
+        
+        WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        imageCanvas.snapshot(params, writableImage);
+        
+        stackPane.getTransforms().add(scale);
+        if(imageCanvas.getWidth()*xScale > canvasScrollPane.getWidth() || imageCanvas.getHeight()*yScale > canvasScrollPane.getHeight()){
+            stackPane.setMinWidth(imageCanvas.getWidth()*xScale + canvasScrollPane.getWidth());
+            stackPane.setMinHeight(imageCanvas.getHeight()*yScale + canvasScrollPane.getHeight());
+        }else{
+            //stackPane.setMinWidth(stage.getWidth());
+            //stackPane.setMinHeight(stage.getHeight());
+        } 
+    }
+    @FXML
+    private void handleZoomOutButton(){
+        Scale scale = new Scale(0.93, 0.93);
+        
+        xScale *= 0.95;
+        yScale *= 0.95;
+        
+        stackPane.getTransforms().add(scale);
+    }
     /** 
      * Will JavaDoc later.
      * @param event to do
@@ -542,9 +584,7 @@ public class FXMLPaintController implements Initializable {
         else if(textButton.isSelected()){
             
         }
-        else if(zoomButton.isSelected()){
-            
-        }
+        
         else{}
     }
     /**
@@ -653,9 +693,7 @@ public class FXMLPaintController implements Initializable {
         else if(textButton.isSelected()){
             
         }
-        else if(zoomButton.isSelected()){
-            
-        }
+        
         else if(eyedropperButton.isSelected()){
             int xPosistion = new Double(event.getX()).intValue();
             int yPosistion = new Double(event.getY()).intValue();

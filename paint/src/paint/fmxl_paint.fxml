@@ -23,7 +23,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" onScroll="#handleZoom">
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" onScroll="#handleZoom" >
     <top>
         <VBox>
             <children>
@@ -99,17 +99,17 @@
     <left>
         <ScrollPane id="toolbarScollPane" fx:id="toolbarScollPane">
             <content>
-               <VBox id="toolBox" fx:id="toolBox" alignment="CENTER"  spacing="10.0">
+               <VBox id="toolBox" fx:id="toolBox" alignment="CENTER"  spacing="10.0" prefWidth="70.0">
                     
                    <fx:define>
                         <ToggleGroup fx:id="toolGroup" />
                     </fx:define>
                     
-                    <Pane VBox.vgrow="ALWAYS" prefHeight="80" />
+                    <Pane VBox.vgrow="ALWAYS" prefHeight="40" />
                     
                     <ToggleButton fx:id="drawButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
                         <tooltip>
-                            <Tooltip text="Draw"/>
+                            <Tooltip text="Pencil"/>
                         </tooltip>
                     </ToggleButton>
                     <ToggleButton fx:id="lineButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
@@ -152,9 +152,14 @@
                             <Tooltip text="Text"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="zoomButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup" onAction="#handleZoomInButton">
                         <tooltip>
-                            <Tooltip text="Zoom"/>
+                            <Tooltip text="Zoom In"/>
+                        </tooltip>
+                    </ToggleButton>
+                    <ToggleButton fx:id="zoomOutButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup" onAction="#handleZoomOutButton">
+                        <tooltip>
+                            <Tooltip text="Zoom Out"/>
                         </tooltip>
                     </ToggleButton>
                     <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
@@ -167,20 +172,22 @@
         </ScrollPane>
     </left>
     <center>
-        <Group fx:id="group">
-            <children>
+        
         <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane">
             <content>
                 <StackPane id="stackPane" fx:id="stackPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                     <children>
+                        <Pane fx:id="canvasPane">
+                            <children>
                         <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" >
                         </Canvas>
+                            </children>
+                        </Pane>
                     </children>
                 </StackPane>
             </content>
         </ScrollPane>
-        </children>
-        </Group>
+
     </center>
     <stylesheets>
         <URL value="@paint.css" />
