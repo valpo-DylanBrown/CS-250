@@ -43,6 +43,8 @@
                                 </Menu>
                                 <Menu text="_Edit" mnemonicParsing="true">
                                     <items>
+                                        <MenuItem onAction="#handleUndoMenuItem" text="Undo" mnemonicParsing="false" accelerator="Shortcut+z"/>
+                                        <MenuItem onAction="#handleRedoMenuItem" text="Redo" mnemonicParsing="false" accelerator="Shortcut+y" />
                                     </items>
                                 </Menu>
                                 <Menu text="_View" mnemonicParsing="true">
@@ -63,7 +65,7 @@
                             </menus> 
                         </MenuBar>
                     <Pane HBox.hgrow="ALWAYS" />
-                    <Button id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefWidth="27.0" text="X" />
+                    <Button id="closeButton" fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefWidth="27.0" text="X" />
                     </children>
                 </HBox>
                 <ToolBar>
