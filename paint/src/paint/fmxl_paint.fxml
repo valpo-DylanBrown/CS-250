@@ -34,7 +34,7 @@
                             <menus>
                                 <Menu text="_File" mnemonicParsing="true">
                                     <items>
-                                        <MenuItem onAction="#openNewFile" text="Open" mnemonicParsing="false" accelerator="Shortcut+O"/>
+                                        <MenuItem onAction="#handleOpen" text="Open" mnemonicParsing="false" accelerator="Shortcut+O"/>
                                         <MenuItem onAction="#handleSave" text="Save" mnemonicParsing="false" accelerator="Shortcut+S"/>
                                         <MenuItem onAction="#handleSaveAs" text="Save As" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
                                         <SeparatorMenuItem />
@@ -71,7 +71,17 @@
                 <ToolBar>
                     <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButton" text="UNDO" />
                     <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" onAction="#handleRedoButton" text="REDO" />
-
+                    
+                    <Button fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomInButton">
+                        <tooltip>
+                            <Tooltip text="Zoom In"/>
+                        </tooltip>
+                    </Button>
+                    <Button fx:id="zoomOutButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomOutButton">
+                        <tooltip>
+                            <Tooltip text="Zoom Out"/>
+                        </tooltip>
+                    </Button>
                     <Pane HBox.hgrow="ALWAYS" />
                     <VBox alignment="CENTER">
                         <Label text="Width" alignment="CENTER" />
@@ -157,16 +167,6 @@
                             <Tooltip text="Text"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup" onAction="#handleZoomInButton">
-                        <tooltip>
-                            <Tooltip text="Zoom In"/>
-                        </tooltip>
-                    </ToggleButton>
-                    <ToggleButton fx:id="zoomOutButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup" onAction="#handleZoomOutButton">
-                        <tooltip>
-                            <Tooltip text="Zoom Out"/>
-                        </tooltip>
-                    </ToggleButton>
                     <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Eyedropper"/>
@@ -178,18 +178,20 @@
     </left>
     <center>
      
-        <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane">
-            <content>
-                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" >    
-                <StackPane id="stackPane" fx:id="stackPane" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                    <children>
-                        
-                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" >
-                        </Canvas>
+        <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane" hbarPolicy="always" vbarPolicy="always">
+            <content> 
+                <Group fx:id="scrollPaneGroup">
+                        <Pane fx:id="staticPane" >
+                            <children>
+                                <Group fx:id="canvasGroup">
+                                    <children>
+                                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" >
+                                    </Canvas>
+                                    </children>
+                                </Group>
                             </children>
-                        
-                </StackPane>
-                </AnchorPane>      
+                        </Pane> 
+                </Group>    
             </content>
         </ScrollPane>
     </center>

@@ -40,6 +40,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -50,6 +51,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -61,6 +63,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
 
 /**
  * <p>
@@ -79,7 +82,8 @@ public class FXMLPaintController implements Initializable {
 
     @FXML public BorderPane borderPane;
     @FXML public ScrollPane canvasScrollPane;
-    @FXML public StackPane stackPane;
+    //@FXML public StackPane stackPane;
+    @FXML private  Pane staticPane;
     @FXML private Slider slider;
     
     @FXML private ToggleButton drawButton;
@@ -91,8 +95,8 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton ovalButton;
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton textButton;
-    @FXML private ToggleButton zoomInButton;
-    @FXML private ToggleButton zoomOutButton;
+    @FXML private Button zoomInButton;
+    @FXML private Button zoomOutButton;
     
     @FXML private Button closeButton;
     @FXML private ToggleButton eyedropperButton;
@@ -112,8 +116,8 @@ public class FXMLPaintController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     File file;
     
-    private double xScale = 1.0;
-    private double yScale = 1.0;
+    private double currentZoom = 1;
+    private Scale zoomScale;
     
     private boolean hasBeenModified = false;
     
@@ -128,13 +132,6 @@ public class FXMLPaintController implements Initializable {
     Stack<Image> undoHistory = new Stack();
     Stack<Image> redoHistory = new Stack();
     
-    
-    //Stage stage = (Stage) borderPane.getScene().getWindow();
-    
-    /*
-    Region target = canvasScrollPane;
-    Group group = new Group(target);
-    */
     
     /**
      * This function currently sets things that need to be controlled after the FXML has been loaded into the program.
@@ -179,12 +176,8 @@ public class FXMLPaintController implements Initializable {
     * @see #loadFile(File)
      */
     @FXML
-    private void openNewFile(){
-        configureFileChooser(fileChooser, "Please Select an Image:");
-        openedFile = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
-        if(openedFile!=null){
-            loadFile(openedFile);
-        } 
+    private void handleOpen(){
+        openNewFile();
     }
     /**
      * FXML Function from File-&gt;Save As.
@@ -193,16 +186,11 @@ public class FXMLPaintController implements Initializable {
      * then saves the file if one has been chosen. 
      * @see #configureFileChooser(FileChooser,String)
      * @see #setImagePath()
-     * @see #saveImage(File)
+     * @see #imageSave(File)
      */
     @FXML
     private void handleSaveAs(){
-        configureFileChooser(fileChooser, "Save File As: ", true);
-        setImagePath();
-        if(file != null){
-            saveImage(file);
-            hasBeenModified = false;
-        }
+        saveImageAs();
     }
     /**
      * FXML Function from File-&gt;Save.
@@ -212,74 +200,19 @@ public class FXMLPaintController implements Initializable {
      * It then shows the save dialog and save it to the path chosen.
      * @see #configureFileChooser(FileChooser,String)
      * @see #setImagePath()
-     * @see #saveImage(File)
+     * @see #imageSave(File)
      */
     @FXML
     private void handleSave(){
-        configureFileChooser(fileChooser, "Save File: ", true);
-        if(file != null){
-            saveImage(file);
-        }
-        else{
-            setImagePath();
-            saveImage(file);
-        }
-        hasBeenModified = false;
+        saveImage();
     }
     
     //this is bad and needs to be fully redone
     @FXML
     private void handleResizeCanvas(){
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Resize Canvas");
-
-        // Set the button types.
-        ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField width = new TextField();
-        width.setPromptText("Width:");
-        TextField height = new TextField();
-        height.setPromptText("Height");
-
-        gridPane.add(new Label("Width:"), 0, 0);
-        gridPane.add(width, 1, 0);
-        gridPane.add(new Label("Height"), 2, 0);
-        gridPane.add(height, 3, 0);
-
-        dialog.getDialogPane().setContent(gridPane);
-
-        // Request focus on the username field by default.
-        Platform.runLater(() -> width.requestFocus());
-        /*double dw = Double.parseDouble(width.toString());
-        double dh = Double.parseDouble(height.toString());
-        imageCanvas.setWidth(dw);
-        imageCanvas.setHeight(dh);*/
         
-        dialog.showAndWait();
-        
-        
-        
-        System.out.println(width.getText());
-        System.out.println(height.getText());
-        double dw = Double.parseDouble(width.getText());
-        double dh = Double.parseDouble(height.getText());
-        //figure out scaling
-        /*
-        Image image = new Image(imageFile,dw,dh,false,true);
-            //System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
-        imageCanvas.setWidth(image.getWidth());
-        imageCanvas.setHeight(image.getHeight());
-        System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
-        gcImage.drawImage(image,0,0);
-        //Optional<Pair<String, String>> result = dialog.showAndWait();
-        */
-        }
+        createDialog();
+    }
     /**
      * FXML Function from Help-&gt;About.
      * This function sends an information dialog to the user. The dialog
@@ -287,12 +220,7 @@ public class FXMLPaintController implements Initializable {
      */
     @FXML
     private void handleAbout(){
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("About");
-        alert.setHeaderText("About PAIN(T) by Dylan Brown");
-        alert.setContentText("This program attempts (poorly) to "
-                + "recreate MS Paint.\nPray for me");
-        alert.showAndWait();
+        createAboutDialog();
     }
     /**
      * FXML from Help-&gt;Release Notes.
@@ -302,8 +230,7 @@ public class FXMLPaintController implements Initializable {
      */
     @FXML
     private void handleReleaseNotes() throws IOException{
-        File releaseNotes = new File("releasenotes.txt");
-        Desktop.getDesktop().open(releaseNotes);
+        openReleaseNotes();
     }
     @FXML 
     private void handleUndoMenuItem(){
@@ -365,47 +292,35 @@ public class FXMLPaintController implements Initializable {
     }
     @FXML
     private void handleZoomInButton(){
-         Scale scale = new Scale(1.07, 1.07);
+        if(openedFile!=null){
+            zoomInButton.setDisable(false);
+            zoomOutButton.setDisable(false);
+            staticPane.getTransforms().remove(zoomScale);
+            currentZoom += 0.05;
+            zoomScale = new Scale(currentZoom, currentZoom,0,0);
         
-        xScale *= 1.05;
-        yScale *= 1.05;
+            Scene scene = borderPane.getScene();
         
-        /*WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-        imageCanvas.snapshot(params, writableImage);
-        */
-        
-        stackPane.getTransforms().add(scale);
-        
-        
-        if(imageCanvas.getWidth()*xScale > canvasScrollPane.getWidth() || imageCanvas.getHeight()*yScale > canvasScrollPane.getHeight()){
+            staticPane.getTransforms().add(zoomScale);
             
-            stackPane.setMinWidth(imageCanvas.getWidth()*xScale);
-            stackPane.setMinHeight(imageCanvas.getHeight()*yScale );
-            //+ canvasScrollPane.getWidth() + canvasScrollPane.getHeight()
-        }else{
-            stackPane.setMinWidth(borderPane.getWidth());
-            stackPane.setMinHeight(borderPane.getHeight());
-        }   
+        }
+        else{
+            zoomOutButton.setDisable(true);
+            zoomInButton.setDisable(true);
+        }
+        
     }
     @FXML
     private void handleZoomOutButton(){
-        Scale scale = new Scale(0.93, 0.93);
+        staticPane.getTransforms().remove(zoomScale);
+        currentZoom -= 0.05;
+        zoomScale = new Scale(currentZoom, currentZoom,0,0);
         
-        xScale *= 0.95;
-        yScale *= 0.95;
+        staticPane.getTransforms().add(zoomScale);
         
-        stackPane.getTransforms().add(scale);        
-        if(imageCanvas.getWidth()*xScale > canvasScrollPane.getWidth() || imageCanvas.getHeight()*yScale > canvasScrollPane.getHeight()){
-            stackPane.setMinWidth(imageCanvas.getWidth()*xScale);
-            stackPane.setMinHeight(imageCanvas.getHeight()*yScale );
-        }else{
-            //stackPane.setMinWidth(borderPane.getWidth());
-            //stackPane.setMinHeight(borderPane.getHeight());
+        if(currentZoom <= 0.05){
+            zoomOutButton.setDisable(true);
         }
-        canvasScrollPane.setHvalue(canvasScrollPane.getHmin());
-        canvasScrollPane.setVvalue(canvasScrollPane.getVmin());
     }
     /** 
      * Will JavaDoc later.
@@ -620,7 +535,7 @@ public class FXMLPaintController implements Initializable {
             //System.out.println("height:"+image.getHeight()+"\nWidth:"+image.getWidth());
             imageCanvas.setWidth(image.getWidth());
             imageCanvas.setHeight(image.getHeight());
-            stackPane.setPrefSize(imageCanvas.getWidth(), imageCanvas.getHeight());
+            staticPane.setPrefSize(imageCanvas.getWidth(), imageCanvas.getHeight());
             //System.out.println("height:"+imageCanvas.getHeight()+"\nWidth:"+imageCanvas.getWidth());
             gcImage.drawImage(image,0,0);
             undoHistory.clear();
@@ -701,7 +616,7 @@ public class FXMLPaintController implements Initializable {
      * 
      * 
      */
-    private void saveImage(File file){
+    private void imageSave(File file){
         try {
             if(file!=null){
                 WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
@@ -764,11 +679,11 @@ public class FXMLPaintController implements Initializable {
             ButtonType yesButton, ButtonType noButton, ButtonType cancelButton ){
             if(result.get()==yesButton){
                 if(file != null){
-                    saveImage(file);
+                    imageSave(file);
                 }
                 else{
                     setImagePath();
-                    saveImage(file);
+                    imageSave(file);
                 }    
             } 
             else if(result.get()==noButton){
@@ -776,5 +691,101 @@ public class FXMLPaintController implements Initializable {
             }
             else if(result.get() == cancelButton){
             }
+    }
+    private void openNewFile(){
+        configureFileChooser(fileChooser, "Please Select an Image:");
+        openedFile = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
+        if(openedFile!=null){
+            loadFile(openedFile);
+        }
+    }
+    private void saveImageAs(){
+        configureFileChooser(fileChooser, "Save File As: ", true);
+        setImagePath();
+        if(file != null){
+            imageSave(file);
+            hasBeenModified = false;
+        }
+    }
+    private void saveImage(){
+        configureFileChooser(fileChooser, "Save File: ", true);
+        if(file != null){
+            imageSave(file);
+        }
+        else{
+            setImagePath();
+            imageSave(file);
+        }
+        hasBeenModified = false;
+    }
+    
+    private void createDialog(){
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Resize Canvas");
+
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField width = new TextField();
+        width.setPromptText("Width:");
+        TextField height = new TextField();
+        height.setPromptText("Height");
+
+        gridPane.add(new Label("Width:"), 0, 0);
+        gridPane.add(width, 1, 0);
+        gridPane.add(new Label("Height"), 2, 0);
+        gridPane.add(height, 3, 0);
+        gridPane.add(new Label("Resize the canvas to your desired pixels\n"
+                + "WARNING: This can not be undone."),0,1);
+
+        dialog.getDialogPane().setContent(gridPane);
+        // Request focus on the username field by default.
+        Platform.runLater(() -> width.requestFocus());
+        
+        dialog.showAndWait();
+        
+        
+        WritableImage beforeResizeImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+        imageCanvas.snapshot(null, beforeResizeImage);
+        PixelReader pixelReader = beforeResizeImage.getPixelReader();
+        if(pixelReader == null){
+            return;
+        }
+        int beforeResizeWidth = (int)imageCanvas.getWidth();
+        int beforeResizeHeight = (int)imageCanvas.getHeight();
+        int afterResizeWidth = Integer.parseInt(width.getText());
+        int afterResizeHeight = Integer.parseInt(height.getText());
+        
+        WritableImage afterResizeImage = new WritableImage(afterResizeWidth,afterResizeHeight);
+        PixelWriter pixelWriter = afterResizeImage.getPixelWriter();
+        
+        for(int resizeY = 0; resizeY < afterResizeHeight; resizeY++) {
+            int previousY = (int)Math.round((double)resizeY / afterResizeHeight * beforeResizeHeight);
+            for(int resizeX = 0; resizeX < afterResizeWidth; resizeX++) {
+                int previousX = (int)Math.round((double)resizeX / afterResizeWidth * beforeResizeWidth);
+                pixelWriter.setArgb(resizeX, resizeY, pixelReader.getArgb(previousX, previousY));
+            }
+        }
+        imageCanvas.setWidth(afterResizeImage.getWidth());
+        imageCanvas.setHeight(afterResizeImage.getHeight());
+        gcImage.drawImage(afterResizeImage,0,0);        
+    }
+    private void createAboutDialog(){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("About");
+        alert.setHeaderText("About PAIN(T) by Dylan Brown");
+        alert.setContentText("This program attempts (poorly) to "
+                + "recreate MS Paint.\nPray for me");
+        alert.showAndWait();
+    }
+    private void openReleaseNotes() throws IOException{
+        File releaseNotes = new File("releasenotes.txt");
+        Desktop.getDesktop().open(releaseNotes);
     }
 }  
