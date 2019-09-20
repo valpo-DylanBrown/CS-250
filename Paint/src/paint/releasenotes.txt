@@ -1,5 +1,32 @@
 RELEASE NOTES FOR PAINT BY DYLAN BROWN
 
+Version 3.0									09/20/2019
+
+New Features:
+	- Pencil tool added
+	- Rectangle tool added
+	- Square tool added
+	- Circle tool added
+	- Ellipse tool added
+	- Eyedropper tool added
+	- Undo now supported
+	- Redo now supported
+	- Zoom in and zoom out now supported
+	- Zoom to [25, 50, 75, 100, 200, 250, 300]% now supported
+	- Fill color added
+	- Ability to swap fill and stroke supported
+	- Canvas can now be resized (pixel, pixel)
+	- Added icons for new buttons
+	- Added tooltips for all tools
+	- Added keyboard shortcuts
+	- Added support for BMP file type
+Known/Possible Issues:
+	- Image quality worsens as images are redone
+Upcoming: 
+	- Clean code and split into different files
+	- Zoom fit to screen
+	- Next requirements (See blackboard)
+
 Version 2.0									09/13/2019
 
 New Features:
