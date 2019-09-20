@@ -52,6 +52,14 @@
                                     <items>
                                         <MenuItem onAction="#handleZoomInMenu" text="Zoom In" mnemonicParsing="false" accelerator="Shortcut+="/>
                                         <MenuItem onAction="#handleZoomOutMenu" text="Zoom Out" mnemonicParsing="false" accelerator="Shortcut+-" />
+                                        <SeparatorMenuItem />
+                                        <MenuItem onAction="#handleZoom25Menu" text="Zoom 25%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom50Menu" text="Zoom 50%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom75Menu" text="Zoom 75%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom100Menu" text="Zoom 100%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom200Menu" text="Zoom 200%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom250Menu" text="Zoom 250%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom300Menu" text="Zoom 250%" mnemonicParsing="false" />
                                     </items>
                                 </Menu>
                                 <Menu text="_Help" mnemonicParsing="true">
@@ -64,20 +72,21 @@
                                 </Menu>
                             </menus> 
                         </MenuBar>
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button id="closeButton" fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefWidth="27.0" text="X" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button id="closeButton" fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefWidth="27.0" text="X" />
                     </children>
                 </HBox>
                 <ToolBar>
-                    <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" onAction="#handleUndoButton" text="UNDO" />
-                    <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" onAction="#handleRedoButton" text="REDO" />
+                    <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleUndoButton" />
+                    <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleRedoButton" />
                     
-                    <Button fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomInButton">
+                    <Button fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomInButton" disable="true">
                         <tooltip>
                             <Tooltip text="Zoom In"/>
                         </tooltip>
                     </Button>
-                    <Button fx:id="zoomOutButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomOutButton">
+                    <Label fx:id="zoomLabel" text="100%"/>
+                    <Button fx:id="zoomOutButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomOutButton" disable = "true">
                         <tooltip>
                             <Tooltip text="Zoom Out"/>
                         </tooltip>
@@ -177,11 +186,10 @@
         </ScrollPane>
     </left>
     <center>
-     
-        <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane" hbarPolicy="always" vbarPolicy="always">
+        <ScrollPane id="canvasScrollPane" fx:id="canvasScrollPane" >
             <content> 
                 <Group fx:id="scrollPaneGroup">
-                        <Pane fx:id="staticPane" >
+                        <Pane fx:id="staticPane" id="staticPane">
                             <children>
                                 <Group fx:id="canvasGroup">
                                     <children>

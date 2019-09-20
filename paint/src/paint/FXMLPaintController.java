@@ -83,7 +83,7 @@ public class FXMLPaintController implements Initializable {
     @FXML public BorderPane borderPane;
     @FXML public ScrollPane canvasScrollPane;
     //@FXML public StackPane stackPane;
-    @FXML private  Pane staticPane;
+    @FXML private Pane staticPane;
     @FXML private Slider slider;
     
     @FXML private ToggleButton drawButton;
@@ -97,6 +97,7 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton textButton;
     @FXML private Button zoomInButton;
     @FXML private Button zoomOutButton;
+    @FXML private Label zoomLabel;
     @FXML private Button swapColors;
     
     @FXML private Button closeButton;
@@ -148,26 +149,99 @@ public class FXMLPaintController implements Initializable {
         //stage = (Stage) borderPane.getScene().getWindow();
     }
     
+    /**
+     * FXML Function to handle zoom in from the menu.
+     * This function strictly fires the zoom in button to complete the action.
+     * @see #zoomInButton()
+     */
     @FXML
     private void handleZoomInMenu(){
         zoomInButton.fire();           
     }
+    
+    /**
+     * FXML Function to handle zoom out from the menu.
+     * This function strictly fires the zoom out button to complete the action.
+     * @see #zoomOutButton()
+     */
     @FXML
     private void handleZoomOutMenu(){
         zoomOutButton.fire();           
     }
     
     /**
+     * FXML Function to set zoom to 25%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom25Menu(){
+        zoomToX(25);  
+    }
+    
+    /**
+     * FXML Function to set zoom to 50%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom50Menu(){
+        zoomToX(50);  
+    }
+    
+    /**
+     * FXML Function to set zoom to 75%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom75Menu(){
+        zoomToX(75);
+    }
+    
+    /**
+     * FXML Function to set zoom to 100%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom100Menu(){
+        zoomToX(100);  
+    }
+    
+    /**
+     * FXML Function to set zoom to 200%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom200Menu(){
+        zoomToX(200);  
+    }
+    
+    /**
+     * FXML Function to set zoom to 250%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom250Menu(){
+        zoomToX(250);  
+    }
+    
+    /**
+     * FXML Function to set zoom to 300%.
+     * @see #zoomToX()
+     */
+    @FXML
+    private void handleZoom300Menu(){
+        zoomToX(300);
+    }
+    
+    /**
     * FMXL Function to close application from File-&gt;Exit.
-    * If a save location is set, this function asks you if you would like to save
-    * before exiting. If yes, the closeStage() method is called. Otherwise, 
-    * the program exits.
-    * @see #closeStage()
+    * Strictly fires close button.
+    * @see #handleCloseButton() 
     */
     @FXML
     private void exitApplication(){
         closeButton.fire();
     }
+    
     /**
     * FXML Function from File-&gt;Open.
     * This function calls configureFileChooser() to configure the file chooser 
@@ -180,6 +254,7 @@ public class FXMLPaintController implements Initializable {
     private void handleOpen(){
         openNewFile();
     }
+    
     /**
      * FXML Function from File-&gt;Save As.
      * This function calls configureFileChooser() to configure the file chooser 
@@ -193,6 +268,7 @@ public class FXMLPaintController implements Initializable {
     private void handleSaveAs(){
         saveImageAs();
     }
+    
     /**
      * FXML Function from File-&gt;Save.
      * This function calls configureFileChooser() to configure the file chooser 
@@ -208,12 +284,15 @@ public class FXMLPaintController implements Initializable {
         saveImage();
     }
     
-    //this is bad and needs to be fully redone
+    /**
+     * FXML Function to resize canvas.
+     * @see #createDialog() 
+     */
     @FXML
-    private void handleResizeCanvas(){
-        
+    private void handleResizeCanvas(){ 
         createDialog();
     }
+    
     /**
      * FXML Function from Help-&gt;About.
      * This function sends an information dialog to the user. The dialog
@@ -223,24 +302,36 @@ public class FXMLPaintController implements Initializable {
     private void handleAbout(){
         createAboutDialog();
     }
+    
     /**
      * FXML from Help-&gt;Release Notes.
-     * This function opens the release notes for the user on their default .txt
-     * editor. 
-     * @throws IOException if file cannot be read.
+     * @see #openReleaseNotes()
+     * @throws IOException if openReleaseNotes throws an exception
      */
     @FXML
     private void handleReleaseNotes() throws IOException{
         openReleaseNotes();
     }
+    /**
+     * FXML Function to handle Edit-&gt;Undo
+     * @see #handleUndoButton()
+     */
     @FXML 
     private void handleUndoMenuItem(){
         undoButton.fire();
     }
+    /**
+     * FXML Function to handle Edit-&gt;Redo
+     * @see #handleRedoButton()
+     */
     @FXML 
     private void handleRedoMenuItem(){
         redoButton.fire();
     }
+    /**
+     * FXML Function to handle the undo button.
+     * @see #undoAction() 
+     */
     @FXML 
     private void handleUndoButton(){
         undoAction();
@@ -265,6 +356,7 @@ public class FXMLPaintController implements Initializable {
     private void handleSwapColorButton(){
         swapColors();
     }
+    
     @FXML
     private void handleZoomInButton(){
         zoomIn();
@@ -647,6 +739,8 @@ public class FXMLPaintController implements Initializable {
         if(openedFile!=null){
             loadFile(openedFile);
         }
+        zoomOutButton.setDisable(false);
+        zoomInButton.setDisable(false);
     }
     private void saveImageAs(){
         configureFileChooser(fileChooser, "Save File As: ", true);
@@ -690,8 +784,8 @@ public class FXMLPaintController implements Initializable {
         gridPane.add(width, 1, 0);
         gridPane.add(new Label("Height"), 2, 0);
         gridPane.add(height, 3, 0);
-        gridPane.add(new Label("Resize the canvas to your desired pixels\n"
-                + "WARNING: This can not be undone."),0,1);
+        gridPane.add(new Label("Resize the canvas to your desired pixels "
+                + "WARNING: This can not be undone."),4,1);
 
         dialog.getDialogPane().setContent(gridPane);
         // Request focus on the username field by default.
@@ -705,10 +799,18 @@ public class FXMLPaintController implements Initializable {
         if(pixelReader == null){
             return;
         }
+        
+        if(width.getText().isEmpty() || height.getText().isEmpty()){
+            return;
+        }
+        
         int beforeResizeWidth = (int)imageCanvas.getWidth();
         int beforeResizeHeight = (int)imageCanvas.getHeight();
         int afterResizeWidth = Integer.parseInt(width.getText());
         int afterResizeHeight = Integer.parseInt(height.getText());
+        
+        afterResizeWidth = Math.abs(afterResizeWidth);
+        afterResizeHeight = Math.abs(afterResizeHeight);
         
         WritableImage afterResizeImage = new WritableImage(afterResizeWidth,afterResizeHeight);
         PixelWriter pixelWriter = afterResizeImage.getPixelWriter();
@@ -781,18 +883,14 @@ public class FXMLPaintController implements Initializable {
         strokeColorPicker.setValue(tempColor);
         tempColor = null; //destroy tempColor to save memory
     }
-private void zoomIn(){
+    private void zoomIn(){
         if(openedFile!=null){
             zoomInButton.setDisable(false);
             zoomOutButton.setDisable(false);
             staticPane.getTransforms().remove(zoomScale);
             currentZoom += 0.05;
-            zoomScale = new Scale(currentZoom, currentZoom,0,0);
-
-            Scene scene = borderPane.getScene();
-
-            staticPane.getTransforms().add(zoomScale);
-
+            applyZoom(currentZoom);
+            zoomLabel.setText(Math.round(currentZoom*100) + "%");
          }
         else{
             zoomOutButton.setDisable(true);
@@ -802,12 +900,26 @@ private void zoomIn(){
     private void zoomOut(){
         staticPane.getTransforms().remove(zoomScale);
         currentZoom -= 0.05;
-        zoomScale = new Scale(currentZoom, currentZoom,0,0);
-        
-        staticPane.getTransforms().add(zoomScale);
+        applyZoom(currentZoom);
         
         if(currentZoom <= 0.05){
             zoomOutButton.setDisable(true);
         }
+        zoomLabel.setText(Math.round(currentZoom*100) + "%");
+    }
+    private void applyZoom(double zoom){
+        zoomScale = new Scale(zoom, zoom,0,0);
+
+        Scene scene = borderPane.getScene();
+
+        staticPane.getTransforms().add(zoomScale);
+    }
+    private void zoomToX(double zoom){
+        zoom/=100;
+        staticPane.getTransforms().remove(zoomScale);
+        currentZoom = zoom;
+        applyZoom(currentZoom);
+        zoomLabel.setText(Math.round(currentZoom*100) + "%");
+        
     }
 }  
