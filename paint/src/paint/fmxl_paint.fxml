@@ -97,7 +97,7 @@
                             </value>
                         </ColorPicker>
                     </VBox>
-                    <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#swapColors" prefWidth="35.0"  />
+                    <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#handleSwapColorButton" prefWidth="35.0"  />
                     <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Fill" alignment="CENTER" />
                         <ColorPicker id="fillColorPicker" fx:id="fillColorPicker">

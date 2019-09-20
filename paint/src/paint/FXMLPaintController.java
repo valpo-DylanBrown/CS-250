@@ -97,6 +97,7 @@ public class FXMLPaintController implements Initializable {
     @FXML private ToggleButton textButton;
     @FXML private Button zoomInButton;
     @FXML private Button zoomOutButton;
+    @FXML private Button swapColors;
     
     @FXML private Button closeButton;
     @FXML private ToggleButton eyedropperButton;
@@ -242,34 +243,11 @@ public class FXMLPaintController implements Initializable {
     }
     @FXML 
     private void handleUndoButton(){
-        if(!undoHistory.empty()){
-            //gcImage.clearRect(0,0,imageCanvas.getWidth(), imageCanvas.getHeight());
-            WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-            imageCanvas.snapshot(null, writableImage);
-            redoHistory.push(writableImage);
-            Image undoneImage = (Image) undoHistory.pop();
-            gcImage.drawImage(undoneImage,0,0);
-            hasBeenModified = true;
-        }
-        else{
-            System.out.println("nothing to undo");
-        }
+        undoAction();
     }
     @FXML 
     private void handleRedoButton(){
-        if(!redoHistory.empty()){
-           WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-            SnapshotParameters params = new SnapshotParameters();
-            params.setFill(Color.TRANSPARENT);
-            imageCanvas.snapshot(params, writableImage);
-            undoHistory.push(writableImage);
-            Image redoneImage = (Image) redoHistory.pop();
-            gcImage.drawImage(redoneImage,0,0);
-            hasBeenModified = true;
-        }
-        else{
-            System.out.println("nothing to redo");
-        }
+        redoAction();
     }
     /**
      * FMXL Function to close application from close button.
@@ -284,43 +262,17 @@ public class FXMLPaintController implements Initializable {
         closeStage();
     }
     @FXML
-    private void swapColors(){
-        Color tempColor = fillColorPicker.getValue();
-        fillColorPicker.setValue(strokeColorPicker.getValue());
-        strokeColorPicker.setValue(tempColor);
-        tempColor = null; //destroy tempColor to save memory
+    private void handleSwapColorButton(){
+        swapColors();
     }
     @FXML
     private void handleZoomInButton(){
-        if(openedFile!=null){
-            zoomInButton.setDisable(false);
-            zoomOutButton.setDisable(false);
-            staticPane.getTransforms().remove(zoomScale);
-            currentZoom += 0.05;
-            zoomScale = new Scale(currentZoom, currentZoom,0,0);
-        
-            Scene scene = borderPane.getScene();
-        
-            staticPane.getTransforms().add(zoomScale);
-            
-        }
-        else{
-            zoomOutButton.setDisable(true);
-            zoomInButton.setDisable(true);
-        }
+        zoomIn();
         
     }
     @FXML
     private void handleZoomOutButton(){
-        staticPane.getTransforms().remove(zoomScale);
-        currentZoom -= 0.05;
-        zoomScale = new Scale(currentZoom, currentZoom,0,0);
-        
-        staticPane.getTransforms().add(zoomScale);
-        
-        if(currentZoom <= 0.05){
-            zoomOutButton.setDisable(true);
-        }
+        zoomOut();
     }
     /** 
      * Will JavaDoc later.
@@ -328,8 +280,7 @@ public class FXMLPaintController implements Initializable {
      */
     @FXML 
     private void setOnMousePressed(MouseEvent event){
-        WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-        imageCanvas.snapshot(null, writableImage);
+        WritableImage writableImage = loadCurrentCanvas();
         undoHistory.push(writableImage);
         redoHistory.clear();
         if(drawButton.isSelected()){
@@ -502,7 +453,7 @@ public class FXMLPaintController implements Initializable {
         else if(eyedropperButton.isSelected()){
             int xPosistion = new Double(event.getX()).intValue();
             int yPosistion = new Double(event.getY()).intValue();
-            Image image = new Image(imageFile);
+            Image image = loadImage();
             PixelReader pixelReader = image.getPixelReader();
             Color pixelClicked = pixelReader.getColor(xPosistion, yPosistion);
             
@@ -619,10 +570,8 @@ public class FXMLPaintController implements Initializable {
     private void imageSave(File file){
         try {
             if(file!=null){
-                WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-                SnapshotParameters params = new SnapshotParameters();
-                params.setFill(Color.TRANSPARENT);
-                imageCanvas.snapshot(params, writableImage);
+                
+                WritableImage writableImage = loadCurrentCanvas();
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
                 ImageIO.write(renderedImage, "png", file);
             }
@@ -751,8 +700,7 @@ public class FXMLPaintController implements Initializable {
         dialog.showAndWait();
         
         
-        WritableImage beforeResizeImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
-        imageCanvas.snapshot(null, beforeResizeImage);
+        WritableImage beforeResizeImage = loadCurrentCanvas();
         PixelReader pixelReader = beforeResizeImage.getPixelReader();
         if(pixelReader == null){
             return;
@@ -787,5 +735,79 @@ public class FXMLPaintController implements Initializable {
     private void openReleaseNotes() throws IOException{
         File releaseNotes = new File("releasenotes.txt");
         Desktop.getDesktop().open(releaseNotes);
+    }
+    private Image loadImage(){
+        WritableImage image = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        imageCanvas.snapshot(params, image);
+        return (Image) image;
+    }
+    private WritableImage loadCurrentCanvas(){
+        WritableImage writableImage = new WritableImage((int)imageCanvas.getWidth(),(int)imageCanvas.getHeight());
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        imageCanvas.snapshot(params, writableImage);
+        return writableImage;
+    }
+    private void undoAction(){
+        if(!undoHistory.empty()){
+            //gcImage.clearRect(0,0,imageCanvas.getWidth(), imageCanvas.getHeight());
+            WritableImage writableImage = loadCurrentCanvas();
+            redoHistory.push(writableImage);
+            Image undoneImage = (Image) undoHistory.pop();
+            gcImage.drawImage(undoneImage,0,0);
+            hasBeenModified = true;
+        }
+        else{
+            System.out.println("nothing to undo");
+        }
+    }
+    private void redoAction(){
+        if(!redoHistory.empty()){
+           WritableImage writableImage = loadCurrentCanvas();
+           undoHistory.push(writableImage);
+           Image redoneImage = (Image) redoHistory.pop();
+           gcImage.drawImage(redoneImage,0,0);
+           hasBeenModified = true;
+        }
+        else{
+            System.out.println("nothing to redo");
+        }
+    }
+    private void swapColors(){
+        Color tempColor = fillColorPicker.getValue();
+        fillColorPicker.setValue(strokeColorPicker.getValue());
+        strokeColorPicker.setValue(tempColor);
+        tempColor = null; //destroy tempColor to save memory
+    }
+private void zoomIn(){
+        if(openedFile!=null){
+            zoomInButton.setDisable(false);
+            zoomOutButton.setDisable(false);
+            staticPane.getTransforms().remove(zoomScale);
+            currentZoom += 0.05;
+            zoomScale = new Scale(currentZoom, currentZoom,0,0);
+
+            Scene scene = borderPane.getScene();
+
+            staticPane.getTransforms().add(zoomScale);
+
+         }
+        else{
+            zoomOutButton.setDisable(true);
+            zoomInButton.setDisable(true);
+        }
+    }
+    private void zoomOut(){
+        staticPane.getTransforms().remove(zoomScale);
+        currentZoom -= 0.05;
+        zoomScale = new Scale(currentZoom, currentZoom,0,0);
+        
+        staticPane.getTransforms().add(zoomScale);
+        
+        if(currentZoom <= 0.05){
+            zoomOutButton.setDisable(true);
+        }
     }
 }  
