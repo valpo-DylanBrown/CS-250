@@ -45,11 +45,11 @@
                                     <items>
                                         <MenuItem onAction="#handleUndoMenuItem" text="Undo" mnemonicParsing="false" accelerator="Shortcut+z"/>
                                         <MenuItem onAction="#handleRedoMenuItem" text="Redo" mnemonicParsing="false" accelerator="Shortcut+y" />
+                                        <MenuItem onAction="#handleResizeCanvas" text="Resize Canvas" />
                                     </items>
                                 </Menu>
                                 <Menu text="_View" mnemonicParsing="true">
                                     <items>
-                                        <MenuItem onAction="#handleResizeCanvas" text="Resize" />
                                         <MenuItem onAction="#handleZoomInMenu" text="Zoom In" mnemonicParsing="false" accelerator="Shortcut+="/>
                                         <MenuItem onAction="#handleZoomOutMenu" text="Zoom Out" mnemonicParsing="false" accelerator="Shortcut+-" />
                                     </items>
