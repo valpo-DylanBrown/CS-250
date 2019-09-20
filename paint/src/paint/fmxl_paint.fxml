@@ -77,9 +77,16 @@
                     </children>
                 </HBox>
                 <ToolBar>
-                    <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleUndoButton" />
-                    <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleRedoButton" />
-                    
+                    <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleUndoButton">
+                        <tooltip>
+                            <Tooltip text="Undo"/>
+                        </tooltip>
+                    </Button>
+                    <Button id="redoButton" fx:id="redoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleRedoButton">
+                        <tooltip>
+                            <Tooltip text="Redo"/>
+                        </tooltip>
+                    </Button>
                     <Button fx:id="zoomInButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleZoomInButton" disable="true">
                         <tooltip>
                             <Tooltip text="Zoom In"/>
