@@ -1,4 +1,4 @@
-package paint;
+package paint_overhaul;
 
 //BIG TODO SPLIT THINGS UP INTO FUNCTIONS AND DIFFERENT FILES
 /*KNOWN BUGS:
