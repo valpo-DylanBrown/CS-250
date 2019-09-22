@@ -12,10 +12,12 @@ package paint_overhaul.constant;
 public enum DrawingTools {
     PENCIL(),
     LINE(),
+    ERASER(),
     RECTANGLE(),
     SQUARE(),
     CIRCLE(),
     ELLIPSE(),
     TRIANGLE(),
+    POLYGON(),
     EYEDROPPER()  
 }

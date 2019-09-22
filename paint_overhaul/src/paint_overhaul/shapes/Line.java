@@ -23,5 +23,7 @@ public class Line extends PaintShape {
     public void draw(GraphicsContext gc){
         gc.strokeLine(x0, y0, x1, y1);
     }
+    @Override
+    public void draw(GraphicsContext gc, int sides){}
 
 }

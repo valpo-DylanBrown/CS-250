@@ -24,8 +24,8 @@ public class Rectangle extends PaintShape {
         boolean yPositive = y1 - y0 >= 0;
         gc.fillRect(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
         gc.strokeRect(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
-
-
     }
+    @Override
+    public void draw(GraphicsContext gc, int sides){}
 
 }

@@ -22,6 +22,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
@@ -55,7 +57,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private BorderPane borderPane;
     @FXML private Canvas canvas;
     @FXML private MenuBar menuBar;
-    
+    @FXML private ReleaseNotesAlert releaseNotesAlert;
     private PaintCanvas paintCanvas;
     
     private FileChooser fileChooser;
@@ -71,12 +73,13 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToggleButton drawButton;
     @FXML private ToggleButton lineButton;
     @FXML private ToggleButton fillButton;
-    @FXML private ToggleButton eraseButton;
+    @FXML private ToggleButton eraserButton;
     @FXML private ToggleButton rectButton;
     @FXML private ToggleButton squareButton;
     @FXML private ToggleButton ovalButton;
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton triangleButton;
+    @FXML private ToggleButton polygonButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton eyedropperButton;
     
@@ -93,6 +96,8 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToolBar toolBar;
     
     @FXML private Slider slider;
+    @FXML private Spinner polygonSpinner;
+    @FXML private Spinner widthSpinner;
     
     public FXMLPaintController(){
         Main.paintController = this;
@@ -109,6 +114,8 @@ public class FXMLPaintController extends DefaultController {
             return;
         }
         paintCanvas.loadImageFromFille(fileToOpen);
+        zoomInButton.setDisable(false);
+        zoomOutButton.setDisable(false);
     }
     @FXML
     public void handleSave(){
@@ -142,13 +149,15 @@ public class FXMLPaintController extends DefaultController {
     }
     @FXML 
     public void handleReleaseNotes(){
-        File releaseNotes = new File("../paint_overhaul/other/releasenotes.txt");
+        //File releaseNotes = new File("src/paint_overhaul/other/releasenotes.txt");
+        releaseNotesAlert.createAlert();
+        /*
         try{
             Desktop.getDesktop().open(releaseNotes);
         }
         catch(IOException e){
             System.out.println("unable to open release notes");
-        }  
+        }*/ 
     }
     @FXML
     public void handleUndoMenuItem(){
@@ -189,7 +198,7 @@ public class FXMLPaintController extends DefaultController {
     }
     @FXML
     private void handleCloseButton(){
-        if(paintCanvas.isHasBeenModified()==true){
+        if(paintCanvas.getHasBeenModified()==true){
             setCloseAlerts();
         }
         else{
@@ -235,10 +244,16 @@ public class FXMLPaintController extends DefaultController {
     @FXML
     public void handleZoomInButton(){
         paintCanvas.zoomIn();
+        zoomOutButton.setDisable(false);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoomOutButton(){
         paintCanvas.zoomOut();
+        if(paintCanvas.getIsZoomedOut() == true){
+            zoomOutButton.setDisable(true);
+        }
+        updateZoomLabel();
     }
     @FXML
     public void handleZoomInMenu(){
@@ -251,33 +266,41 @@ public class FXMLPaintController extends DefaultController {
     @FXML
     public void handleZoom25Menu(){
         paintCanvas.zoomToX(25);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom50Menu(){
         paintCanvas.zoomToX(50);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom75Menu(){
         paintCanvas.zoomToX(75);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom100Menu(){
         paintCanvas.zoomToX(100);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom200Menu(){
         paintCanvas.zoomToX(200);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom250Menu(){
         paintCanvas.zoomToX(250);
+        updateZoomLabel();
     }
     @FXML
     public void handleZoom300Menu(){
         paintCanvas.zoomToX(300);
+        updateZoomLabel();
     }
-    
-    
+    public void updateZoomLabel(){
+        zoomLabel.setText(Math.round(paintCanvas.getCurrentZoom()*100)+"% ");
+    }
     @FXML
     public void handleDrawToggle(){
         if(drawButton.isSelected()){
@@ -291,6 +314,14 @@ public class FXMLPaintController extends DefaultController {
     public void handleLineToggle(){
         if(lineButton.isSelected()){
             paintCanvas.setDrawingToolMode(DrawingTools.LINE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    public void handleEraserToggle(){
+        if(eraserButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.ERASER);
         }
         else{
             paintCanvas.setDrawingToolMode(null);
@@ -336,6 +367,15 @@ public class FXMLPaintController extends DefaultController {
     public void handleTriangleToggle(){
         if(triangleButton.isSelected()){
             paintCanvas.setDrawingToolMode(DrawingTools.TRIANGLE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handlePolygonButton(){
+        if(polygonButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.POLYGON);
         }
         else{
             paintCanvas.setDrawingToolMode(null);
@@ -439,13 +479,20 @@ public class FXMLPaintController extends DefaultController {
         }
         paintCanvas.getCanvas().setWidth(afterResizeImage.getWidth());
         paintCanvas.getCanvas().setHeight(afterResizeImage.getHeight());
-        paintCanvas.getGraphicsContext().drawImage(afterResizeImage,0,0);        
+        paintCanvas.getGraphicsContext().drawImage(afterResizeImage,0,0);
+        paintCanvas.setHasBeenModified(false);
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
+        //slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
+        polygonSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
+        polygonSpinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) polygonSpinner.getValue()));
+        widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
+        widthSpinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) widthSpinner.getValue()));
+        
         fileChooser = new FileChooser();
         paintCanvas = new PaintCanvas(canvas);
+        releaseNotesAlert = new ReleaseNotesAlert();
         
     }
 }  

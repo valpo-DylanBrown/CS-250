@@ -39,18 +39,21 @@ public class PaintCanvas {
     private File savedFile;
     private DrawingTools drawTools;
     private PaintShape currentShape;
-    private boolean hasBeenModified;
+    private boolean hasBeenModified = false;
+    private boolean isPolygon = false;
     private Stack<Image> undoHistory;
     private Stack<Image> redoHistory;
     private double currentZoom = 1;
     private Scale zoomScale;
+    private boolean isZoomedOut = false;
+    private int numSides = 5;
     
     PaintCanvas(Canvas canvas){
         undoHistory = new Stack<>();
         redoHistory = new Stack<>();
         this.canvas = canvas;
-        strokeColor = Color.WHITE;
-        fillColor = Color.TRANSPARENT;
+        strokeColor = Color.BLACK;
+        fillColor = Color.BLACK;
         this.gc = canvas.getGraphicsContext2D();
         canvasSetup();
         redrawnImage = canvas.snapshot(null,null);
@@ -59,7 +62,6 @@ public class PaintCanvas {
     private void canvasSetup(){
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e->{
             if(drawTools == null){
-                System.out.println("Draw Tools NULL");
                 return;
             }
             redrawnImage = canvas.snapshot(null,null);
@@ -69,6 +71,9 @@ public class PaintCanvas {
                     break;
                 case LINE:
                     currentShape = new Line(e.getX(), e.getY());
+                    break;
+                case ERASER:
+                    currentShape = new Eraser(e.getX(), e.getY());
                     break;
                 case RECTANGLE:
                     currentShape = new Rectangle(e.getX(), e.getY());
@@ -85,6 +90,9 @@ public class PaintCanvas {
                 case TRIANGLE:
                     currentShape = new Triangle(e.getX(), e.getY());
                     break;
+                case POLYGON:
+                    currentShape = new Polygon(e.getX(), e.getY());
+                    break;
                 case EYEDROPPER:
                     Color color = redrawnImage.getPixelReader().getColor((int)e.getX(), (int)e.getY());
                     Main.paintController.getFillColorPicker().setValue(color);
@@ -99,7 +107,12 @@ public class PaintCanvas {
                 }
                 redrawCanvas();
                 currentShape.setEnd(e.getX(), e.getY());
-                currentShape.draw(gc);
+                if(!currentShape.getIsPolygon()){
+                    currentShape.draw(gc);
+                }
+                else{
+                    currentShape.draw(gc,numSides);
+                }
                 hasBeenModified = true;
             });
             canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e->{
@@ -109,7 +122,12 @@ public class PaintCanvas {
                 undoHistory.add(redrawnImage);
                 redrawCanvas();
                 currentShape.setEnd(e.getX(), e.getY());
-                currentShape.draw(gc);
+                if(!currentShape.getIsPolygon()){
+                    currentShape.draw(gc);
+                }
+                else{
+                    currentShape.draw(gc,numSides);
+                }
                 redrawnImage = canvas.snapshot(null,null);
                 hasBeenModified = true;
             });
@@ -119,6 +137,9 @@ public class PaintCanvas {
     }
     public void setLineWidth(double width){
         gc.setLineWidth(width);
+    }
+    public void setNumSides(int sides){
+        numSides = sides;
     }
     public void setFillColor(Color color){
         this.fillColor = color;
@@ -156,8 +177,14 @@ public class PaintCanvas {
     public File getSavedFile(){
         return savedFile;
     }
-    public boolean isHasBeenModified(){
+    public boolean getHasBeenModified(){
         return hasBeenModified;                
+    }
+    public void setHasBeenModified(boolean bool){
+        hasBeenModified = bool;               
+    }
+    public boolean getIsZoomedOut(){
+        return isZoomedOut;                
     }
     public void loadImageFromFille(File imageFile){
         Image image = null;
@@ -216,6 +243,12 @@ public class PaintCanvas {
         parent.getTransforms().remove(zoomScale);
         currentZoom -= 0.05;
         applyZoom(parent, currentZoom);
+        if(currentZoom <= 0.05){
+            isZoomedOut = true;
+        }
+        else{
+            isZoomedOut = false;
+        }
     }
     public void zoomToX(double zoom){
         Parent parent = canvas.getParent();

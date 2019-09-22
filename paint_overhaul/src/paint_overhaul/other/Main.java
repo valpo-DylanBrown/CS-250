@@ -38,8 +38,8 @@ public class Main extends Application {
          * do this
          * stage.initStyle(StageStyle.UNDECORATED);
         */
-        //Image icon = new Image(getClass().getResourceAsStream("icon.png"));
-        //stage.getIcons().add(icon);
+        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
+        stage.getIcons().add(icon);
         stage.setMaximized(true);
         stage.show();
     }

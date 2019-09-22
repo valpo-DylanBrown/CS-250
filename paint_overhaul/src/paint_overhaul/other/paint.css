@@ -23,101 +23,104 @@
 }
 
 #drawButton {          
-    -fx-background-image: url("pencil.png");
+    -fx-background-image: url("../icons/pencil.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #lineButton {          
-    -fx-background-image: url("line.png");
+    -fx-background-image: url("../icons/line.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #fillButton {          
-    -fx-background-image: url("fill.png");
+    -fx-background-image: url("../icons/fill.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
-#eraseButton {          
-    -fx-background-image: url("eraser.png");
+#eraserButton {          
+    -fx-background-image: url("../icons/eraser.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #rectButton {          
-    -fx-background-image: url("rectangle.png");
+    -fx-background-image: url("../icons/rectangle.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #squareButton {          
-    -fx-background-image: url("square.png");
+    -fx-background-image: url("../icons/square.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #ovalButton {          
-    -fx-background-image: url("ellipse.png");
+    -fx-background-image: url("../icons/ellipse.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #circleButton {          
-    -fx-background-image: url("circle.png");
+    -fx-background-image: url("../icons/circle.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #triangleButton {          
-    -fx-background-image: url("triangle.png");
+    -fx-background-image: url("../icons/triangle.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
+#polygonButton {          
+    -fx-background-image: url("../icons/polygon.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #textButton {          
-    -fx-background-image: url("text.png");
+    -fx-background-image: url("../icons/text.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #zoomInButton {          
-    -fx-background-image: url("zoomIn.png");
+    -fx-background-image: url("../icons/zoomIn.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #zoomOutButton {          
-    -fx-background-image: url("zoomOut.png");
+    -fx-background-image: url("../icons/zoomOut.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #undoButton {          
-    -fx-background-image: url("undo.png");
+    -fx-background-image: url("../icons/undo.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #redoButton {          
-    -fx-background-image: url("redo.png");
+    -fx-background-image: url("../icons/redo.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #eyedropperButton {          
-    -fx-background-image: url("eyedropper.png");
+    -fx-background-image: url("../icons/eyedropper.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
 #swapColors {          
-    -fx-background-image: url("swap.png");
+    -fx-background-image: url("../icons/swap.png");
     -fx-background-size: 30 30;
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
-}
-#staticPane{
-    -fx-background-color: white;
 }

@@ -25,4 +25,6 @@ public class Ellipse extends PaintShape {
         gc.fillOval(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
         gc.strokeOval(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
     }
+    @Override
+    public void draw(GraphicsContext gc, int sides){}
 }

@@ -6,7 +6,6 @@
 package paint_overhaul.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
-
 /**
  *
  * @author dylan
@@ -27,5 +26,6 @@ public class Triangle extends PaintShape {
         gc.fillPolygon(new double[]{x0,x1,x2}, new double[]{y0,y1,y2}, 3);
         gc.strokePolygon(new double[]{x0,x1,x2}, new double[]{y0,y1,y2}, 3);
     }
-
+    @Override
+    public void draw(GraphicsContext gc, int sides){}
 }

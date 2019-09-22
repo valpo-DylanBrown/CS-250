@@ -36,5 +36,7 @@ public class Pencil extends PaintShape {
         }
 
     }
+    @Override
+    public void draw(GraphicsContext gc, int sides){}
 
 }
