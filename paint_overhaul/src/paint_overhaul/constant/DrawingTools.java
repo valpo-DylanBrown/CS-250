@@ -19,5 +19,6 @@ public enum DrawingTools {
     ELLIPSE(),
     TRIANGLE(),
     POLYGON(),
+    STAR(),
     EYEDROPPER()  
 }

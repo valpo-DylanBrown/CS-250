@@ -2,40 +2,31 @@ package paint_overhaul.other;
 
 //BIG TODO SPLIT THINGS UP INTO FUNCTIONS AND DIFFERENT FILES
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import paint_overhaul.constant.*;
+import paint_overhaul.alerts.*;
+import paint_overhaul.other.BetterFileChooser;
+import paint_overhaul.other.Main;
+import paint_overhaul.other.PaintCanvas;
+
 
 
 
@@ -58,9 +49,13 @@ public class FXMLPaintController extends DefaultController {
     @FXML private Canvas canvas;
     @FXML private MenuBar menuBar;
     @FXML private ReleaseNotesAlert releaseNotesAlert;
+    @FXML private AboutAlert aboutAlert;
+    @FXML private SmartSaveAlert smartSaveAlert;
+    @FXML private ResizeCanvasAlert resizeCanvasAlert;
     private PaintCanvas paintCanvas;
     
-    private FileChooser fileChooser;
+    private BetterFileChooser openFileChooser;
+    private BetterFileChooser saveFileChooser;
     
     @FXML ColorPicker strokeColorPicker;
     @FXML ColorPicker fillColorPicker;
@@ -80,6 +75,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToggleButton circleButton;
     @FXML private ToggleButton triangleButton;
     @FXML private ToggleButton polygonButton;
+    @FXML private ToggleButton starButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton eyedropperButton;
     
@@ -105,11 +101,10 @@ public class FXMLPaintController extends DefaultController {
     public PaintCanvas getPaintCanvas(){
         return paintCanvas;
     }
-    
     @FXML
     public void handleOpen(){
-        configureFileChooser(fileChooser, "Open File: ");
-        File fileToOpen = fileChooser.showOpenDialog(borderPane.getScene().getWindow());
+        
+        File fileToOpen = openFileChooser.getFileChooser().showOpenDialog(borderPane.getScene().getWindow());
         if(fileToOpen == null){
             return;
         }
@@ -127,8 +122,7 @@ public class FXMLPaintController extends DefaultController {
     }
     @FXML
     public void handleSaveAs(){
-        configureFileChooser(fileChooser, "Save File: ");
-        File file = fileChooser.showSaveDialog(borderPane.getScene().getWindow());
+        File file = saveFileChooser.getFileChooser().showSaveDialog(borderPane.getScene().getWindow());
         if(file==null){
             return;
         }
@@ -140,24 +134,11 @@ public class FXMLPaintController extends DefaultController {
     }
     @FXML
     public void handleAbout(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About");
-        alert.setHeaderText("About PAIN(T) by Dylan Brown");
-        alert.setContentText("This program attempts (poorly) to "
-                + "recreate MS Paint.\nPray for me");
-        alert.showAndWait();
+        aboutAlert.createAboutAlert();
     }
     @FXML 
     public void handleReleaseNotes(){
-        //File releaseNotes = new File("src/paint_overhaul/other/releasenotes.txt");
         releaseNotesAlert.createAlert();
-        /*
-        try{
-            Desktop.getDesktop().open(releaseNotes);
-        }
-        catch(IOException e){
-            System.out.println("unable to open release notes");
-        }*/ 
     }
     @FXML
     public void handleUndoMenuItem(){
@@ -169,7 +150,7 @@ public class FXMLPaintController extends DefaultController {
     }
     @FXML
     public void handleResizeCanvas(){
-        createResizeDialog();
+        resizeCanvasAlert.createResizeDialog();
     }
     @FXML
     public void handleUndoButton(){
@@ -199,48 +180,12 @@ public class FXMLPaintController extends DefaultController {
     @FXML
     private void handleCloseButton(){
         if(paintCanvas.getHasBeenModified()==true){
-            setCloseAlerts();
+            smartSaveAlert.setSmartSaveAlert();
         }
         else{
             Platform.exit();
         }
     }
-    private void setCloseAlerts(){
-        Alert alert = createCloseAlertDialog();
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
-        ButtonType cancelButton = new ButtonType("Cancel");
-                
-        alert.getButtonTypes().setAll(yesButton,noButton,cancelButton);
-        
-        Optional<ButtonType> result = alert.showAndWait();
-        handleButtonTypeLogic(result, yesButton, noButton, cancelButton);
-    }
-    private Alert createCloseAlertDialog(){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning!");
-        alert.setHeaderText("Your file is not currently saved. Would you "
-                + "like to save it?");
-        alert.setContentText("Please choose an option");
-        return alert;
-    }
-    private void handleButtonTypeLogic(Optional<ButtonType> result, 
-            ButtonType yesButton, ButtonType noButton, ButtonType cancelButton ){
-            if(result.get()==yesButton){
-                if(paintCanvas.getSavedFile() != null){
-                    handleSave();
-                }
-                else{
-                    handleSaveAs();
-                }    
-            } 
-            else if(result.get()==noButton){
-                Platform.exit();
-            }
-            else if(result.get() == cancelButton){
-            }
-    }
-    
     @FXML
     public void handleZoomInButton(){
         paintCanvas.zoomIn();
@@ -305,6 +250,15 @@ public class FXMLPaintController extends DefaultController {
     public void handleDrawToggle(){
         if(drawButton.isSelected()){
             paintCanvas.setDrawingToolMode(DrawingTools.PENCIL);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleStarButton(){
+        if(starButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.STAR);
         }
         else{
             paintCanvas.setDrawingToolMode(null);
@@ -391,108 +345,37 @@ public class FXMLPaintController extends DefaultController {
         }
     }
     
-    
-     /**
-     * Configures the File Chooser.
-     * This function configures the file chooser. The function passes the string
-     * to the title of the window and adds extension filters to filter images in.
-     * Called from {@link #openNewFile()}, {@link #handleSaveAs()}, and
-     * {@link #handleSave()} 
-     * @param fileChooser  file chooser to edit
-     * @param title string to set title of the window
-     * 
-     */
-    private void configureFileChooser(FileChooser fileChooser, String title){
-        fileChooser.setTitle(title);
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("All Files", "*.jpeg", "*.jpg",
-                "*.png", "*.tiff", "*.tif","*.bmp", "*.JPEG", "*.JPG","*.PNG",
-                "*.TIFF","*.TIF", "*.BMP"),
-            new FileChooser.ExtensionFilter("JPEG", "*.jpeg", "*.jpg",
-                "*.JPEG", "*.JPG"),
-            new FileChooser.ExtensionFilter("PNG", "*.png", "*.PNG"),
-            new FileChooser.ExtensionFilter("BMP", "*.bmp", "*.BMP"),
-            new FileChooser.ExtensionFilter("TIFF", "*.tiff", "*.tif",
-                "*.TIFF", "*.tif")
-            );
-    }
-    
-    public void createResizeDialog(){
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Resize Canvas");
-
-        // Set the button types.
-        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
-
-        GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField width = new TextField();
-        width.setPromptText("Width:");
-        TextField height = new TextField();
-        height.setPromptText("Height");
-
-        gridPane.add(new Label("Width:"), 0, 0);
-        gridPane.add(width, 1, 0);
-        gridPane.add(new Label("Height"), 2, 0);
-        gridPane.add(height, 3, 0);
-        gridPane.add(new Label("Resize the canvas to your desired pixels "
-                + "WARNING: This can not be undone."),4,1);
-
-        dialog.getDialogPane().setContent(gridPane);
-        // Request focus on the username field by default.
-        Platform.runLater(() -> width.requestFocus());
-        
-        dialog.showAndWait();
-        
-        
-        WritableImage beforeResizeImage = paintCanvas.snapshotCurrentCanvas();
-        PixelReader pixelReader = beforeResizeImage.getPixelReader();
-        if(pixelReader == null){
-            return;
-        }
-        
-        if(width.getText().isEmpty() || height.getText().isEmpty()){
-            return;
-        }
-        
-        int beforeResizeWidth = (int)paintCanvas.getCanvas().getWidth();
-        int beforeResizeHeight = (int)paintCanvas.getCanvas().getHeight();
-        int afterResizeWidth = Integer.parseInt(width.getText());
-        int afterResizeHeight = Integer.parseInt(height.getText());
-        
-        afterResizeWidth = Math.abs(afterResizeWidth);
-        afterResizeHeight = Math.abs(afterResizeHeight);
-        
-        WritableImage afterResizeImage = new WritableImage(afterResizeWidth,afterResizeHeight);
-        PixelWriter pixelWriter = afterResizeImage.getPixelWriter();
-        
-        for(int resizeY = 0; resizeY < afterResizeHeight; resizeY++) {
-            int previousY = (int)Math.round((double)resizeY / afterResizeHeight * beforeResizeHeight);
-            for(int resizeX = 0; resizeX < afterResizeWidth; resizeX++) {
-                int previousX = (int)Math.round((double)resizeX / afterResizeWidth * beforeResizeWidth);
-                pixelWriter.setArgb(resizeX, resizeY, pixelReader.getArgb(previousX, previousY));
-            }
-        }
-        paintCanvas.getCanvas().setWidth(afterResizeImage.getWidth());
-        paintCanvas.getCanvas().setHeight(afterResizeImage.getHeight());
-        paintCanvas.getGraphicsContext().drawImage(afterResizeImage,0,0);
-        paintCanvas.setHasBeenModified(false);
+    public BorderPane getBorderPane(){
+        return borderPane;
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
-        polygonSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
-        polygonSpinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) polygonSpinner.getValue()));
-        widthSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000));
-        widthSpinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) widthSpinner.getValue()));
+        configurePolygonSpinner(polygonSpinner);
+        configureWidthSpinner(widthSpinner);
         
-        fileChooser = new FileChooser();
+        openFileChooser = new BetterFileChooser("Open Image: ");
+        saveFileChooser = new BetterFileChooser("Save Canvas: ");
         paintCanvas = new PaintCanvas(canvas);
         releaseNotesAlert = new ReleaseNotesAlert();
-        
+        aboutAlert = new AboutAlert();
+        smartSaveAlert = new SmartSaveAlert(paintCanvas, saveFileChooser);
+        resizeCanvasAlert = new ResizeCanvasAlert(paintCanvas);
+    }
+    public void configureWidthSpinner(Spinner spinner){
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) spinner.getValue()));
+    }
+    public void configurePolygonSpinner(Spinner spinner){
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) spinner.getValue()));
     }
 }  

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package paint_overhaul.other;
+package paint_overhaul.alerts;
 
 import java.io.File;
 

@@ -12,10 +12,11 @@ import javafx.scene.canvas.GraphicsContext;
  * @author dylan
  */
 public class Polygon extends PaintShape{
-    
+    private double rotation;
     public Polygon(double x, double y) {
         super(x,y,x,y);
         setIsPolygon();
+        setRotation(Math.PI);
     }
     @Override
     public void setEnd(double x1, double y1) {
@@ -31,8 +32,12 @@ public class Polygon extends PaintShape{
         double[] xPoints = new double[sides];
         double[] yPoints = new double[sides];
         for(int i=0; i < sides; i++, angle+=angleStep){
-            xPoints[i] = Math.sin(angle)*radiusDistance+x0;
-            yPoints[i] = Math.cos(angle)*radiusDistance+y0;
+        /* THIS CREATES A STAR with n = 5
+        xPoints[i] = Math.sin(angle*3)*radiusDistance+x0;
+            yPoints[i] = Math.cos(angle*3)*radiusDistance+y0;    
+        */
+            xPoints[i] = Math.sin(angle+rotation)*radiusDistance+x0;
+            yPoints[i] = Math.cos(angle+rotation)*radiusDistance+y0;
         }
         gc.fillPolygon(xPoints, yPoints, sides);
         gc.strokePolygon(xPoints, yPoints, sides);
@@ -44,5 +49,7 @@ public class Polygon extends PaintShape{
     public void setIsPolygon(){
         isPolygon = true;
     }
-
+    public void setRotation(double num){
+        rotation = num;
+    }
 }

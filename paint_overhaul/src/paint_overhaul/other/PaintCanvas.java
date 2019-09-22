@@ -48,7 +48,7 @@ public class PaintCanvas {
     private boolean isZoomedOut = false;
     private int numSides = 5;
     
-    PaintCanvas(Canvas canvas){
+    public PaintCanvas(Canvas canvas){
         undoHistory = new Stack<>();
         redoHistory = new Stack<>();
         this.canvas = canvas;
@@ -92,6 +92,9 @@ public class PaintCanvas {
                     break;
                 case POLYGON:
                     currentShape = new Polygon(e.getX(), e.getY());
+                    break;
+                case STAR:
+                    currentShape = new Star(e.getX(), e.getY());
                     break;
                 case EYEDROPPER:
                     Color color = redrawnImage.getPixelReader().getColor((int)e.getX(), (int)e.getY());
@@ -177,6 +180,9 @@ public class PaintCanvas {
     public File getSavedFile(){
         return savedFile;
     }
+    public void setSavedFile(File file){
+        savedFile = file;
+    }
     public boolean getHasBeenModified(){
         return hasBeenModified;                
     }
@@ -204,7 +210,7 @@ public class PaintCanvas {
         gc.drawImage(image,0,0,image.getWidth(),image.getHeight());
     }
     public void saveCanvasToFile(File file) {
-        savedFile = file;
+        setSavedFile(file);
         WritableImage writableImage = snapshotCurrentCanvas();
         RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
         try{

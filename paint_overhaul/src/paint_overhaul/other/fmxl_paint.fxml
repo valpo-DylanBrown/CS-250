@@ -109,15 +109,25 @@
                     <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Stroke" alignment="CENTER" />
                         <ColorPicker id="strokeC1olorPicker" fx:id="strokeColorPicker" onAction="#handleStrokeColorPicker">
+                            <tooltip>
+                                <Tooltip text="Stroke Color"/>
+                            </tooltip>
                             <value>
                                 <Color blue="0.0" green="0.0" red="0.0" />
                             </value>
                         </ColorPicker>
                     </VBox>
-                    <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#handleSwapColorButton" prefWidth="35.0"  />
+                    <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#handleSwapColorButton" prefWidth="35.0">
+                        <tooltip>
+                                <Tooltip text="Swap Colors"/>
+                        </tooltip>
+                    </Button>
                     <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Fill" alignment="CENTER" />
                         <ColorPicker id="fillColorPicker" fx:id="fillColorPicker" onAction="#handleFillColorPicker">
+                            <tooltip>
+                                <Tooltip text="FillColor"/>
+                            </tooltip>
                             <value>
                                 <Color blue="0.0" green="0.0" red="0.0" />
                             </value>
@@ -192,6 +202,11 @@
                         </ToggleButton>
                         <Spinner fx:id="polygonSpinner" prefWidth="60.0" editable="true"/>
                     </HBox>
+                    <ToggleButton fx:id="starButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleStarButton" toggleGroup="$toolGroup">
+                            <tooltip>
+                                <Tooltip text="Star"/>
+                            </tooltip>
+                    </ToggleButton>
                     <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0"  toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Text"/>

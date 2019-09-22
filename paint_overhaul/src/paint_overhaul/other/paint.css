@@ -82,6 +82,12 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
+#starButton {          
+    -fx-background-image: url("../icons/star.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
 #textButton {          
     -fx-background-image: url("../icons/text.png");
     -fx-background-size: 30 30;
