@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shapes;
+package paint_overhaul.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
 
@@ -21,6 +21,7 @@ public class Line extends PaintShape {
     }
     @Override
     public void draw(GraphicsContext gc){
+        System.out.println("Inside line draw");
         gc.strokeLine(x0, y0, x1, y1);
     }
 

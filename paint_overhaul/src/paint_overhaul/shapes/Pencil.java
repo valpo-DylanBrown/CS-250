@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shapes;
+package paint_overhaul.shapes;
 
 import java.util.ArrayList;
 import java.util.List;

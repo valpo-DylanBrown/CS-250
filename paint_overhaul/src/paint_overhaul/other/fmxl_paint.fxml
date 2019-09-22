@@ -24,7 +24,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint.FXMLPaintController" >
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint_overhaul.other.FXMLPaintController" >
     <top>
         <VBox>
             <children>
@@ -36,9 +36,9 @@
                                     <items>
                                         <MenuItem onAction="#handleOpen" text="Open" mnemonicParsing="false" accelerator="Shortcut+O"/>
                                         <MenuItem onAction="#handleSave" text="Save" mnemonicParsing="false" accelerator="Shortcut+S"/>
-                                        <MenuItem onAction="#handleSaveAs" text="Save As" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
+                                        <MenuItem fx:id="saveAsMenu" onAction="#handleSaveAs" text="Save As" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
                                         <SeparatorMenuItem />
-                                        <MenuItem onAction="#exitApplication" text="Exit" mnemonicParsing="false" accelerator="Alt+F4" />
+                                        <MenuItem onAction="#handleExit" text="Exit" mnemonicParsing="false" accelerator="Alt+F4" />
                                     </items>
                                 </Menu>
                                 <Menu text="_Edit" mnemonicParsing="true">
@@ -76,7 +76,7 @@
                         <Button id="closeButton" fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefWidth="27.0" text="X" />
                     </children>
                 </HBox>
-                <ToolBar>
+                <ToolBar fx:id="toolBar">
                     <Button id="undoButton" fx:id="undoButton" mnemonicParsing="false" prefWidth="55.0" prefHeight="35.0" onAction="#handleUndoButton">
                         <tooltip>
                             <Tooltip text="Undo"/>
@@ -107,7 +107,7 @@
                     </VBox>
                     <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Stroke" alignment="CENTER" />
-                        <ColorPicker id="strokeColorPicker" fx:id="strokeColorPicker">
+                        <ColorPicker id="strokeC1olorPicker" fx:id="strokeColorPicker" onAction="#handleStrokeColorPicker">
                             <value>
                                 <Color blue="0.0" green="0.0" red="0.0" />
                             </value>
@@ -116,7 +116,7 @@
                     <Button id="swapColors" fx:id="swapColors" mnemonicParsing="false" onAction="#handleSwapColorButton" prefWidth="35.0"  />
                     <VBox alignment="TOP_CENTER" spacing="4.0">
                         <Label text="Fill" alignment="CENTER" />
-                        <ColorPicker id="fillColorPicker" fx:id="fillColorPicker">
+                        <ColorPicker id="fillColorPicker" fx:id="fillColorPicker" onAction="#handleFillColorPicker">
                             <value>
                                 <Color blue="0.0" green="0.0" red="0.0" opacity = "0.0"/>
                             </value>
@@ -200,8 +200,8 @@
                             <children>
                                 <Group fx:id="canvasGroup">
                                     <children>
-                                        <Canvas id="imageCanvas" fx:id="imageCanvas" onMousePressed="#setOnMousePressed" onMouseDragged="#setOnMouseDragged" onMouseReleased="#setOnMouseReleased" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" >
-                                    </Canvas>
+                                        <Canvas id="canvas" fx:id="canvas">
+                                        </Canvas>
                                     </children>
                                 </Group>
                             </children>

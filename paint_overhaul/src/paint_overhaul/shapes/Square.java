@@ -1,4 +1,4 @@
-package shapes;
+package paint_overhaul.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
 
