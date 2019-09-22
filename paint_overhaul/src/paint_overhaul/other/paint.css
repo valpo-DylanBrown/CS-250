@@ -70,6 +70,12 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
+#triangleButton {          
+    -fx-background-image: url("triangle.png");
+    -fx-background-size: 30 30;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
 #textButton {          
     -fx-background-image: url("text.png");
     -fx-background-size: 30 30;

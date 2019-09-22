@@ -16,5 +16,6 @@ public enum DrawingTools {
     SQUARE(),
     CIRCLE(),
     ELLIPSE(),
+    TRIANGLE(),
     EYEDROPPER()  
 }

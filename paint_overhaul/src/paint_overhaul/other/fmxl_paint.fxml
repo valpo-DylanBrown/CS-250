@@ -178,6 +178,11 @@
                             <Tooltip text="Circle"/>
                         </tooltip>
                     </ToggleButton>
+                    <ToggleButton fx:id="triangleButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleTriangleToggle" toggleGroup="$toolGroup">
+                        <tooltip>
+                            <Tooltip text="Triangle"/>
+                        </tooltip>
+                    </ToggleButton>
                     <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0"  toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Text"/>

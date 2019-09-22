@@ -21,7 +21,6 @@ public class Line extends PaintShape {
     }
     @Override
     public void draw(GraphicsContext gc){
-        System.out.println("Inside line draw");
         gc.strokeLine(x0, y0, x1, y1);
     }
 

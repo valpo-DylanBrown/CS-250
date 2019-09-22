@@ -20,17 +20,17 @@ public class Circle extends Ellipse {
     }
     @Override
     public void draw(GraphicsContext gc){
-        double maxWidth = Math.min(Math.abs(x1-x0), Math.abs(y1-y0));
-        if(Math.abs(y1-y0) > maxWidth)
+        double maxRadius = Math.min(Math.abs(x1-x0), Math.abs(y1-y0));
+        if(Math.abs(y1-y0) > maxRadius)
             if(y1 < y0)
-                y1 = y0 - maxWidth;
+                y1 = y0 - maxRadius;
             else
-                y1 = y0 + maxWidth;
-        if(Math.abs(x1-x0) > maxWidth)
+                y1 = y0 + maxRadius;
+        if(Math.abs(x1-x0) > maxRadius)
             if(x1 < x0)
-                x1 = x0 - maxWidth;
+                x1 = x0 - maxRadius;
             else
-                x1 = x0 + maxWidth;
+                x1 = x0 + maxRadius;
         super.draw(gc);
     }
 }

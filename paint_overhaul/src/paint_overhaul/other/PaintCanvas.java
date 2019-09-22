@@ -82,6 +82,9 @@ public class PaintCanvas {
                 case ELLIPSE:
                     currentShape = new Ellipse(e.getX(), e.getY());
                     break;
+                case TRIANGLE:
+                    currentShape = new Triangle(e.getX(), e.getY());
+                    break;
                 case EYEDROPPER:
                     Color color = redrawnImage.getPixelReader().getColor((int)e.getX(), (int)e.getY());
                     Main.paintController.getFillColorPicker().setValue(color);

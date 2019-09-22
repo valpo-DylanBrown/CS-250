@@ -76,6 +76,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToggleButton squareButton;
     @FXML private ToggleButton ovalButton;
     @FXML private ToggleButton circleButton;
+    @FXML private ToggleButton triangleButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton eyedropperButton;
     
@@ -196,7 +197,7 @@ public class FXMLPaintController extends DefaultController {
         }
     }
     private void setCloseAlerts(){
-       Alert alert = createCloseAlertDialog();
+        Alert alert = createCloseAlertDialog();
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
         ButtonType cancelButton = new ButtonType("Cancel");
@@ -332,9 +333,18 @@ public class FXMLPaintController extends DefaultController {
         }
     }
     @FXML
+    public void handleTriangleToggle(){
+        if(triangleButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.TRIANGLE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
     public void handleEDToggle(){
         if(eyedropperButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.EYEDROPPER);
+            paintCanvas.setDrawingToolMode(DrawingTools.TRIANGLE);
         }
         else{
             paintCanvas.setDrawingToolMode(null);
