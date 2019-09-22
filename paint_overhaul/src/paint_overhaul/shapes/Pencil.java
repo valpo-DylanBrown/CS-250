@@ -23,13 +23,18 @@ public class Pencil extends PaintShape {
         path.add(new Point2D(x,y));
     }
     @Override
-    public void setEnd(double x, double y) {
-        super.setEnd(x,y);
-        path.add(new Point2D(x,y));
+    public void setEnd(double x1, double y1) {
+        super.setEnd(x1,y1);
+        path.add(new Point2D(x1,y1));
     }
     @Override
     public void draw(GraphicsContext gc){
-        gc.strokeLine(x0, y0, x1, y1);
+        for(int i = 1; i < path.size(); i++) {
+            Point2D from = path.get(i-1);
+            Point2D to = path.get(i);
+            gc.strokeLine(from.getX(), from.getY(), to.getX(), to.getY());
+        }
+
     }
 
 }

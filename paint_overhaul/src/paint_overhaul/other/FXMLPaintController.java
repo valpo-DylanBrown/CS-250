@@ -277,7 +277,69 @@ public class FXMLPaintController extends DefaultController {
     }
     
     
-    
+    @FXML
+    public void handleDrawToggle(){
+        if(drawButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.PENCIL);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleLineToggle(){
+        if(lineButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.LINE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleRectToggle(){
+        if(rectButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.RECTANGLE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleCircleToggle(){
+       if(circleButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.CIRCLE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleSquareToggle(){
+        if(squareButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.SQUARE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleOvalToggle(){
+        if(ovalButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.ELLIPSE);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
+    public void handleEDToggle(){
+        if(eyedropperButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.EYEDROPPER);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
     
     
      /**
@@ -373,7 +435,6 @@ public class FXMLPaintController extends DefaultController {
     public void initialize(URL location, ResourceBundle resources) {
         slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
         fileChooser = new FileChooser();
-        
         paintCanvas = new PaintCanvas(canvas);
         
     }

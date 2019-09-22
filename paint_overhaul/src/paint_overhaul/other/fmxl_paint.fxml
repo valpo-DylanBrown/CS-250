@@ -118,7 +118,7 @@
                         <Label text="Fill" alignment="CENTER" />
                         <ColorPicker id="fillColorPicker" fx:id="fillColorPicker" onAction="#handleFillColorPicker">
                             <value>
-                                <Color blue="0.0" green="0.0" red="0.0" opacity = "0.0"/>
+                                <Color blue="0.0" green="0.0" red="0.0" />
                             </value>
                         </ColorPicker>
                     </VBox>
@@ -138,52 +138,52 @@
                     
                     <Pane VBox.vgrow="ALWAYS" prefHeight="40" />
                     
-                    <ToggleButton fx:id="drawButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="drawButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleDrawToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Pencil"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="lineButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="lineButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleLineToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Line"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="fillButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="fillButton" prefWidth="55.0" prefHeight="35.0"  toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Fill"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="eraseButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="eraseButton" prefWidth="55.0" prefHeight="35.0"  toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Erase"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="rectButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="rectButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleRectToggle" toggleGroup="$toolGroup" >
                         <tooltip>
                             <Tooltip text="Rectangle"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="squareButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="squareButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleSquareToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Square"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="ovalButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="ovalButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleOvalToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Ellipse"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="circleButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="circleButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleCircleToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Circle"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0"  toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Text"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleEDToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Eyedropper"/>
                         </tooltip>

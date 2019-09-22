@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.Stack;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,7 +49,7 @@ public class PaintCanvas {
         undoHistory = new Stack<>();
         redoHistory = new Stack<>();
         this.canvas = canvas;
-        strokeColor = Color.BLACK;
+        strokeColor = Color.WHITE;
         fillColor = Color.TRANSPARENT;
         this.gc = canvas.getGraphicsContext2D();
         canvasSetup();
