@@ -21,7 +21,7 @@ public class Text extends PaintShape{
     @Override
     public void draw(GraphicsContext gc){
         gc.fillText(text, x1, y1);
-        gc.strokeText(text, x1, y1);
+        //gc.strokeText(text, x1, y1);
     }
     @Override
     public void draw(GraphicsContext gc, int sides){}

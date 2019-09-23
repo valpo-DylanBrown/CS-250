@@ -10,26 +10,21 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import paint_overhaul.constant.*;
 import paint_overhaul.alerts.*;
-import paint_overhaul.other.BetterFileChooser;
-import paint_overhaul.other.Main;
-import paint_overhaul.other.PaintCanvas;
-
-
-
-
 /**
  * <p>
  * FXMLPaintController is the base class for the whole program.
@@ -90,8 +85,10 @@ public class FXMLPaintController extends DefaultController {
     @FXML private MenuItem saveAsMenu;
     
     @FXML private ToolBar toolBar;
+    @FXML private ComboBox<String> fontChooser;
+    @FXML private Spinner fontSizeSpinner;
+    @FXML private TextField userText;
     
-    @FXML private Slider slider;
     @FXML private Spinner polygonSpinner;
     @FXML private Spinner widthSpinner;
     
@@ -159,6 +156,10 @@ public class FXMLPaintController extends DefaultController {
     @FXML
     public void handleRedoButton(){
         paintCanvas.redoLast();
+    }
+    @FXML
+    public void handleFontChooser(){
+        paintCanvas.setFont(new Font(fontChooser.getValue(), (int)fontSizeSpinner.getValue()));
     }
     @FXML
     public void handleStrokeColorPicker(){
@@ -336,9 +337,18 @@ public class FXMLPaintController extends DefaultController {
         }
     }
     @FXML
+    public void handleTextToggle(){
+        if(textButton.isSelected()){
+            paintCanvas.setDrawingToolMode(DrawingTools.TEXT);
+        }
+        else{
+            paintCanvas.setDrawingToolMode(null);
+        }
+    }
+    @FXML
     public void handleEDToggle(){
         if(eyedropperButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.TRIANGLE);
+            paintCanvas.setDrawingToolMode(DrawingTools.EYEDROPPER);
         }
         else{
             paintCanvas.setDrawingToolMode(null);
@@ -353,7 +363,13 @@ public class FXMLPaintController extends DefaultController {
         //slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
         configurePolygonSpinner(polygonSpinner);
         configureWidthSpinner(widthSpinner);
+        configureFontSizeSpinner(fontSizeSpinner);
         
+        fontChooser.getItems().setAll(Font.getFamilies());
+        fontChooser.getSelectionModel().selectFirst();
+        userText.textProperty().addListener((observable, oldValue, newValue) -> {
+            paintCanvas.setUserText(newValue);
+        });
         openFileChooser = new BetterFileChooser("Open Image: ");
         saveFileChooser = new BetterFileChooser("Save Canvas: ");
         paintCanvas = new PaintCanvas(canvas);
@@ -362,7 +378,7 @@ public class FXMLPaintController extends DefaultController {
         smartSaveAlert = new SmartSaveAlert(paintCanvas, saveFileChooser);
         resizeCanvasAlert = new ResizeCanvasAlert(paintCanvas);
     }
-    public void configureWidthSpinner(Spinner spinner){
+    public void configureWidthSpinner(Spinner spinner) throws NumberFormatException{
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
         TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
         spinner.getEditor().setTextFormatter(formatter);
@@ -370,12 +386,20 @@ public class FXMLPaintController extends DefaultController {
         spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
         spinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) spinner.getValue()));
     }
-    public void configurePolygonSpinner(Spinner spinner){
+    public void configurePolygonSpinner(Spinner spinner) throws NumberFormatException{
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
         TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
         spinner.getEditor().setTextFormatter(formatter);
         // bidi-bind the values
         spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
         spinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) spinner.getValue()));
+    }
+    public void configureFontSizeSpinner(Spinner spinner) throws NumberFormatException{
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setFont(new Font(fontChooser.getValue(),(int) spinner.getValue())));
     }
 }  

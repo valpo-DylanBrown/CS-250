@@ -13,7 +13,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- *
+ * Main class for the CS-250 Microsoft Pain(t) rebuild. 
+ * This function creates the scene and loads the controller. It also sets the 
+ * icon of the application.
  * @author dylan
  */
 public class Main extends Application {

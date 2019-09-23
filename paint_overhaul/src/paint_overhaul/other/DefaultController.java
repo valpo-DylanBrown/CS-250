@@ -8,8 +8,6 @@ package paint_overhaul.other;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
-import paint_overhaul.other.Main;
-import paint_overhaul.other.PaintCanvas;
 
 /**
  *

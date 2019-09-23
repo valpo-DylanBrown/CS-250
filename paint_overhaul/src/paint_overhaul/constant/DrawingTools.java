@@ -6,8 +6,12 @@
 package paint_overhaul.constant;
 
 /**
- *
+ * Enumeration of tool types.
+ * This enumeration shows the drawing mode of the canvas. This is to replace
+ * calling the toggle button is selected function. 
  * @author dylan
+ * @version 1.0
+ * @since 3.0
  */
 public enum DrawingTools {
     PENCIL(),
@@ -20,5 +24,6 @@ public enum DrawingTools {
     TRIANGLE(),
     POLYGON(),
     STAR(),
+    TEXT(),
     EYEDROPPER()  
 }

@@ -13,6 +13,8 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.Group?>
@@ -99,6 +101,18 @@
                             <Tooltip text="Zoom Out"/>
                         </tooltip>
                     </Button>
+                    <Pane HBox.hgrow="ALWAYS" maxWidth="400"/>
+                    <VBox alignment="CENTER" spacing="3.0">
+                        <children>
+                            <TextField fx:id="userText" promptText="Add your message here..."/>
+                            <HBox spacing="3.0">
+                                <children>
+                                    <ComboBox fx:id="fontChooser" promptText="Font" onAction="#handleFontChooser"/>
+                                    <Spinner fx:id="fontSizeSpinner" prefWidth="70.0" editable="true"/>
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
                     <Pane HBox.hgrow="ALWAYS" maxWidth="400"/>
                     <VBox alignment="CENTER">
                         <Label text="Width" alignment="CENTER" />
@@ -207,7 +221,7 @@
                                 <Tooltip text="Star"/>
                             </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0"  toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleTextToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Text"/>
                         </tooltip>
