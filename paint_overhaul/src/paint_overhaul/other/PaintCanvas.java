@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -58,6 +59,7 @@ public class PaintCanvas {
     private int fontSize;
     private Font font;
     private String userText;
+    private SelectionRectangle selectedRectangle;
     
     /**
      * Constructor for PaintCanvas.
@@ -132,8 +134,11 @@ public class PaintCanvas {
                     setFillColor(color);
                     break;
                 case SELECTIONRECTANGLE:
-                    currentShape = new SelectionRectangle(e.getX(), e.getY());
-                    
+                    if(selectedRectangle.getImage() == null){
+                        selectedRectangle = new SelectionRectangle(e.getX(), e.getY());
+                    }
+                    currentShape = new Rectangle(e.getX(), e.getY());
+                    break;
                 } 
                
             }
@@ -150,6 +155,16 @@ public class PaintCanvas {
                 currentShape.setEnd(e.getX(), e.getY());
                 if(!currentShape.getIsPolygon()){
                     currentShape.draw(gc);
+                }
+                else if(drawMode == DrawingMode.SELECT){
+                    selectedRectangle.setEnd(e.getX(), e.getY());
+                    SnapshotParameters params = new SnapshotParameters();
+                    double width = selectedRectangle.getEndX() - selectedRectangle.getOrigX();
+                    double height = selectedRectangle.getEndY() - selectedRectangle.getOrigY();
+                    params.setViewport(new Rectangle2D(selectedRectangle.getOrigX(), selectedRectangle.getOrigY(), width, height));
+                    WritableImage image = canvas.snapshot(params, null);
+                    selectedRectangle.setImage(image);
+                    
                 }
                 else{
                     currentShape.draw(gc,numSides);

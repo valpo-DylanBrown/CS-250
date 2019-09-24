@@ -6,6 +6,8 @@
 package paint_overhaul.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
@@ -13,12 +15,19 @@ import javafx.scene.paint.Color;
  * @author dylan
  */
 public class SelectionRectangle extends Rectangle {
+    private WritableImage image;
+    private double origX, origY;
+    private double endX, endY;
+    
     public SelectionRectangle(double startX, double startY, double endX, double endY) {
         super(startX, startY, endX, endY);
     }
     public SelectionRectangle(double x, double y) {
         super(x,y,x,y);
+        origX = x;
+        origY = y;
     }
+    
     @Override
     public void draw(GraphicsContext gc){
         boolean xPositive = x1 - x0 >= 0;
@@ -32,4 +41,30 @@ public class SelectionRectangle extends Rectangle {
     }
     @Override
     public void draw(GraphicsContext gc, int sides){}
+    @Override
+    public void setEnd(double x, double y) {
+        this.x1 = x;
+        this.y1 = y;
+        this.endX = x;
+        this.endY = y;
+    }
+    public double getOrigX(){
+        return origX;
+    }
+    public double getOrigY(){
+        return origY;
+    }
+    public double getEndX(){
+        return endX;
+    }
+    public double getEndY(){
+        return endY;
+    }
+    public WritableImage getImage(){
+        return image;
+    }
+    public void setImage(WritableImage image){
+        this.image = image;
+    }
+    
 }
