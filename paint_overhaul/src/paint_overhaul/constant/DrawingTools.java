@@ -25,5 +25,6 @@ public enum DrawingTools {
     POLYGON(),
     STAR(),
     TEXT(),
-    EYEDROPPER()  
+    EYEDROPPER(),
+    SELECTIONRECTANGLE()
 }

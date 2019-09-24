@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javax.imageio.ImageIO;
+import paint_overhaul.constant.DrawingMode;
 import paint_overhaul.constant.DrawingTools;
 import paint_overhaul.shapes.*;
 
@@ -44,6 +45,7 @@ public class PaintCanvas {
     private File openedFile;
     private File savedFile;
     private DrawingTools drawTools;
+    private DrawingMode drawMode;
     private PaintShape currentShape;
     private boolean hasBeenModified = false;
     private boolean isPolygon = false;
@@ -89,9 +91,9 @@ public class PaintCanvas {
                 return;
             }
             redrawnImage = canvas.snapshot(null,null);
-            switch(drawTools){
+            if(drawMode!=DrawingMode.SELECT){
+               switch(drawTools){
                 case PENCIL:
-                    System.out.println("In pencil");
                     currentShape = new Pencil(e.getX(), e.getY());
                     break;
                 case LINE:
@@ -122,7 +124,6 @@ public class PaintCanvas {
                     currentShape = new Star(e.getX(), e.getY());
                     break;
                 case TEXT:
-                    System.out.println("In text");
                     currentShape = new Text(e.getX(), e.getY(), userText);
                     break;
                 case EYEDROPPER:
@@ -130,6 +131,14 @@ public class PaintCanvas {
                     Main.paintController.getFillColorPicker().setValue(color);
                     setFillColor(color);
                     break;
+                case SELECTIONRECTANGLE:
+                    currentShape = new SelectionRectangle(e.getX(), e.getY());
+                    
+                } 
+               
+            }
+            else{
+                
             }
             hasBeenModified = true;
             });
@@ -152,7 +161,7 @@ public class PaintCanvas {
                     return;
                 }
                 undoHistory.add(redrawnImage);
-                redrawCanvas();
+                //redrawCanvas();
                 currentShape.setEnd(e.getX(), e.getY());
                 if(!currentShape.getIsPolygon()){
                     currentShape.draw(gc);
@@ -168,8 +177,11 @@ public class PaintCanvas {
      * Sets the mode of the canvas.
      * @param type Type of tool listed in DrawingTools.java
      */
-    public void setDrawingToolMode(DrawingTools type){
+    public void setDrawingTool(DrawingTools type){
         this.drawTools=type;
+    }
+    public void setDrawingMode(DrawingMode mode){
+        this.drawMode=mode;
     }
     /**
      * Sets the line width of the graphics context.

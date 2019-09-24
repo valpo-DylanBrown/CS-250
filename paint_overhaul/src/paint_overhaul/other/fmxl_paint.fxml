@@ -27,7 +27,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint_overhaul.other.FXMLPaintController" >
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.01" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint_overhaul.other.FXMLPaintController" >
     <top>
         <VBox>
             <children>
@@ -229,6 +229,11 @@
                     <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleEDToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Eyedropper"/>
+                        </tooltip>
+                    </ToggleButton>
+                    <ToggleButton fx:id="selectionRectangle" prefWidth="55.0"  prefHeight="35.0" onAction="#handleSelectionRectangle" toggleGroup="$toolGroup">
+                        <tooltip>
+                            <Tooltip text="Selection Rectangle"/>
                         </tooltip>
                     </ToggleButton>
                 </VBox> 

@@ -73,6 +73,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToggleButton starButton;
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton eyedropperButton;
+    @FXML private ToggleButton selectionRectangle;
     
     @FXML private Button zoomInButton;
     @FXML private Button zoomOutButton;
@@ -250,108 +251,117 @@ public class FXMLPaintController extends DefaultController {
     @FXML
     public void handleDrawToggle(){
         if(drawButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.PENCIL);
+            paintCanvas.setDrawingTool(DrawingTools.PENCIL);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleStarButton(){
         if(starButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.STAR);
+            paintCanvas.setDrawingTool(DrawingTools.STAR);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleLineToggle(){
         if(lineButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.LINE);
+            paintCanvas.setDrawingTool(DrawingTools.LINE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     public void handleEraserToggle(){
         if(eraserButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.ERASER);
+            paintCanvas.setDrawingTool(DrawingTools.ERASER);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleRectToggle(){
         if(rectButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.RECTANGLE);
+            paintCanvas.setDrawingTool(DrawingTools.RECTANGLE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleCircleToggle(){
        if(circleButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.CIRCLE);
+            paintCanvas.setDrawingTool(DrawingTools.CIRCLE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleSquareToggle(){
         if(squareButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.SQUARE);
+            paintCanvas.setDrawingTool(DrawingTools.SQUARE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleOvalToggle(){
         if(ovalButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.ELLIPSE);
+            paintCanvas.setDrawingTool(DrawingTools.ELLIPSE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleTriangleToggle(){
         if(triangleButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.TRIANGLE);
+            paintCanvas.setDrawingTool(DrawingTools.TRIANGLE);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handlePolygonButton(){
         if(polygonButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.POLYGON);
+            paintCanvas.setDrawingTool(DrawingTools.POLYGON);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleTextToggle(){
         if(textButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.TEXT);
+            paintCanvas.setDrawingTool(DrawingTools.TEXT);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
         }
     }
     @FXML
     public void handleEDToggle(){
         if(eyedropperButton.isSelected()){
-            paintCanvas.setDrawingToolMode(DrawingTools.EYEDROPPER);
+            paintCanvas.setDrawingTool(DrawingTools.EYEDROPPER);
         }
         else{
-            paintCanvas.setDrawingToolMode(null);
+            paintCanvas.setDrawingTool(null);
+        }
+    }
+    public void handleSelectionRectangle(){
+        if(selectionRectangle.isSelected()){
+            //paintCanvas.setDrawingMode(DrawingMode.SELECT);
+            paintCanvas.setDrawingTool(DrawingTools.SELECTIONRECTANGLE);
+        }
+        else{
+            paintCanvas.setDrawingTool(null);
         }
     }
     
