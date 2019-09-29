@@ -1,8 +1,35 @@
 Pain(t) Release Notes
 Author: Dylan Brown
-This program recreates the popular Microsoft Paint application using JavaFX. 
+This program recreates the popular Microsoft Paint application using JavaFX.
 
 Last Updated: 9/22/19
+
+------------------------------------------------------------------------------------------
+
+Version 4.0									09/28/2019
+
+New Features:
+	- Code overhauled
+			- Instead of being one large file, the program now utilizes
+				multiple objects. This upload is significantly larger
+				then usual.
+	- Text now supported
+	- Triangle now supported
+	- Star now supported
+	- N-Sided polygon now supported
+	- Erasing now supported
+	- Application shows shape will drawing
+	- Select and move now supported
+	- Release notes in-app support added
+	- Help contents in-app support added
+	- Javadoc updated
+Known/Possible Issues:
+	- MacBook image blur (this does not affect windows users)
+Upcoming:
+	- Unit testing
+	- Autosave
+	- Log tools
+	- Log app usage
 
 ------------------------------------------------------------------------------------------
 
@@ -28,7 +55,7 @@ New Features:
 	- Added support for BMP file type
 Known/Possible Issues:
 	- Image quality worsens as images are redone
-Upcoming: 
+Upcoming:
 	- Clean code and split into different files
 	- Zoom fit to screen
 	- Next requirements (See blackboard)
@@ -58,7 +85,7 @@ Known/Possible Issues:
 	- Alert before exiting does not currently check if the file needs to be saved
 		- Will be exploring using a bool to keep track of saved items.
 	- No other known issues.
-Upcoming: 
+Upcoming:
 	- Circle, rectangle, zoom, erase functions
 	- Undo/Redo functions
 	- Layers for the canvas
@@ -69,7 +96,7 @@ Upcoming:
 
 ------------------------------------------------------------------------------------------
 
-Version 1.0									09/03/2019				
+Version 1.0									09/03/2019
 New Features:
 	- Created MenuBar
 		- Create File Option
@@ -84,7 +111,7 @@ New Features:
 Known/Possible Issues:
 	- Snapshot extension hardcoded as PNG
 	- Using SwingFXUtils to save files
-Upcoming: 
+Upcoming:
 	- Create tools and toolbar
 	- Add support for tools
 		- Line, rectangle, circle, etc

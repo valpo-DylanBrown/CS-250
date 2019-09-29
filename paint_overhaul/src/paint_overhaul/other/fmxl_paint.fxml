@@ -62,12 +62,13 @@
                                         <MenuItem onAction="#handleZoom100Menu" text="Zoom 100%" mnemonicParsing="false" />
                                         <MenuItem onAction="#handleZoom200Menu" text="Zoom 200%" mnemonicParsing="false" />
                                         <MenuItem onAction="#handleZoom250Menu" text="Zoom 250%" mnemonicParsing="false" />
-                                        <MenuItem onAction="#handleZoom300Menu" text="Zoom 250%" mnemonicParsing="false" />
+                                        <MenuItem onAction="#handleZoom300Menu" text="Zoom 300%" mnemonicParsing="false" />
                                     </items>
                                 </Menu>
                                 <Menu text="_Help" mnemonicParsing="true">
                                     <items>
                                         <MenuItem disable="true" text="Search" />
+                                        <MenuItem text="Help Contents" onAction="#handleHelpContents"/>
                                         <SeparatorMenuItem />
                                         <MenuItem onAction="#handleAbout" text="About" mnemonicParsing="false" accelerator="Alt+A"/>
                                         <MenuItem onAction="#handleReleaseNotes" text="Release Notes" mnemonicParsing="false" accelerator="Alt+R" />
@@ -163,75 +164,75 @@
                     
                     <Pane VBox.vgrow="ALWAYS"/>
                     
-                    <ToggleButton fx:id="drawButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleDrawToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="drawButton" prefWidth="55.0" prefHeight="32.0" onAction="#handleDrawToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Pencil"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="lineButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleLineToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="lineButton" prefWidth="55.0" prefHeight="32.0" onAction="#handleLineToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Line"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="fillButton" prefWidth="55.0" prefHeight="35.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="fillButton" prefWidth="55.0" prefHeight="32.0" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Fill"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="eraserButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleEraserToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="eraserButton" prefWidth="55.0" prefHeight="32.0" onAction="#handleEraserToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Erase"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="rectButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleRectToggle" toggleGroup="$toolGroup" >
+                    <ToggleButton fx:id="rectButton" prefWidth="55.0" prefHeight="32.0" onAction="#handleRectToggle" toggleGroup="$toolGroup" >
                         <tooltip>
                             <Tooltip text="Rectangle"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="squareButton" prefWidth="55.0" prefHeight="35.0" onAction="#handleSquareToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="squareButton" prefWidth="55.0" prefHeight="32.0" onAction="#handleSquareToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Square"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="ovalButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleOvalToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="ovalButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleOvalToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Ellipse"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="circleButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleCircleToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="circleButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleCircleToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Circle"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="triangleButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleTriangleToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="triangleButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleTriangleToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Triangle"/>
                         </tooltip>
                     </ToggleButton>
                     <HBox alignment="CENTER" spacing="1.5">
-                        <ToggleButton fx:id="polygonButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handlePolygonButton" toggleGroup="$toolGroup">
+                        <ToggleButton fx:id="polygonButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handlePolygonButton" toggleGroup="$toolGroup">
                             <tooltip>
                                 <Tooltip text="N-Sided Polygon"/>
                             </tooltip>
                         </ToggleButton>
                         <Spinner fx:id="polygonSpinner" prefWidth="60.0" editable="true"/>
                     </HBox>
-                    <ToggleButton fx:id="starButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleStarButton" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="starButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleStarButton" toggleGroup="$toolGroup">
                             <tooltip>
                                 <Tooltip text="Star"/>
                             </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleTextToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="textButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleTextToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Text"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="35.0" onAction="#handleEDToggle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="eyedropperButton" prefWidth="55.0"  prefHeight="32.0" onAction="#handleEDToggle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Eyedropper"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="selectionRectangle" prefWidth="55.0"  prefHeight="35.0" onAction="#handleSelectionRectangle" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="selectionRectangle" prefWidth="55.0"  prefHeight="32.0" onAction="#handleSelectionRectangle" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Selection Rectangle"/>
                         </tooltip>

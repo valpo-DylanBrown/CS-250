@@ -5,8 +5,9 @@
  */
 package paint_overhaul.shapes;
 
-import com.sun.javafx.geom.Shape;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 /**
  *
@@ -28,5 +29,24 @@ public class Rectangle extends PaintShape {
     }
     @Override
     public void draw(GraphicsContext gc, int sides){}
+    
+    public void drawSelection(GraphicsContext gc){
+        boolean xPositive = x1 - x0 >= 0;
+        boolean yPositive = y1 - y0 >= 0;
+        Paint beforeStrokeColor = gc.getStroke();
+        Paint beforeFillColor = gc.getFill();
+        double beforeLineWidth = gc.getLineWidth();
+        
+        gc.setFill(Color.TRANSPARENT);
+        gc.setStroke(Color.BLACK);
+        gc.setLineDashes(4);
+        gc.setLineWidth(1);
+        gc.fillRect(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
+        gc.strokeRect(xPositive ? x0 : x1, yPositive ? y0 : y1, xPositive ? x1-x0 : x0-x1, yPositive ? y1-y0 : y0-y1);
+        gc.setStroke(beforeStrokeColor);
+        gc.setFill(beforeFillColor);
+        gc.setLineDashes(0);
+        gc.setLineWidth(beforeLineWidth);
+    }
 
 }

@@ -12,7 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- *
+ * Class to create an about alert for the application. This class sets the
+ * icon of the window, and creates an including the information about the app.
  * @author Dylan
  */
 public class AboutAlert {

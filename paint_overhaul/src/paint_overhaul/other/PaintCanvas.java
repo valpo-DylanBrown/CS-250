@@ -12,15 +12,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javax.imageio.ImageIO;
@@ -48,10 +49,14 @@ public class PaintCanvas {
     private DrawingTools drawTools;
     private DrawingMode drawMode;
     private PaintShape currentShape;
+    private Rectangle rectangle;
+    private ImageView currentSelection;
+    private WritableImage selectedImage;
     private boolean hasBeenModified = false;
     private boolean isPolygon = false;
     private Stack<Image> undoHistory;
     private Stack<Image> redoHistory;
+    private SelectionRectangle selection;
     private double currentZoom = 1;
     private Scale zoomScale;
     private boolean isZoomedOut = false;
@@ -59,7 +64,7 @@ public class PaintCanvas {
     private int fontSize;
     private Font font;
     private String userText;
-    private SelectionRectangle selectedRectangle;
+   
     
     /**
      * Constructor for PaintCanvas.
@@ -133,17 +138,14 @@ public class PaintCanvas {
                     Main.paintController.getFillColorPicker().setValue(color);
                     setFillColor(color);
                     break;
-                case SELECTIONRECTANGLE:
-                    if(selectedRectangle.getImage() == null){
-                        selectedRectangle = new SelectionRectangle(e.getX(), e.getY());
-                    }
-                    currentShape = new Rectangle(e.getX(), e.getY());
-                    break;
                 } 
                
             }
             else{
-                
+                if(currentSelection == null){
+                    selection = new SelectionRectangle(e.getX(), e.getY());
+                    rectangle = new Rectangle(e.getX(), e.getY());    
+                }
             }
             hasBeenModified = true;
             });
@@ -152,38 +154,105 @@ public class PaintCanvas {
                     return;
                 }
                 redrawCanvas();
-                currentShape.setEnd(e.getX(), e.getY());
-                if(!currentShape.getIsPolygon()){
-                    currentShape.draw(gc);
-                }
-                else if(drawMode == DrawingMode.SELECT){
-                    selectedRectangle.setEnd(e.getX(), e.getY());
-                    SnapshotParameters params = new SnapshotParameters();
-                    double width = selectedRectangle.getEndX() - selectedRectangle.getOrigX();
-                    double height = selectedRectangle.getEndY() - selectedRectangle.getOrigY();
-                    params.setViewport(new Rectangle2D(selectedRectangle.getOrigX(), selectedRectangle.getOrigY(), width, height));
-                    WritableImage image = canvas.snapshot(params, null);
-                    selectedRectangle.setImage(image);
-                    
+                
+                if(drawMode!=DrawingMode.SELECT){
+                    currentShape.setEnd(e.getX(), e.getY());
+                    if(!currentShape.getIsPolygon()){
+                      currentShape.draw(gc);
+                    }
+                    else{
+                        currentShape.draw(gc,numSides);
+                    }  
                 }
                 else{
-                    currentShape.draw(gc,numSides);
+                    if(currentSelection==null){
+                        rectangle.setEnd(e.getX(), e.getY());
+                        rectangle.drawSelection(gc);
+                        selection.setEnd(e.getX(), e.getY());
+                    }
+                    
+                    
                 }
                 hasBeenModified = true;
             });
-            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e->{
+            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent e)->{
                 if(drawTools == null || drawTools == DrawingTools.EYEDROPPER){
                     return;
                 }
                 undoHistory.add(redrawnImage);
                 //redrawCanvas();
-                currentShape.setEnd(e.getX(), e.getY());
-                if(!currentShape.getIsPolygon()){
-                    currentShape.draw(gc);
+                
+                
+                if(drawMode!=DrawingMode.SELECT){
+                    currentShape.setEnd(e.getX(), e.getY());
+                    if(!currentShape.getIsPolygon()){
+                      currentShape.draw(gc);
+                      }
+                      else{
+                          currentShape.draw(gc,numSides);
+                      }  
                 }
                 else{
-                    currentShape.draw(gc,numSides);
+                    if(currentSelection == null){
+                        rectangle.setEnd(e.getX(), e.getY());
+                        rectangle.drawSelection(gc);
+                        WritableImage oldImg = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+                        canvas.snapshot(null, oldImg);
+                        selection.setEnd(e.getX(), e.getY());
+                        if(selection.getOrigX() > selection.getEndX()){
+                            double temp = selection.getOrigX();
+                            selection.setEndX(selection.getEndX());
+                            selection.setOrigX(temp);
+                        }
+                        if(selection.getOrigY() > selection.getEndY()){
+                            double temp = selection.getOrigY();
+                            selection.setEndY(selection.getEndY());
+                            selection.setOrigY(temp);
+                        }
+                        WritableImage newImage = new WritableImage(oldImg.getPixelReader(), (int)selection.getOrigX(), (int)selection.getOrigY(), (int)Math.abs(selection.getOrigX()-selection.getEndX()), (int)Math.abs(selection.getOrigY()-selection.getEndY()));
+                        //selectedImage = newImage;
+                        Paint colorBeforeErase = gc.getFill();
+                        currentSelection = new ImageView(newImage);
+                        gc.setFill(Color.WHITE);
+                        gc.fillRect(selection.getOrigX(), selection.getOrigY(), Math.abs(selection.getEndX() - selection.getOrigX()), Math.abs(selection.getEndY() - selection.getOrigY()));
+                        
+                        currentSelection.setX(selection.getOrigX()-5);
+                        currentSelection.setY(selection.getOrigY()-5);
+                        
+                        currentSelection.setOnMousePressed(event -> {
+                            
+                            selection.setOrigX(event.getX()- currentSelection.getX());
+                            selection.setOrigY(event.getY()- currentSelection.getY());
+                        });
+                        currentSelection.setOnMouseDragged(event -> {
+                            //System.out.println("DRAGGED1");
+                                currentSelection.setX(event.getX()- selection.getOrigX());
+                                currentSelection.setY(event.getY()- selection.getOrigY());
+                                event.consume();
+                                //System.out.println("DRAGGED");
+                                //selection.setEndX(currentSelection.getX());
+                                //selection.setEndY(currentSelection.getY());
+                                //selection.setIsDragging(true);
+                        });
+                        currentSelection.setOnMouseReleased(event -> {
+                                //selection.setIsDragging(false);
+                            Main.paintController.getStaticPane().getChildren().remove(currentSelection);
+                            gc.drawImage(currentSelection.getImage(),currentSelection.getX(),currentSelection.getY());
+                            //selection.getOrigX(), selection.getOrigY(), currentSelection.getX()-selection.getOrigX(), currentSelection.getY()-selection.getOrigY()
+                            currentSelection = null;
+                        });
+                        double width = selection.getEndX() - selection.getOrigX();
+                        double height = selection.getEndY() - selection.getOrigY();
+                        //gc.drawImage(currentSelection.getImage(), selection.getEndX(),selection.getEndY());
+                        Main.paintController.getStaticPane().getChildren().add(currentSelection);
+                        gc.setFill(colorBeforeErase);
+                        
+                        //selection.setImage(gc);
+                    }
+                    
+                    
                 }
+                
                 redrawnImage = canvas.snapshot(null,null);
                 hasBeenModified = true;
             });
@@ -390,6 +459,11 @@ public class PaintCanvas {
         WritableImage writableImage = new WritableImage((int)canvas.getWidth(),(int)canvas.getHeight());
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
+        canvas.snapshot(params, writableImage);
+        return writableImage;
+    }
+    public WritableImage snapshotCurrentCanvas(SnapshotParameters params, double width, double height){
+        WritableImage writableImage = new WritableImage((int) width, (int) height);
         canvas.snapshot(params, writableImage);
         return writableImage;
     }

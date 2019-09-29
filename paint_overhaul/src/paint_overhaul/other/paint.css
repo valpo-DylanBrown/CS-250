@@ -124,6 +124,12 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
+#selectionRectangle {          
+    -fx-background-image: url("../icons/select.png");
+    -fx-background-size: 32 32;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:center;   
+}
 #swapColors {          
     -fx-background-image: url("../icons/swap.png");
     -fx-background-size: 30 30;

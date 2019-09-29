@@ -21,8 +21,11 @@ public class Eraser extends Pencil {
     @Override
     public void draw(GraphicsContext gc){
         Paint colorBeforeErase = gc.getStroke();
+        double lineWidthBefore = gc.getLineWidth();
         gc.setStroke(Color.WHITE);
+        gc.setLineWidth(lineWidthBefore*2);
         super.draw(gc);
         gc.setStroke(colorBeforeErase);
+        gc.setLineWidth(lineWidthBefore);
     }
 }
