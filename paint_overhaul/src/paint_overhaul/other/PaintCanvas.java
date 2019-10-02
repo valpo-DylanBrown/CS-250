@@ -5,12 +5,16 @@
  */
 package paint_overhaul.other;
 
+import static java.util.concurrent.TimeUnit.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
@@ -34,7 +38,6 @@ import paint_overhaul.shapes.*;
  * This class allows for easy drawing and zooming. 
  * 
  * @author dylan
- * @version 1.0
  * @since 3.0
  * 
  */
@@ -64,6 +67,7 @@ public class PaintCanvas {
     private int fontSize;
     private Font font;
     private String userText;
+    
    
     
     /**
@@ -440,6 +444,17 @@ public class PaintCanvas {
      */
     public void saveCanvasToFile(File file) {
         setSavedFile(file);
+        WritableImage writableImage = snapshotCurrentCanvas();
+        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+        try{
+            ImageIO.write(renderedImage, "png", file);
+        }
+        catch(IOException e){
+            System.out.println("File not found");
+        }
+    }
+    public void autoSaveCanvasToFile(File file) {
+        //setSavedFile(file);
         WritableImage writableImage = snapshotCurrentCanvas();
         RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
         try{

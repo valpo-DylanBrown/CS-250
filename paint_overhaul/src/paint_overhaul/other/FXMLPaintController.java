@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import paint_overhaul.constant.*;
 import paint_overhaul.alerts.*;
+import paint_overhaul.threads.AutoSaveThread;
 /**
  * <p>
  * FXMLPaintController is the base class for the whole program.
@@ -35,21 +36,20 @@ import paint_overhaul.alerts.*;
  * This class also references all actions created in the .fxml file. 
  * </p>
  * @author dylan
- * @version 2.1
  * @since 1.0
  */
 public class FXMLPaintController extends DefaultController {
-    @SuppressWarnings("LeakingThisInConstructor")
     
     @FXML private BorderPane borderPane;
     @FXML private Pane staticPane;
     @FXML private Canvas canvas;
     @FXML private MenuBar menuBar;
-    @FXML private ReleaseNotesAlert releaseNotesAlert;
-    @FXML private HelpAlert helpAlert;
-    @FXML private AboutAlert aboutAlert;
-    @FXML private SmartSaveAlert smartSaveAlert;
-    @FXML private ResizeCanvasAlert resizeCanvasAlert;
+    //private AutoSaveThread autoSaveThread;
+    private ReleaseNotesAlert releaseNotesAlert;
+    private HelpAlert helpAlert;
+    private AboutAlert aboutAlert;
+    private SmartSaveAlert smartSaveAlert;
+    private ResizeCanvasAlert resizeCanvasAlert;
     private PaintCanvas paintCanvas;
     
     private BetterFileChooser openFileChooser;
@@ -81,11 +81,12 @@ public class FXMLPaintController extends DefaultController {
     @FXML private Button zoomInButton;
     @FXML private Button zoomOutButton;
     @FXML private Label zoomLabel;
+    @FXML private Label autoSaveLabel; 
     @FXML private Button swapColors;
     @FXML private Button closeButton;
     @FXML private Button undoButton;
     @FXML private Button redoButton;
-    
+    private boolean isVisible = true;
     @FXML private MenuItem saveAsMenu;
     
     @FXML private ToolBar toolBar;
@@ -109,6 +110,9 @@ public class FXMLPaintController extends DefaultController {
     public PaintCanvas getPaintCanvas(){
         return paintCanvas;
     }
+    public AutoSaveThread getAutoSaveThread(){
+        return autoSaveThread;
+    }
     /**
      * FXML Function to handle opening a file. 
      * This function opens a file using the file chooser,
@@ -125,6 +129,7 @@ public class FXMLPaintController extends DefaultController {
             return;
         }
         paintCanvas.loadImageFromFille(fileToOpen);
+        
         zoomInButton.setDisable(false);
         zoomOutButton.setDisable(false);
     }
@@ -281,6 +286,18 @@ public class FXMLPaintController extends DefaultController {
         else{
             Platform.exit();
         }
+        //autoSaveThread.setAutoSaveFlag(false);
+    }
+    @FXML
+    public void handleAutoSaveLabel(){
+        if(isVisible == true){
+            autoSaveLabel.setVisible(false);
+            isVisible = false;
+        }
+        else{
+            autoSaveLabel.setVisible(true);
+            isVisible = true;
+        }
     }
     @FXML
     public void handleZoomInButton(){
@@ -341,6 +358,10 @@ public class FXMLPaintController extends DefaultController {
     }
     public void updateZoomLabel(){
         zoomLabel.setText(Math.round(paintCanvas.getCurrentZoom()*100)+"% ");
+    }
+    
+    public void setAutoSaveLabel(String string){
+        autoSaveLabel.setText(string);
     }
     @FXML
     public void handleDrawToggle(){
@@ -491,6 +512,10 @@ public class FXMLPaintController extends DefaultController {
         });
         openFileChooser = new BetterFileChooser("Open Image: ");
         saveFileChooser = new BetterFileChooser("Save Canvas: ");
+        
+        autoSaveThread = new AutoSaveThread();
+        autoSaveThread.startAutoSaveThread();
+        
         paintCanvas = new PaintCanvas(canvas);
         releaseNotesAlert = new ReleaseNotesAlert();
         helpAlert = new HelpAlert();

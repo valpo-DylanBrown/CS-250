@@ -15,17 +15,27 @@ import paint_overhaul.other.Main;
 import paint_overhaul.other.PaintCanvas;
 
 /**
- *
+ * Creates the pop-up window for the smart save notification.
  * @author Dylan
  */
 public class SmartSaveAlert {
     private PaintCanvas paintCanvas;
     private BetterFileChooser betterFC;
     File file;
+    /**
+     * Constructor for the smart save alert. 
+     * @param paintCanvas PaintCanvas object for the application. 
+     * @param betterFC BetterFileChooser for the application. 
+     */
     public SmartSaveAlert(PaintCanvas paintCanvas, BetterFileChooser betterFC){
         this.paintCanvas = paintCanvas;
         this.betterFC = betterFC;
     }
+    /**
+     * Creates the alert for the smart save notification. 
+     * @see #createCloseAlertDialog() 
+     * @see #handleButtonTypeLogic(Optional, ButtonType, ButtonType, ButtonType) 
+     */
     public void setSmartSaveAlert(){
         Alert alert = createCloseAlertDialog();
         ButtonType yesButton = new ButtonType("Yes");
@@ -37,6 +47,10 @@ public class SmartSaveAlert {
         Optional<ButtonType> result = alert.showAndWait();
         handleButtonTypeLogic(result, yesButton, noButton, cancelButton);
     }
+    /**
+     * Function to set the header for the smart save alert. 
+     * @return Alert to show. 
+     */
     private Alert createCloseAlertDialog(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning!");
@@ -45,6 +59,13 @@ public class SmartSaveAlert {
         alert.setContentText("Please choose an option");
         return alert;
     }
+    /**
+     * 
+     * @param result Optional object
+     * @param yesButton Yes button for the window.
+     * @param noButton No button for the window. 
+     * @param cancelButton Cancel button for the window. 
+     */
     private void handleButtonTypeLogic(Optional<ButtonType> result, 
             ButtonType yesButton, ButtonType noButton, ButtonType cancelButton ){
             if(result.get()==yesButton){
@@ -52,10 +73,12 @@ public class SmartSaveAlert {
                     paintCanvas.setSavedFile(betterFC.getFileChooser().showSaveDialog(Main.paintController.getBorderPane().getScene().getWindow())); 
                     }
                 paintCanvas.saveCanvasToFile(paintCanvas.getSavedFile());
+                //Main.paintController.getAutoSaveThread().shutdownThread();
                 Platform.exit();
             }
             
             else if(result.get()==noButton){
+                
                 Platform.exit();
             }
             else if(result.get() == cancelButton){

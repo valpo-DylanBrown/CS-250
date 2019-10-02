@@ -8,13 +8,27 @@ package paint_overhaul.shapes;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- *
+ * Star object. This object extends {@link Polygon}
  * @author Dylan
+ * @since 4.0
  */
 public class Star extends Polygon {
+    /**
+     * Constructor for the star object.
+     * @param x X location. 
+     * @param y Y location. 
+     */
     public Star(double x, double y) {
         super(x,y);
     }
+    /**
+     * Override for the draw function from {@link PaintShape}.
+     * This function uses the mathematical formula for any n-sided polygon.
+     * It sets the angle to 2Pi/5, has 5 sides, and steps the angle by triple
+     * the previous angle plus Pi. 
+     * @param gc Graphics
+     * @param sides 5 sides. Called in the PaintCanvas class.  
+     */
     @Override
     public void draw(GraphicsContext gc, int sides){
         boolean xPositive = x1 - x0 >= 0;

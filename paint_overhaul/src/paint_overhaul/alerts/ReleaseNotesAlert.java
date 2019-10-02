@@ -19,7 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- *
+ * Class to create a release note alert. Loaded from relative release notes 
+ * text document.
  * @author Dylan
  */
 public class ReleaseNotesAlert {
@@ -27,13 +28,14 @@ public class ReleaseNotesAlert {
     //public TextArea area;
     String filePath  = "src/paint_overhaul/other/releasenotes.txt";
     String iconFilePath = "src/paint_overhaul/icons/alertIcon.png";
+    /**
+     * Creates the alert for the release notes. Sets the icon, title, and header
+     * information. It then shows the window to the user. 
+     */
     public void createAlert(){
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Release Notes");
         alert.setHeaderText("Release Notes for Pain(t)");
-
-        
-        
         content = this.setContent(filePath);
         TextArea area = new TextArea(content);
         area.setWrapText(true);
@@ -42,12 +44,15 @@ public class ReleaseNotesAlert {
         area.setPrefHeight(600);
         alert.getDialogPane().setContent(area);
         alert.setResizable(true);
-        File file = new File(iconFilePath);
-        Image image = new Image(file.toURI().toString(), 50, 50, true, true);
-        ImageView icon = new ImageView(image);
+        ImageView icon = loadIcon();
         alert.getDialogPane().setGraphic(icon);
         alert.showAndWait();
     }
+    /**
+     * Internal function to set the content of the window.
+     * @param filePath  Location of the file to be loaded. 
+     * @return String of content. 
+     */
     private String setContent(String filePath)
     {
         StringBuilder contentBuilder = new StringBuilder();
@@ -60,5 +65,15 @@ public class ReleaseNotesAlert {
             System.out.println("error");
         }
         return contentBuilder.toString();
+    }
+    /**
+     * Internal function to load the icon into the window. 
+     * @return ImageView for the icon. 
+     */
+    private ImageView loadIcon(){
+        File file = new File(iconFilePath);
+        Image image = new Image(file.toURI().toString(), 50, 50, true, true);
+        ImageView icon = new ImageView(image);
+        return icon;
     }
 }

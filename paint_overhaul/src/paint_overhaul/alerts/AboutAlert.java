@@ -13,11 +13,16 @@ import javafx.scene.image.ImageView;
 
 /**
  * Class to create an about alert for the application. This class sets the
- * icon of the window, and creates an including the information about the app.
+ * icon of the window, and creates an including the information about the 
+ * application.
  * @author Dylan
+ * @since 3.0
  */
 public class AboutAlert {
     String iconFilePath = "src/paint_overhaul/icons/alertIcon.png";
+    /**
+     * Setup for the alert. This function also shows the alert to the user. 
+     */
     public void createAboutAlert(){
         Alert alert = new Alert(AlertType.INFORMATION);
         ImageView icon = loadIcon();
@@ -28,7 +33,11 @@ public class AboutAlert {
         alert.getDialogPane().setGraphic(icon);
         alert.showAndWait();
     }
-    public ImageView loadIcon(){
+    /**
+     * Internal function to load the icon into the window. 
+     * @return ImageView for the icon. 
+     */
+    private ImageView loadIcon(){
         File file = new File(iconFilePath);
         Image image = new Image(file.toURI().toString(), 50, 50, true, true);
         ImageView icon = new ImageView(image);

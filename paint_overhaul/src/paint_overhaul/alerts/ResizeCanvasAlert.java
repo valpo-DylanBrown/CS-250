@@ -20,15 +20,25 @@ import javafx.util.Pair;
 import paint_overhaul.other.PaintCanvas;
 
 /**
- *
+ * Class to create an alert when resizing the canvas. 
+ * The function handles different actions from the user-input. If the user
+ * wishes to resize the canvas, the width and height are changed. If not, the 
+ * dialog exits. 
  * @author Dylan
+ * @since 3.0
  */
 public class ResizeCanvasAlert {
     private PaintCanvas paintCanvas;
-    
+    /**
+     * Constructor
+     * @param pc PaintCanvas object
+     */
     public ResizeCanvasAlert(PaintCanvas pc){
         this.paintCanvas=pc;
     }
+    /**
+     * This function creates the resize dialog. 
+     */
     public void createResizeDialog(){
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Resize Canvas");
@@ -83,6 +93,12 @@ public class ResizeCanvasAlert {
         paintCanvas.getGraphicsContext().drawImage(afterResizeImage,0,0);
         paintCanvas.setHasBeenModified(true);
     }
+    /**
+     * Internal function to create a grid pane for the dialog elements.
+     * @param gridPane Grid Pane that will be created.
+     * @param width  TextField to hold width data.
+     * @param height TextField to hold height data
+     */
     private void createGridPane(GridPane gridPane, TextField width, TextField height){
         gridPane.setHgap(10);
         gridPane.setVgap(10);

@@ -53,6 +53,8 @@
                                 </Menu>
                                 <Menu text="_View" mnemonicParsing="true">
                                     <items>
+                                        <MenuItem onAction="#handleAutoSaveLabel" text="View Autosave Timer"/>
+                                        <SeparatorMenuItem />
                                         <MenuItem onAction="#handleZoomInMenu" text="Zoom In" mnemonicParsing="false" accelerator="Shortcut+="/>
                                         <MenuItem onAction="#handleZoomOutMenu" text="Zoom Out" mnemonicParsing="false" accelerator="Shortcut+-" />
                                         <SeparatorMenuItem />
@@ -259,6 +261,12 @@
             </content>
         </ScrollPane>
     </center>
+    <bottom>
+        <HBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label id="autoSaveLabel" alignment="center" fx:id="autoSaveLabel"/> 
+        </HBox>
+    </bottom>
     <stylesheets>
         <URL value="@paint.css" />
     </stylesheets> 

@@ -6,7 +6,9 @@
 package paint_overhaul.constant;
 
 /**
- *
+ * Enumeration for the modes of the PaintCanvas. Draw mode is used for normal
+ * drawing tools. If the select rectangle is selected, the SELECT enumeration 
+ * is used. 
  * @author dylan
  */
 public enum DrawingMode {

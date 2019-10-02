@@ -8,12 +8,16 @@ package paint_overhaul.other;
 import javafx.stage.FileChooser;
 
 /**
- *
+ * Class for a more efficient file chooser
  * @author Dylan
  */
 public class BetterFileChooser {
     FileChooser fileChooser = new FileChooser();
     String fcTitle;
+    /**
+     * Constructor for BetterFileChooser. 
+     * @param title Desired title of File Chooser. 
+     */
     public BetterFileChooser(String title){
         this.fcTitle = title;
         configureFileChooser(fileChooser, fcTitle);
@@ -26,7 +30,6 @@ public class BetterFileChooser {
      * {@link #handleSave()} 
      * @param fileChooser  file chooser to edit
      * @param title string to set title of the window
-     * 
      */
     private void configureFileChooser(FileChooser fileChooser, String title){
         fileChooser.setTitle(title);
@@ -42,6 +45,10 @@ public class BetterFileChooser {
                 "*.TIFF", "*.tif")
             );
     }
+    /**
+     * Getter for the FileChooser. 
+     * @return fileChooser. 
+     */
     public FileChooser getFileChooser(){
         return fileChooser;
     }

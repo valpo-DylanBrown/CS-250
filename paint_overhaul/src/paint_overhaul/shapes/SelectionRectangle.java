@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 import paint_overhaul.other.PaintCanvas;
 
 /**
- *
+ * SelectionRectangle object. This class needs to be overhauled and is only 
+ * partially functional. The code to handle the select and move can be see
+ * in {@link PaintCanvas#canvasSetup()}
  * @author dylan
  */
 public class SelectionRectangle {

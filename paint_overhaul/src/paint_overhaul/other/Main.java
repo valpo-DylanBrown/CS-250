@@ -5,6 +5,7 @@
  */
 package paint_overhaul.other;
 
+import paint_overhaul.threads.AutoSaveThread;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
  * This function creates the scene and loads the controller. It also sets the 
  * icon of the application.
  * @author dylan
+ * @version 4.0
  */
 public class Main extends Application {
     public static final double MIN_PROGRAM_WIDTH = 400;
@@ -26,11 +28,11 @@ public class Main extends Application {
     public static final double DEFAULT_HEIGHT = 760;
     
     public static FXMLPaintController paintController;
+    //public static AutoSaveThread autoSaveThread = new AutoSaveThread();
     
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(FXMLPaintController.class.getResource("fmxl_paint.fxml"));
-        
         Scene scene = new Scene(root, DEFAULT_WIDTH , DEFAULT_HEIGHT);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
@@ -44,8 +46,15 @@ public class Main extends Application {
         stage.getIcons().add(icon);
         stage.setMaximized(true);
         stage.show();
+        
+        /*
+        autoSaveThread.beepForAnHour();
+        stage.setOnCloseRequest(e -> {
+            //System.out.println("Shutting down");
+            autoSaveThread.shutdownThread();
+        });*/
     }
-
+    
     /**
      * @param args the command line arguments
      */
