@@ -16,7 +16,7 @@ import paint_overhaul.other.PaintCanvas;
  * @author Dylan
  */
 public class LossWarning {
-    private PaintCanvas paintCanvas;
+    private final PaintCanvas paintCanvas;
 
     public LossWarning(PaintCanvas paintCanvas){
         this.paintCanvas = paintCanvas;
