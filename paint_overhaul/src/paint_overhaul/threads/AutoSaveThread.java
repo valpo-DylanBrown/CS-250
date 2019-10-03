@@ -29,6 +29,7 @@ public class AutoSaveThread {
     public AutoSaveThread(){
         System.out.println("Auto save thread created");
         logFile = new File(logLocation);
+        checkLogDeletion();
         thread = new Thread(() -> {
             while(true){
                 handleAutoSave();
@@ -88,6 +89,15 @@ public class AutoSaveThread {
             fWriter.append(fileName + " Saved at: " + dateFormat.format(date)+ System.getProperty( "line.separator" ));
         }
         fWriter.close();
+    }
+    private void checkLogDeletion(){
+        long lastLogFileModification = new Date().getTime() - logFile.lastModified();
+        int dayThreshold = 3*24*60*60*1000;
+        
+        if(lastLogFileModification > dayThreshold){
+            logFile.delete();
+        }
+        
     }
     /*
     //private final PaintCanvas paintCanvas;
