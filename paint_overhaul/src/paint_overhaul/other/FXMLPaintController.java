@@ -3,8 +3,11 @@ package paint_overhaul.other;
 //BIG TODO SPLIT THINGS UP INTO FUNCTIONS AND DIFFERENT FILES
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -130,7 +133,11 @@ public class FXMLPaintController extends DefaultController {
             return;
         }
         paintCanvas.loadImageFromFille(fileToOpen);
-        
+        try {
+            autoSaveThread.logFile(fileToOpen.getName(), true);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         zoomInButton.setDisable(false);
         zoomOutButton.setDisable(false);
     }
@@ -147,7 +154,13 @@ public class FXMLPaintController extends DefaultController {
             saveAsMenu.fire();
             return;
         }
-        paintCanvas.saveCanvasToFile(paintCanvas.getSavedFile()); 
+        paintCanvas.saveCanvasToFile(paintCanvas.getSavedFile());
+        
+        try {
+            autoSaveThread.logFile(paintCanvas.getSavedFile().getName(), false);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * FXML Function to handle save as functionality. 
@@ -158,11 +171,17 @@ public class FXMLPaintController extends DefaultController {
      */
     @FXML
     public void handleSaveAs(){
-        File file = saveFileChooser.getFileChooser().showSaveDialog(borderPane.getScene().getWindow());
-        if(file==null){
+        File savedFile = saveFileChooser.getFileChooser().showSaveDialog(borderPane.getScene().getWindow());
+        if(savedFile==null){
             return;
         }
-        paintCanvas.saveCanvasToFile(file); 
+        paintCanvas.saveCanvasToFile(savedFile);
+        
+        try {
+            autoSaveThread.logFile(savedFile.getName(), false);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * FXML Function to close the application from File-&gt;Exit.
@@ -371,7 +390,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.PENCIL);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -381,7 +406,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.STAR);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -391,7 +422,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.LINE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public void handleEraserToggle(){
@@ -400,7 +437,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.ERASER);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -410,7 +453,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.RECTANGLE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -420,7 +469,13 @@ public class FXMLPaintController extends DefaultController {
            paintCanvas.setDrawingTool(DrawingTools.CIRCLE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -430,7 +485,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.SQUARE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -440,7 +501,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.ELLIPSE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -450,7 +517,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.TRIANGLE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -460,7 +533,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.POLYGON);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -470,7 +549,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.TEXT);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     @FXML
@@ -480,7 +565,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.EYEDROPPER);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public void handleSelectionRectangle(){
@@ -489,7 +580,13 @@ public class FXMLPaintController extends DefaultController {
             paintCanvas.setDrawingTool(DrawingTools.SELECTIONRECTANGLE);
         }
         else{
-            paintCanvas.setDrawingTool(null);
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

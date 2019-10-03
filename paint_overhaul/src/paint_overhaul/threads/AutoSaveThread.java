@@ -6,6 +6,11 @@
 package paint_overhaul.threads;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.application.Platform;
 import paint_overhaul.other.Main;
 
@@ -15,13 +20,15 @@ import paint_overhaul.other.Main;
  */
 public class AutoSaveThread {
     private final Thread thread;
-    //private final String autoSaveLocation = "src/paint_overhaul/autosave/autosave.";
+    int timeElapsed = 0;
+    private final File logFile;
+    private final String logLocation = "src/paint_overhaul/logs/log.txt";
     //private final File file;
     //private final String extension; 
     
     public AutoSaveThread(){
         System.out.println("Auto save thread created");
-        
+        logFile = new File(logLocation);
         thread = new Thread(() -> {
             while(true){
                 handleAutoSave();
@@ -37,6 +44,7 @@ public class AutoSaveThread {
         try{
             for(int i=60; i>0; i--){
                 int currentCount=i;
+                timeElapsed++;
                 Platform.runLater(() -> {
                     Main.paintController.setAutoSaveLabel("Saving in: " +  currentCount);
                 });
@@ -55,6 +63,31 @@ public class AutoSaveThread {
             System.out.println("No canvas");
         }
         
+    }
+    public void logTool(String tool) throws IOException{
+        FileWriter fWriter;
+        fWriter = new FileWriter(logFile,true);
+        fWriter.append(tool + ": " + timeElapsed + " seconds" + System.getProperty("line.separator"));
+        fWriter.close();
+        
+        timeElapsed = 0;
+    }
+    
+    public void logFile(String fileName, boolean mode) throws IOException{
+        FileWriter fWriter;
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        
+        fWriter = new FileWriter(logFile,true);
+        if(mode){
+            
+            fWriter.append(fileName + " Opened at: " + dateFormat.format(date) + System.getProperty( "line.separator" ));
+            timeElapsed = 0;
+        }
+        else{
+            fWriter.append(fileName + " Saved at: " + dateFormat.format(date)+ System.getProperty( "line.separator" ));
+        }
+        fWriter.close();
     }
     /*
     //private final PaintCanvas paintCanvas;

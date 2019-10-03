@@ -28,7 +28,7 @@ public class Main extends Application {
     public static final double DEFAULT_HEIGHT = 760;
     
     public static FXMLPaintController paintController;
-    //public static AutoSaveThread autoSaveThread = new AutoSaveThread();
+    
     
     @Override
     public void start(Stage stage) throws Exception {

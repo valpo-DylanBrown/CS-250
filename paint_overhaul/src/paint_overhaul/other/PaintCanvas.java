@@ -14,9 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Stack;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
@@ -105,7 +102,7 @@ public class PaintCanvas {
      */
     private void canvasSetup(){
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e->{
-            if(drawTools == null){
+            if(drawTools == DrawingTools.NONE){
                 return;
             }
             redrawnImage = canvas.snapshot(null,null);
@@ -161,7 +158,7 @@ public class PaintCanvas {
             hasBeenModified = true;
             });
          canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
-                if(drawTools == null || drawTools == DrawingTools.EYEDROPPER){
+                if(drawTools == DrawingTools.NONE || drawTools == DrawingTools.EYEDROPPER){
                     return;
                 }
                 redrawCanvas();
@@ -187,7 +184,7 @@ public class PaintCanvas {
                 hasBeenModified = true;
             });
             canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent e)->{
-                if(drawTools == null || drawTools == DrawingTools.EYEDROPPER){
+                if(drawTools == DrawingTools.NONE || drawTools == DrawingTools.EYEDROPPER){
                     return;
                 }
                 undoHistory.add(redrawnImage);
@@ -274,6 +271,9 @@ public class PaintCanvas {
      */
     public void setDrawingTool(DrawingTools type){
         this.drawTools=type;
+    }
+    public DrawingTools getDrawingTool(){
+        return drawTools;
     }
     public void setDrawingMode(DrawingMode mode){
         this.drawMode=mode;
