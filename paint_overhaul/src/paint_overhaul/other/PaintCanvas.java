@@ -5,6 +5,8 @@
  */
 package paint_overhaul.other;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import static java.util.concurrent.TimeUnit.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -29,6 +31,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javax.imageio.ImageIO;
+import paint_overhaul.alerts.LossWarning;
 import paint_overhaul.constant.DrawingMode;
 import paint_overhaul.constant.DrawingTools;
 import paint_overhaul.shapes.*;
@@ -48,7 +51,9 @@ public class PaintCanvas {
     private Color fillColor;
     private Image redrawnImage;
     private File openedFile;
+    private String openedFileExtension;
     private File savedFile;
+    private String savedFileExtension;
     private DrawingTools drawTools;
     private DrawingMode drawMode;
     private PaintShape currentShape;
@@ -67,8 +72,8 @@ public class PaintCanvas {
     private int fontSize;
     private Font font;
     private String userText;
+    private String autoSaveLocation;
     
-   
     
     /**
      * Constructor for PaintCanvas.
@@ -83,10 +88,12 @@ public class PaintCanvas {
         this.canvas = canvas;
         strokeColor = Color.BLACK;
         fillColor = Color.BLACK;
+        autoSaveLocation = "src/paint_overhaul/autosave/autosave.";
         this.gc = canvas.getGraphicsContext2D();
         canvasSetup();
         redrawnImage = canvas.snapshot(null,null);
         redrawCanvas();
+        
     }
     /**
      * Function to implement drawing on the canvas.
@@ -371,6 +378,25 @@ public class PaintCanvas {
     public File getSavedFile(){
         return savedFile;
     }
+    public String getFileExtension(File file){
+        String fileName = file.getName();
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            //ystem.out.println(fileName.substring(fileName.lastIndexOf(".") + 1));
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+            
+        /*if(file!=null){
+            String fileName = file.getName();
+            String ext = fileName.substring(1+fileName.lastIndexOf(".")).toLowerCase();
+            System.out.println(ext);
+            return ext;
+        }
+        else{
+            return "";
+        }*/
+    }
     /**
      * Setter for the saved file of the canvas
      * @param file Desired save location
@@ -417,12 +443,12 @@ public class PaintCanvas {
         Image image = null;
         try{
             image = new Image(new FileInputStream(imageFile.getAbsolutePath()));
-  
         }
         catch(FileNotFoundException e){
             System.out.println("file not found");
         }
         openedFile = imageFile;
+        //System.out.println(getFileExtension(openedFile));
         loadImage(image);
     }
     /**
@@ -444,25 +470,71 @@ public class PaintCanvas {
      */
     public void saveCanvasToFile(File file) {
         setSavedFile(file);
-        WritableImage writableImage = snapshotCurrentCanvas();
-        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-        try{
-            ImageIO.write(renderedImage, "png", file);
+        System.out.println("Open Ext: " +  getFileExtension(openedFile));
+        System.out.println("Save ext: " + getFileExtension(file));
+        
+        //System.out.println(getFileExtension(savedFile));
+        if(getFileExtension(file).equalsIgnoreCase(getFileExtension(openedFile))){
+            WritableImage writableImage = snapshotCurrentCanvas();
+            //String ext = getFileExtension(file);
+            if(getFileExtension(openedFile).equals("png")){
+                System.out.println("IN PNG");
+                savePNGImage(writableImage, file);
+            }
+            else{
+                System.out.println("IN OTHER");
+                saveOtherImageTypes(writableImage, file);
+            }
+            hasBeenModified = false;
         }
-        catch(IOException e){
-            System.out.println("File not found");
+        else{
+            System.out.println("LOSS GOING TO OCCUR");
+            Main.paintController.getLossWarning().setLossWarningAlert();
+        }
+        
+        
+    }
+    public void autoSaveCanvasToFile() {
+        //setSavedFile(file);
+        String fullPath = autoSaveLocation + getFileExtension(openedFile);
+        File autoSavedFile = new File(fullPath);
+        WritableImage writableImage = snapshotCurrentCanvas();
+        if(getFileExtension(autoSavedFile).equals("png")){
+            savePNGImage(writableImage, autoSavedFile);
+        }
+        else{
+            saveOtherImageTypes(writableImage, autoSavedFile);
         }
     }
-    public void autoSaveCanvasToFile(File file) {
-        //setSavedFile(file);
-        WritableImage writableImage = snapshotCurrentCanvas();
+    public void savePNGImage(WritableImage writableImage, File file){
         RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+            try{
+                ImageIO.write(renderedImage, getFileExtension(file), file);
+            }
+            catch(IOException e){
+                System.out.println("File not found");
+            }
+    }
+    public void saveOtherImageTypes(WritableImage writableImage, File file){
+        // Get buffered image:
+        BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null); 
+
+        // Remove alpha-channel from buffered image:
+        BufferedImage imageRGB = new BufferedImage(
+            image.getWidth(), 
+            image.getHeight(), 
+            BufferedImage.OPAQUE); 
+
+        Graphics2D graphics = imageRGB.createGraphics();
+
+        graphics.drawImage(image, 0, 0, null);
         try{
-            ImageIO.write(renderedImage, "png", file);
+            ImageIO.write(imageRGB, getFileExtension(file), file);
         }
         catch(IOException e){
             System.out.println("File not found");
         }
+        graphics.dispose();
     }
     /**
      * Function that snapshots the current canvas.

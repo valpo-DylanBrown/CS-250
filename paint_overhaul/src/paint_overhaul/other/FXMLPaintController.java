@@ -51,6 +51,7 @@ public class FXMLPaintController extends DefaultController {
     private SmartSaveAlert smartSaveAlert;
     private ResizeCanvasAlert resizeCanvasAlert;
     private PaintCanvas paintCanvas;
+    private LossWarning lossWarning;
     
     private BetterFileChooser openFileChooser;
     private BetterFileChooser saveFileChooser;
@@ -498,6 +499,9 @@ public class FXMLPaintController extends DefaultController {
     public Pane getStaticPane(){
         return staticPane;
     }
+    public LossWarning getLossWarning(){
+        return lossWarning;
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //slider.valueProperty().addListener((e) -> paintCanvas.setLineWidth(slider.getValue()));
@@ -522,6 +526,7 @@ public class FXMLPaintController extends DefaultController {
         aboutAlert = new AboutAlert();
         smartSaveAlert = new SmartSaveAlert(paintCanvas, saveFileChooser);
         resizeCanvasAlert = new ResizeCanvasAlert(paintCanvas);
+        lossWarning = new LossWarning(paintCanvas);
     }
     public void configureWidthSpinner(Spinner spinner) throws NumberFormatException{
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));

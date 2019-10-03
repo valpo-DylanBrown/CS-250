@@ -15,12 +15,13 @@ import paint_overhaul.other.Main;
  */
 public class AutoSaveThread {
     private final Thread thread;
-    private final String autoSaveLocation = "src/paint_overhaul/autosave/autosave.png";
-    private final File file;
+    //private final String autoSaveLocation = "src/paint_overhaul/autosave/autosave.";
+    //private final File file;
+    //private final String extension; 
     
     public AutoSaveThread(){
         System.out.println("Auto save thread created");
-        file = new File(autoSaveLocation);
+        
         thread = new Thread(() -> {
             while(true){
                 handleAutoSave();
@@ -47,7 +48,7 @@ public class AutoSaveThread {
         }
         try{
             Platform.runLater(() -> {
-                Main.paintController.getPaintCanvas().autoSaveCanvasToFile(file);
+                Main.paintController.getPaintCanvas().autoSaveCanvasToFile();
             });  
         }
         catch(IllegalArgumentException e){
