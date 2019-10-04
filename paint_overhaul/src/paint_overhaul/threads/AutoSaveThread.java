@@ -65,6 +65,12 @@ public class AutoSaveThread {
         }
         
     }
+    public File getLogFile(){
+        return logFile;
+    }
+    public int getTimeElapsed(){
+        return timeElapsed;
+    }
     public void logTool(String tool) throws IOException{
         FileWriter fWriter;
         fWriter = new FileWriter(logFile,true);

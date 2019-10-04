@@ -5,12 +5,14 @@
  */
 package paint_overhaul.threads;
 
+import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import paint_overhaul.constant.DrawingTools;
 
 /**
  *
@@ -37,67 +39,34 @@ public class AutoSaveThreadTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of startAutoSaveThread method, of class AutoSaveThread.
-     */
     @Test
-    public void testStartAutoSaveThread() {
-        System.out.println("startAutoSaveThread");
+    public void testTimeElapsedZero() throws InterruptedException{
         AutoSaveThread instance = new AutoSaveThread();
-        instance.startAutoSaveThread();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of logTool method, of class AutoSaveThread.
-     */
-    @Test
-    public void testLogTool() throws Exception {
-        System.out.println("logTool");
-        String tool = "";
-        AutoSaveThread instance = new AutoSaveThread();
-        instance.logTool(tool);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of logFile method, of class AutoSaveThread.
-     */
-    @Test
-    public void testLogFile() throws Exception {
-        System.out.println("logFile");
-        String fileName = "";
-        boolean mode = false;
-        AutoSaveThread instance = new AutoSaveThread();
-        instance.logFile(fileName, mode);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(instance.getTimeElapsed(), 0);
     }
     
+    @Test
+    public void testLogFileLocation(){
+        AutoSaveThread instance = new AutoSaveThread();
+        File file = new File("src/paint_overhaul/logs/log.txt");
+        
+        assertEquals(file, instance.getLogFile());
+    }
+    
+    @Test
+    public void testDrawingTools(){
+        String instance = "PENCIL";
+        assertEquals(instance, DrawingTools.PENCIL.toString());
+        instance = "LINE";
+        assertEquals(instance, DrawingTools.LINE.toString());
+        instance = "RECTANGLE";
+        assertEquals(instance, DrawingTools.RECTANGLE.toString());
+    }
 }
 /*
 public class TimerTest {
     
-    public TimerTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of runTimer method, of class Timer.

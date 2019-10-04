@@ -7,7 +7,6 @@ package paint_overhaul.other;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import static java.util.concurrent.TimeUnit.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -235,23 +234,23 @@ public class PaintCanvas {
                         });
                         currentSelection.setOnMouseDragged(event -> {
                             //System.out.println("DRAGGED1");
-                                currentSelection.setX(event.getX()- selection.getOrigX());
-                                currentSelection.setY(event.getY()- selection.getOrigY());
-                                event.consume();
-                                //System.out.println("DRAGGED");
-                                //selection.setEndX(currentSelection.getX());
-                                //selection.setEndY(currentSelection.getY());
-                                //selection.setIsDragging(true);
+                            currentSelection.setX(event.getX()- selection.getOrigX());
+                            currentSelection.setY(event.getY()- selection.getOrigY());
+                            event.consume();
+                            //System.out.println("DRAGGED");
+                            //selection.setEndX(currentSelection.getX());
+                            //selection.setEndY(currentSelection.getY());
+                            //selection.setIsDragging(true);
                         });
                         currentSelection.setOnMouseReleased(event -> {
-                                //selection.setIsDragging(false);
+                            //selection.setIsDragging(false);
                             Main.paintController.getStaticPane().getChildren().remove(currentSelection);
                             gc.drawImage(currentSelection.getImage(),currentSelection.getX(),currentSelection.getY());
                             //selection.getOrigX(), selection.getOrigY(), currentSelection.getX()-selection.getOrigX(), currentSelection.getY()-selection.getOrigY()
                             currentSelection = null;
                         });
-                        double width = selection.getEndX() - selection.getOrigX();
-                        double height = selection.getEndY() - selection.getOrigY();
+                        //double width = selection.getEndX() - selection.getOrigX();
+                        //double height = selection.getEndY() - selection.getOrigY();
                         //gc.drawImage(currentSelection.getImage(), selection.getEndX(),selection.getEndY());
                         Main.paintController.getStaticPane().getChildren().add(currentSelection);
                         gc.setFill(colorBeforeErase);
