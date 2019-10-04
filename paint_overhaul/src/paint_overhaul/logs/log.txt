@@ -1,2 +1,11 @@
 wallpaper.jpg Opened at: 17:43:28
 wallpaper.jpg Opened at: 17:48:03
+wallpaper.jpg Opened at: 21:30:47
+PENCIL: 1 seconds
+RECTANGLE: 2 seconds
+CIRCLE: 0 seconds
+STAR: 3 seconds
+wallpaper.jpg Opened at: 21:49:19
+LINE: 1 seconds
+PENCIL: 3 seconds
+CIRCLE: 2 seconds

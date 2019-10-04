@@ -136,3 +136,6 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position:center;   
 }
+#autoSaveLabel {          
+    -fx-padding: 0 20 0 0;   
+}

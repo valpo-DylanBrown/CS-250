@@ -85,6 +85,7 @@ public class PaintCanvas {
         this.canvas = canvas;
         strokeColor = Color.BLACK;
         fillColor = Color.BLACK;
+        drawTools = DrawingTools.NONE;
         autoSaveLocation = "src/paint_overhaul/autosave/autosave.";
         this.gc = canvas.getGraphicsContext2D();
         canvasSetup();
@@ -292,6 +293,9 @@ public class PaintCanvas {
     public void setNumSides(int sides){
         numSides = sides;
     }
+    public int getNumSides(){
+        return numSides;
+    }
     /**
      * Sets the fill color of the graphics context.
      * @param color Desired fill color
@@ -299,6 +303,9 @@ public class PaintCanvas {
     public void setFillColor(Color color){
         this.fillColor = color;
         gc.setFill(color);
+    }
+    public Color getFillColor(){
+        return fillColor;
     }
     /**
      * Sets the stroke color for the graphics context

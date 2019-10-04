@@ -5,6 +5,8 @@
  */
 package paint_overhaul.other;
 
+import java.io.File;
+import java.net.URL;
 import paint_overhaul.threads.AutoSaveThread;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -28,11 +30,12 @@ public class Main extends Application {
     public static final double DEFAULT_HEIGHT = 760;
     
     public static FXMLPaintController paintController;
-    
+    public PaintCanvas paintCanvas;
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(FXMLPaintController.class.getResource("fmxl_paint.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
         Scene scene = new Scene(root, DEFAULT_WIDTH , DEFAULT_HEIGHT);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
