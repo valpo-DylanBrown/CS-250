@@ -57,7 +57,12 @@ public class AutoSaveThread {
         }
         try{
             Platform.runLater(() -> {
-                Main.paintController.getPaintCanvas().autoSaveCanvasToFile();
+                try{
+                    Main.paintController.getPaintCanvas().autoSaveCanvasToFile();
+                }
+                catch(Exception e){
+                    System.out.println("No canvas");
+                }
             });  
         }
         catch(IllegalArgumentException e){
