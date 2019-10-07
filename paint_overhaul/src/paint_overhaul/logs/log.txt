@@ -1,21 +1,6 @@
-wallpaper.jpg Opened at: 17:43:28
-wallpaper.jpg Opened at: 17:48:03
-wallpaper.jpg Opened at: 21:30:47
-PENCIL: 1 seconds
-RECTANGLE: 2 seconds
-CIRCLE: 0 seconds
-STAR: 3 seconds
-wallpaper.jpg Opened at: 21:49:19
-LINE: 1 seconds
-PENCIL: 3 seconds
-CIRCLE: 2 seconds
-flowchart.png Opened at: 00:11:59
-PENCIL: 1 seconds
-LINE: 3 seconds
-PENCIL: 10 seconds
-NONE: 3 seconds
-flowchart.png Opened at: 11:53:02
-RECTANGLE: 41 seconds
-PENCIL: 280 seconds
-NONE: 3 seconds
-SELECTIONRECTANGLE: 548 seconds
+Untitled.png Opened at: 19:47:56
+NONE: 0 seconds
+PENCIL: 13 seconds
+NONE: 0 seconds
+RECTANGLE: 10 seconds
+testin.jpg Saved at: 19:49:20

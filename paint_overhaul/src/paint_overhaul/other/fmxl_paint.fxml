@@ -74,6 +74,7 @@
                                         <SeparatorMenuItem />
                                         <MenuItem onAction="#handleAbout" text="About" mnemonicParsing="false" accelerator="Alt+A"/>
                                         <MenuItem onAction="#handleReleaseNotes" text="Release Notes" mnemonicParsing="false" accelerator="Alt+R" />
+                                        <MenuItem onAction="#handleLog" text="Log File"/>
                                     </items>
                                 </Menu>
                             </menus> 

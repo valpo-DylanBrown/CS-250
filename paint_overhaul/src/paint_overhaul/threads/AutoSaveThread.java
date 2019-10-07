@@ -23,11 +23,12 @@ public class AutoSaveThread {
     int timeElapsed = 0;
     private final File logFile;
     private final String logLocation = "src/paint_overhaul/logs/log.txt";
+    String currentTool = "NONE";
     //private final File file;
     //private final String extension; 
     
     public AutoSaveThread(){
-        System.out.println("Auto save thread created");
+        //System.out.println("Auto save thread created");
         logFile = new File(logLocation);
         checkLogDeletion();
         thread = new Thread(() -> {
@@ -76,11 +77,13 @@ public class AutoSaveThread {
     public int getTimeElapsed(){
         return timeElapsed;
     }
-    public void logTool(String tool) throws IOException{
+    public void logTool(String newTool) throws IOException{
         FileWriter fWriter;
         fWriter = new FileWriter(logFile,true);
-        fWriter.append(tool + ": " + timeElapsed + " seconds" + System.getProperty("line.separator"));
+        fWriter.append(currentTool + ": " + timeElapsed + " seconds" + System.getProperty("line.separator"));
         fWriter.close();
+        
+        currentTool = newTool;
         
         timeElapsed = 0;
     }

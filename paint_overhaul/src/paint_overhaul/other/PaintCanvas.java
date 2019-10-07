@@ -484,17 +484,17 @@ public class PaintCanvas {
             WritableImage writableImage = snapshotCurrentCanvas();
             //String ext = getFileExtension(file);
             if(getFileExtension(openedFile).equals("png")){
-                System.out.println("IN PNG");
+                
                 savePNGImage(writableImage, file);
             }
             else{
-                System.out.println("IN OTHER");
+               
                 saveOtherImageTypes(writableImage, file);
             }
             hasBeenModified = false;
         }
         else{
-            System.out.println("LOSS GOING TO OCCUR");
+            
             Main.paintController.getLossWarning().setLossWarningAlert();
         }
         

@@ -49,6 +49,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private MenuBar menuBar;
     //private AutoSaveThread autoSaveThread;
     private ReleaseNotesAlert releaseNotesAlert;
+    private LogAlert logAlert;
     private HelpAlert helpAlert;
     private AboutAlert aboutAlert;
     private SmartSaveAlert smartSaveAlert;
@@ -207,6 +208,10 @@ public class FXMLPaintController extends DefaultController {
     @FXML 
     public void handleReleaseNotes(){
         releaseNotesAlert.createAlert();
+    }
+    @FXML 
+    public void handleLog(){
+        logAlert.createAlert();
     }
     /**
      * Function to handle alerts from Help-&gt;Help Contents.
@@ -619,6 +624,7 @@ public class FXMLPaintController extends DefaultController {
         
         paintCanvas = new PaintCanvas(canvas);
         releaseNotesAlert = new ReleaseNotesAlert();
+        logAlert = new LogAlert();
         helpAlert = new HelpAlert();
         aboutAlert = new AboutAlert();
         smartSaveAlert = new SmartSaveAlert(paintCanvas, saveFileChooser);

@@ -2,7 +2,28 @@ Pain(t) Release Notes
 Author: Dylan Brown
 This program recreates the popular Microsoft Paint application using JavaFX.
 
-Last Updated: 9/22/19
+Last Updated: 10/06/19
+
+------------------------------------------------------------------------------------------
+
+Version 5.0									10/06/2019
+
+New Features:
+	- Unit testing added
+	- File open/save now logged to file
+	- Users can view log file in application from Help->Log File
+	- A warning now appears when switching file types
+	- Autosave added
+	- Users can toggle the visibility of the autosave timer
+		- This does not affect autosave functionality
+	- More Javadoc added
+Known/Possible Issues:
+	- MacBook image blur (this does not affect windows users)
+Upcoming:
+	- Copy/paste selection
+	- Status bar (tooltips were added in verson 3.0)
+	- New canvas
+	- Any other new features
 
 ------------------------------------------------------------------------------------------
 
