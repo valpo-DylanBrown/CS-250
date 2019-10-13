@@ -4,3 +4,45 @@ PENCIL: 13 seconds
 NONE: 0 seconds
 RECTANGLE: 10 seconds
 testin.jpg Saved at: 19:49:20
+000.jpeg Opened at: 11:53:16
+NONE: 1 seconds
+flowchart.png Opened at: 12:09:30
+000.jpeg Opened at: 12:09:36
+NONE: 0 seconds
+000.jpeg Opened at: 12:11:24
+NONE: 0 seconds
+000.jpeg Opened at: 12:13:44
+NONE: 1 seconds
+000.jpeg Opened at: 22:47:58
+NONE: 1 seconds
+PENCIL: 1 seconds
+LINE: 4 seconds
+ERASER: 0 seconds
+NONE: 2 seconds
+RECTANGLE: 0 seconds
+NONE: 2 seconds
+LINE: 0 seconds
+NONE: 2 seconds
+SQUARE: 1 seconds
+NONE: 1 seconds
+ELLIPSE: 0 seconds
+NONE: 1 seconds
+CIRCLE: 0 seconds
+NONE: 0 seconds
+flowchart.png Opened at: 22:52:57
+NONE: 0 seconds
+PENCIL: 1 seconds
+LINE: 2 seconds
+ERASER: 1 seconds
+RECTANGLE: 0 seconds
+SQUARE: 1 seconds
+ELLIPSE: 0 seconds
+CIRCLE: 1 seconds
+TRIANGLE: 1 seconds
+NONE: 0 seconds
+POLYGON: 1 seconds
+STAR: 1 seconds
+TEXT: 0 seconds
+EYEDROPPER: 1 seconds
+SELECTIONRECTANGLE: 1 seconds
+PENCIL: 1 seconds

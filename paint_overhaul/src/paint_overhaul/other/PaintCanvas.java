@@ -204,56 +204,8 @@ public class PaintCanvas {
                     if(currentSelection == null){
                         rectangle.setEnd(e.getX(), e.getY());
                         rectangle.drawSelection(gc);
-                        WritableImage oldImg = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
-                        canvas.snapshot(null, oldImg);
                         selection.setEnd(e.getX(), e.getY());
-                        if(selection.getOrigX() > selection.getEndX()){
-                            double temp = selection.getOrigX();
-                            selection.setEndX(selection.getEndX());
-                            selection.setOrigX(temp);
-                        }
-                        if(selection.getOrigY() > selection.getEndY()){
-                            double temp = selection.getOrigY();
-                            selection.setEndY(selection.getEndY());
-                            selection.setOrigY(temp);
-                        }
-                        WritableImage newImage = new WritableImage(oldImg.getPixelReader(), (int)selection.getOrigX(), (int)selection.getOrigY(), (int)Math.abs(selection.getOrigX()-selection.getEndX()), (int)Math.abs(selection.getOrigY()-selection.getEndY()));
-                        //selectedImage = newImage;
-                        Paint colorBeforeErase = gc.getFill();
-                        currentSelection = new ImageView(newImage);
-                        gc.setFill(Color.WHITE);
-                        gc.fillRect(selection.getOrigX(), selection.getOrigY(), Math.abs(selection.getEndX() - selection.getOrigX()), Math.abs(selection.getEndY() - selection.getOrigY()));
-                        
-                        currentSelection.setX(selection.getOrigX()-5);
-                        currentSelection.setY(selection.getOrigY()-5);
-                        
-                        currentSelection.setOnMousePressed(event -> {
-                            
-                            selection.setOrigX(event.getX()- currentSelection.getX());
-                            selection.setOrigY(event.getY()- currentSelection.getY());
-                        });
-                        currentSelection.setOnMouseDragged(event -> {
-                            //System.out.println("DRAGGED1");
-                            currentSelection.setX(event.getX()- selection.getOrigX());
-                            currentSelection.setY(event.getY()- selection.getOrigY());
-                            event.consume();
-                            //System.out.println("DRAGGED");
-                            //selection.setEndX(currentSelection.getX());
-                            //selection.setEndY(currentSelection.getY());
-                            //selection.setIsDragging(true);
-                        });
-                        currentSelection.setOnMouseReleased(event -> {
-                            //selection.setIsDragging(false);
-                            Main.paintController.getStaticPane().getChildren().remove(currentSelection);
-                            gc.drawImage(currentSelection.getImage(),currentSelection.getX(),currentSelection.getY());
-                            //selection.getOrigX(), selection.getOrigY(), currentSelection.getX()-selection.getOrigX(), currentSelection.getY()-selection.getOrigY()
-                            currentSelection = null;
-                        });
-                        //double width = selection.getEndX() - selection.getOrigX();
-                        //double height = selection.getEndY() - selection.getOrigY();
-                        //gc.drawImage(currentSelection.getImage(), selection.getEndX(),selection.getEndY());
-                        Main.paintController.getStaticPane().getChildren().add(currentSelection);
-                        gc.setFill(colorBeforeErase);
+                        selection.setImage(canvas, gc);
                         
                         //selection.setImage(gc);
                     }
@@ -476,8 +428,7 @@ public class PaintCanvas {
      */
     public void saveCanvasToFile(File file) {
         setSavedFile(file);
-        System.out.println("Open Ext: " +  getFileExtension(openedFile));
-        System.out.println("Save ext: " + getFileExtension(file));
+        
         
         //System.out.println(getFileExtension(savedFile));
         if(getFileExtension(file).equalsIgnoreCase(getFileExtension(openedFile))){

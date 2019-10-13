@@ -87,6 +87,7 @@ public class FXMLPaintController extends DefaultController {
     @FXML private Button zoomOutButton;
     @FXML private Label zoomLabel;
     @FXML private Label autoSaveLabel; 
+    @FXML private Label toolStatus;
     @FXML private Button swapColors;
     @FXML private Button closeButton;
     @FXML private Button undoButton;
@@ -388,14 +389,19 @@ public class FXMLPaintController extends DefaultController {
     public void setAutoSaveLabel(String string){
         autoSaveLabel.setText(string);
     }
+    public void setToolStatus(String string){
+        toolStatus.setText(string);
+    }
     @FXML
     public void handleDrawToggle(){
         if(drawButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.PENCIL);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -409,9 +415,12 @@ public class FXMLPaintController extends DefaultController {
         if(starButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.STAR);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
+
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -425,9 +434,11 @@ public class FXMLPaintController extends DefaultController {
         if(lineButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.LINE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -440,9 +451,11 @@ public class FXMLPaintController extends DefaultController {
         if(eraserButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.ERASER);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -456,9 +469,11 @@ public class FXMLPaintController extends DefaultController {
         if(rectButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.RECTANGLE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -472,9 +487,11 @@ public class FXMLPaintController extends DefaultController {
        if(circleButton.isSelected()){
            paintCanvas.setDrawingMode(DrawingMode.DRAW);
            paintCanvas.setDrawingTool(DrawingTools.CIRCLE);
+           setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -488,9 +505,11 @@ public class FXMLPaintController extends DefaultController {
         if(squareButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.SQUARE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -504,9 +523,11 @@ public class FXMLPaintController extends DefaultController {
         if(ovalButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.ELLIPSE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -520,9 +541,11 @@ public class FXMLPaintController extends DefaultController {
         if(triangleButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.TRIANGLE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -536,9 +559,11 @@ public class FXMLPaintController extends DefaultController {
         if(polygonButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.POLYGON);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -552,9 +577,11 @@ public class FXMLPaintController extends DefaultController {
         if(textButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.TEXT);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -568,9 +595,11 @@ public class FXMLPaintController extends DefaultController {
         if(eyedropperButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
             paintCanvas.setDrawingTool(DrawingTools.EYEDROPPER);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {
@@ -583,9 +612,11 @@ public class FXMLPaintController extends DefaultController {
         if(selectionRectangle.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.SELECT);
             paintCanvas.setDrawingTool(DrawingTools.SELECTIONRECTANGLE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{
             paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         
         try {

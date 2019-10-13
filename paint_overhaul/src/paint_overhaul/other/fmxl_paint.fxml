@@ -264,6 +264,7 @@
     </center>
     <bottom>
         <HBox>
+            <Label id="toolStatus" alignment="center" fx:id="toolStatus" text="Tool Selected: NONE"/>
             <Pane HBox.hgrow="ALWAYS" />
             <Label id="autoSaveLabel" alignment="center" fx:id="autoSaveLabel"/> 
         </HBox>
