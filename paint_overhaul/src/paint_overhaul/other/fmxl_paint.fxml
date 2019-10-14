@@ -37,6 +37,7 @@
                             <menus>
                                 <Menu text="_File" mnemonicParsing="true">
                                     <items>
+                                        
                                         <MenuItem onAction="#handleOpen" text="Open" mnemonicParsing="false" accelerator="Shortcut+O"/>
                                         <MenuItem onAction="#handleSave" text="Save" mnemonicParsing="false" accelerator="Shortcut+S"/>
                                         <MenuItem fx:id="saveAsMenu" onAction="#handleSaveAs" text="Save As" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
@@ -46,8 +47,13 @@
                                 </Menu>
                                 <Menu text="_Edit" mnemonicParsing="true">
                                     <items>
+                                        
+                                        
                                         <MenuItem onAction="#handleUndoMenuItem" text="Undo" mnemonicParsing="false" accelerator="Shortcut+z"/>
                                         <MenuItem onAction="#handleRedoMenuItem" text="Redo" mnemonicParsing="false" accelerator="Shortcut+y" />
+                                        <SeparatorMenuItem />
+                                        <MenuItem onAction="#handleCopyButton" text="Copy" mnemonicParsing="false" accelerator="Shortcut+c"/>
+                                        <SeparatorMenuItem />
                                         <MenuItem onAction="#handleResizeCanvas" text="Resize Canvas" />
                                     </items>
                                 </Menu>
@@ -177,7 +183,7 @@
                             <Tooltip text="Line"/>
                         </tooltip>
                     </ToggleButton>
-                    <ToggleButton fx:id="fillButton" prefWidth="55.0" prefHeight="32.0" toggleGroup="$toolGroup">
+                    <ToggleButton fx:id="fillButton" onAction="#handleFillToggle" prefWidth="55.0" prefHeight="32.0" toggleGroup="$toolGroup">
                         <tooltip>
                             <Tooltip text="Fill"/>
                         </tooltip>

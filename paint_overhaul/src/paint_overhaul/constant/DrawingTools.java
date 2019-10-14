@@ -16,6 +16,7 @@ package paint_overhaul.constant;
 public enum DrawingTools {
     PENCIL(),
     LINE(),
+    FILL(),
     ERASER(),
     RECTANGLE(),
     SQUARE(),
@@ -26,6 +27,6 @@ public enum DrawingTools {
     STAR(),
     TEXT(),
     EYEDROPPER(),
-    SELECTIONRECTANGLE(),
+    SELECT(),
     NONE()
 }

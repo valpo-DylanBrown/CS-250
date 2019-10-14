@@ -119,6 +119,7 @@ public class FXMLPaintController extends DefaultController {
     public AutoSaveThread getAutoSaveThread(){
         return autoSaveThread;
     }
+    
     /**
      * FXML Function to handle opening a file. 
      * This function opens a file using the file chooser,
@@ -223,6 +224,11 @@ public class FXMLPaintController extends DefaultController {
     public void handleHelpContents(){
         helpAlert.createAlert();
     }
+    @FXML
+    public void handleCopyButton(){
+        paintCanvas.getSelectionRecatangle().setCopyMode(true);
+    }
+    
     /**
      * FXML Function to undo the last action from Edit-&gt;Undo.
      * Fires the undo button.
@@ -447,6 +453,23 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void handleFillToggle(){
+        if(fillButton.isSelected()){
+            paintCanvas.setDrawingMode(DrawingMode.DRAW);
+            paintCanvas.setDrawingTool(DrawingTools.FILL);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
+        }
+        else{
+            paintCanvas.setDrawingTool(DrawingTools.NONE);
+            setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
+        }
+        
+        try {
+            autoSaveThread.logTool(paintCanvas.getDrawingTool().toString());
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public void handleEraserToggle(){
         if(eraserButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
@@ -611,7 +634,7 @@ public class FXMLPaintController extends DefaultController {
     public void handleSelectionRectangle(){
         if(selectionRectangle.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.SELECT);
-            paintCanvas.setDrawingTool(DrawingTools.SELECTIONRECTANGLE);
+            paintCanvas.setDrawingTool(DrawingTools.SELECT);
             setToolStatus("Tool Selected: " + paintCanvas.getDrawingTool().toString());
         }
         else{

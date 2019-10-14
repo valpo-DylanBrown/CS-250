@@ -111,6 +111,9 @@ public class PaintCanvas {
                 case PENCIL:
                     currentShape = new Pencil(e.getX(), e.getY());
                     break;
+                case FILL:
+                    currentShape = new Fill(e.getX(), e.getY(), getCanvas());
+                    break;
                 case LINE:
                     currentShape = new Line(e.getX(), e.getY());
                     break;
@@ -524,6 +527,9 @@ public class PaintCanvas {
      */
     public double getCurrentZoom(){
         return currentZoom;
+    }
+    public SelectionRectangle getSelectionRecatangle(){
+        return selection;
     }
     /**
      * Function to zoom the canvas in.

@@ -5,13 +5,15 @@
  */
 package paint_overhaul.shapes;
 
-import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import paint_overhaul.other.Main;
@@ -25,11 +27,11 @@ import paint_overhaul.other.PaintCanvas;
  */
 public class SelectionRectangle {
     private WritableImage image;
-    private ImageView imgView;
     private PaintCanvas paintCanvas;
     double origX, origY;
     double endX, endY;
-    boolean isDragging = false;
+    boolean copyMode = false;
+    boolean pasteMode = false;
     private ImageView currentSelection;
     public SelectionRectangle(double startX, double startY, double endX, double endY) {
         origX = startX;
@@ -50,14 +52,19 @@ public class SelectionRectangle {
     }
     
     public void setImage(Canvas canvas, GraphicsContext gc){
+        
         selectionSetup(canvas, gc);
+       
         Paint colorBeforeErase = gc.getFill();
         currentSelection.setX(origX);
         currentSelection.setY(origY);
-
+        
+        
         currentSelection.setOnMousePressed(event -> {
-            gc.setFill(Color.WHITE);
-            gc.fillRect(origX, origY, Math.abs(endX - origX), Math.abs(endY - origY));
+            if(!copyMode){
+                gc.setFill(Color.WHITE);
+                gc.fillRect(origX, origY, Math.abs(endX - origX), Math.abs(endY - origY));
+            }
             origX = (event.getX()- currentSelection.getX());
             origY = (event.getY()- currentSelection.getY());
         });
@@ -77,16 +84,20 @@ public class SelectionRectangle {
             gc.drawImage(currentSelection.getImage(),currentSelection.getX(),currentSelection.getY());
             //selection.getOrigX(), selection.getOrigY(), currentSelection.getX()-selection.getOrigX(), currentSelection.getY()-selection.getOrigY()
             currentSelection = null;
+            setCopyMode(false);
         });
         //double width = selection.getEndX() - selection.getOrigX();
         //double height = selection.getEndY() - selection.getOrigY();
         //gc.drawImage(currentSelection.getImage(), selection.getEndX(),selection.getEndY());
         Main.paintController.getStaticPane().getChildren().add(currentSelection);
+        
         gc.setFill(colorBeforeErase); 
 
     }
     private void selectionSetup(Canvas canvas, GraphicsContext gc){
+        
         WritableImage oldImg = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+        Main.paintController.getPaintCanvas().redoLast();
         canvas.snapshot(null, oldImg);
         
         if(origX > endX){
@@ -99,14 +110,14 @@ public class SelectionRectangle {
             endY = origY;
             origY = temp;
         }
+        
         WritableImage newImage = new WritableImage(oldImg.getPixelReader(), (int)origX, (int)origY, (int)Math.abs(origX-endX), (int)Math.abs(origY-endY));
         //selectedImage = newImage;
         
         currentSelection = new ImageView(newImage);
+        
     }
-    public Image getImage(){
-        return imgView.getImage();
-    }
+    
     public double getOrigX(){
         return origX;
     }
@@ -131,11 +142,8 @@ public class SelectionRectangle {
     public void setEndY(double endY){
         this.endY = endY;
     }
-    public void setIsDragging(boolean bool){
-        this.isDragging = bool;
+    public void setCopyMode(boolean bool){
+        this.copyMode = bool;
     }
-    public boolean getIsDragging(){
-        return isDragging;
-                
-    }
+    
 }
