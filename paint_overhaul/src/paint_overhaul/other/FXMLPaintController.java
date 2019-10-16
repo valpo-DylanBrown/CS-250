@@ -332,6 +332,10 @@ public class FXMLPaintController extends DefaultController {
         }
     }
     @FXML
+    public void handleRotate(){
+        paintCanvas.rotate();
+    }
+    @FXML
     public void handleZoomInButton(){
         paintCanvas.zoomIn();
         zoomOutButton.setDisable(false);

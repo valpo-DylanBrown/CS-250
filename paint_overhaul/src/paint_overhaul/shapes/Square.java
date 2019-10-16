@@ -3,11 +3,11 @@ package paint_overhaul.shapes;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Square Object. This extends {@link Rectangle}. 
+ * Square Object. This extends {@link BetterRectangle}. 
  * @author dylan
  * @since 4.0
  */
-public class Square extends Rectangle {
+public class Square extends BetterRectangle {
     /**
      * 4-input constructor for Square object. 
      * @param x0 Starting X location. 
@@ -29,7 +29,7 @@ public class Square extends Rectangle {
     /**
      * Override for draw in PaintCanvas. This function handles users drawing 
      * square in any direction. It calculates the needed distance for the drawing
-     * to be square. It then calls the {@link Rectangle#draw(GraphicsContext)}.
+     * to be square. It then calls the {@link BetterRectangle#draw(GraphicsContext)}.
     */
     @Override
     public void draw(GraphicsContext gc) {

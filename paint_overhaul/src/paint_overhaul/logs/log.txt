@@ -128,3 +128,118 @@ Untitled.png Opened at: 17:35:35
 NONE: 1 seconds
 Untitled.png Opened at: 17:36:20
 NONE: 0 seconds
+000.jpeg Opened at: 11:37:49
+NONE: 11 seconds
+000.jpeg Opened at: 11:39:15
+NONE: 0 seconds
+SQUARE: 2 seconds
+RECTANGLE: 2 seconds
+000.jpeg Opened at: 11:52:56
+NONE: 1 seconds
+000.jpeg Opened at: 11:54:20
+NONE: 0 seconds
+000.jpeg Opened at: 11:54:53
+NONE: 1 seconds
+000.jpeg Opened at: 11:55:28
+NONE: 1 seconds
+000.jpeg Opened at: 11:56:15
+NONE: 0 seconds
+000.jpeg Opened at: 11:56:47
+NONE: 1 seconds
+000.jpeg Opened at: 11:57:23
+NONE: 1 seconds
+999.jpeg Opened at: 12:02:40
+NONE: 0 seconds
+000.jpeg Opened at: 12:03:53
+NONE: 0 seconds
+budnike.jpeg Opened at: 13:37:57
+NONE: 1 seconds
+checkme.jpeg Opened at: 13:38:09
+SELECT: 0 seconds
+NONE: 1 seconds
+checkme.jpeg Opened at: 13:38:51
+NONE: 0 seconds
+PENCIL: 2 seconds
+LINE: 1 seconds
+FILL: 3 seconds
+RECTANGLE: 2 seconds
+checkme.jpeg Opened at: 13:43:07
+NONE: 0 seconds
+SELECT: 4 seconds
+LINE: 1 seconds
+SELECT: 4 seconds
+FILL: 6 seconds
+checkme.jpeg Opened at: 13:45:09
+NONE: 1 seconds
+PENCIL: 7 seconds
+SQUARE: 0 seconds
+RECTANGLE: 3 seconds
+FILL: 2 seconds
+LINE: 3 seconds
+RECTANGLE: 3 seconds
+FILL: 2 seconds
+PENCIL: 4 seconds
+FILL: 3 seconds
+SELECT: 4 seconds
+checkme.jpeg Opened at: 13:46:26
+NONE: 1 seconds
+SELECT: 3 seconds
+SQUARE: 3 seconds
+RECTANGLE: 1 seconds
+FILL: 2 seconds
+SELECT: 3 seconds
+FILL: 3 seconds
+TRIANGLE: 5 seconds
+SELECT: 5 seconds
+FILL: 2 seconds
+SELECT: 2 seconds
+NONE: 1 seconds
+checkme.jpeg Opened at: 13:48:26
+NONE: 0 seconds
+RECTANGLE: 2 seconds
+FILL: 5 seconds
+SELECT: 342 seconds
+FILL: 2 seconds
+checkme.jpeg Opened at: 14:07:22
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:10:26
+NONE: 1 seconds
+PENCIL: 1 seconds
+checkme.jpeg Opened at: 14:11:36
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:15:53
+NONE: 0 seconds
+checkme.jpeg Opened at: 14:17:18
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:19:14
+NONE: 2 seconds
+checkme.jpeg Opened at: 14:19:56
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:21:30
+NONE: 0 seconds
+PENCIL: 2 seconds
+checkme.jpeg Opened at: 14:24:43
+NONE: 0 seconds
+checkme.jpeg Opened at: 14:26:22
+NONE: 7 seconds
+checkme.jpeg Opened at: 14:29:18
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:32:22
+NONE: 1 seconds
+checkme.jpeg Opened at: 14:34:15
+NONE: 0 seconds
+checkmepls.jpeg Opened at: 14:40:19
+NONE: 0 seconds
+checkme.jpeg Opened at: 14:42:11
+NONE: 2 seconds
+RECTANGLE: 10 seconds
+PENCIL: 3 seconds
+checkme.jpeg Opened at: 14:43:04
+NONE: 1 seconds
+PENCIL: 4 seconds
+RECTANGLE: 7 seconds
+EYEDROPPER: 3 seconds
+checkme.jpeg Opened at: 14:49:49
+NONE: 11 seconds
+rotatetest.jpeg Saved at: 14:50:10
+rotatetest.jpeg Saved at: 14:50:32

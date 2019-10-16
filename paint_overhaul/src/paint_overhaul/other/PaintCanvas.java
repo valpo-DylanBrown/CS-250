@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javax.imageio.ImageIO;
 import paint_overhaul.alerts.LossWarning;
@@ -53,7 +54,7 @@ public class PaintCanvas {
     private DrawingTools drawTools;
     private DrawingMode drawMode;
     private PaintShape currentShape;
-    private Rectangle rectangle;
+    private BetterRectangle rectangle;
     private ImageView currentSelection;
     private WritableImage selectedImage;
     private boolean hasBeenModified = false;
@@ -121,7 +122,7 @@ public class PaintCanvas {
                     currentShape = new Eraser(e.getX(), e.getY());
                     break;
                 case RECTANGLE:
-                    currentShape = new Rectangle(e.getX(), e.getY());
+                    currentShape = new BetterRectangle(e.getX(), e.getY());
                     break;
                 case SQUARE:
                     currentShape = new Square(e.getX(), e.getY());
@@ -155,7 +156,7 @@ public class PaintCanvas {
             else{
                 if(currentSelection == null){
                     selection = new SelectionRectangle(e.getX(), e.getY());
-                    rectangle = new Rectangle(e.getX(), e.getY());    
+                    rectangle = new BetterRectangle(e.getX(), e.getY());    
                 }
             }
             hasBeenModified = true;
@@ -209,6 +210,7 @@ public class PaintCanvas {
                         rectangle.drawSelection(gc);
                         selection.setEnd(e.getX(), e.getY());
                         selection.setImage(canvas, gc);
+                        currentSelection = selection.getCurrentSelection();
                         
                         //selection.setImage(gc);
                     }
@@ -226,6 +228,9 @@ public class PaintCanvas {
      */
     public void setDrawingTool(DrawingTools type){
         this.drawTools=type;
+    }
+    public void setCurrentSelectionNulll(){
+        currentSelection = null;
     }
     public DrawingTools getDrawingTool(){
         return drawTools;
@@ -297,6 +302,7 @@ public class PaintCanvas {
         }
         redoHistory.push(redrawnImage);
         redrawnImage = undoHistory.pop();
+        //Main.paintController.getStaticPane().getChildren().remove(selection.getCurrentSelection());
         redrawCanvas();
     }
     /**
@@ -392,6 +398,9 @@ public class PaintCanvas {
      */
     public boolean getIsZoomedOut(){
         return isZoomedOut;                
+    }
+    public BetterRectangle getRectangle(){
+        return rectangle;
     }
     /**
      * Function to open an image from file.
@@ -596,5 +605,9 @@ public class PaintCanvas {
         applyZoom(parent, currentZoom);
         //zoomLabel.setText(Math.round(currentZoom*100) + "%");
         
+    }
+    public void rotate(){
+        Rotate rotate = new Rotate(90,0,0);
+        Main.paintController.getStaticPane().getTransforms().add(rotate);
     }
 }
