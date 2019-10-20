@@ -243,3 +243,6 @@ checkme.jpeg Opened at: 14:49:49
 NONE: 11 seconds
 rotatetest.jpeg Saved at: 14:50:10
 rotatetest.jpeg Saved at: 14:50:32
+rotatetest.jpeg Opened at: 12:10:43
+NONE: 3 seconds
+SELECT: 6 seconds
