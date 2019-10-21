@@ -182,4 +182,5 @@ File.open('fed.html', 'w+' ) do |temp|
 </html>")
 end
 
+system("open fed.html")
 #puts"#{readstate}"
