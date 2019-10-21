@@ -111,12 +111,19 @@ while (line = file.gets)
             curFed.fedPub.gsub!("For ", "")
             curFed.fedPub.gsub!("From ", "")
             curFed.fedPub.gsub!("the ", "")
-            
+            #curFed.fedPub = titleLines.last
+            list1 = curFed.fedPub.split(".")
+            curFed.fedPub = list1[0]
+            if(curFed.fedDate.empty?) then
+              curFed.fedDate = list1[1]
+
+            end
             titleLines.pop
             curFed.fedTitle = titleLines.join("\n")
             break
           elsif ((titleLines.last.include? "Tuesday") || (titleLines.last.include? "Wednesday") || (titleLines.last.include? "Thursday") || (titleLines.last.include? "Friday") || (titleLines.last.include? "January")) then
             curFed.fedDate = titleLines.last
+            curFed.fedDate.gsub!(".", "")
             titleLines.pop
             i = i+1
           else
