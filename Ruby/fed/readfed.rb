@@ -154,10 +154,32 @@ renderer = ERB.new(template)
 
 #feds.each{|f| rhtml.run(f.get_binding)}
 
-File.open('temp.html', 'w+' ) do |temp|
+File.open('fed.html', 'w+' ) do |temp|
   #f.write(rhtml.run(feds[0].get_binding))
-  feds.each{|f| temp.write renderer.result(f.get_binding)}
+  temp.write("<!DOCTYPE html>
+
+  <html>
+  <head>
+    <title>Federalist Index</title>
+    <link rel=\"stylesheet\" href=\"styles.css\" >
+  </head>
+  <body>
+    <h3>Federalist Index</h3>
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Author</th>
+        <th>Title</th>
+        <th>Pub</th>
+        <th>Date</th>
+      </tr>")
+
+  feds.each{|f| temp << renderer.result(f.get_binding)}
   #f.write renderer.result(feds[0].get_binding)
+  temp << ("
+    </table>
+  </body>
+</html>")
 end
 
 #puts"#{readstate}"
