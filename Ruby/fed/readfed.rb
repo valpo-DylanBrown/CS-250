@@ -31,7 +31,51 @@ class Fed
        puts "Date: #{@fedDate}"
        puts "\n\n\n"
     end
+    def clean_up(curFed)
+      clean_author(curFed)
+      clean_title_pub(curFed)
+    end
+    def clean_author(curFed)
+      words = curFed.fedAuthor.split()
+      if words.size==1 then
+        curFed.fedAuthor.capitalize!
+      else
+        words[0].capitalize!
+        words[1].downcase!
+        words[2].capitalize!
+        curFed.fedAuthor = words.join(' ')
+      end
+    end
+    def clean_title_pub(curFed)
+      titleLines = curFed.fedTitle.lines.map(&:chomp)
+      i = 1
+      until i > 2
+        if ((titleLines.last.include? "For") || (titleLines.last.include? "From")) then
+          curFed.fedPub = titleLines.last
+          curFed.fedPub.gsub!("For ", "")
+          curFed.fedPub.gsub!("From ", "")
+          curFed.fedPub.gsub!("the ", "")
+          #curFed.fedPub = titleLines.last
+          list1 = curFed.fedPub.split(".")
+          curFed.fedPub = list1[0]
+          if(curFed.fedDate.empty?) then
+            curFed.fedDate = list1[1]
 
+          end
+          titleLines.pop
+          curFed.fedTitle = titleLines.join("\n")
+          break
+        elsif ((titleLines.last.include? "Tuesday") || (titleLines.last.include? "Wednesday") || (titleLines.last.include? "Thursday") || (titleLines.last.include? "Friday") || (titleLines.last.include? "January")) then
+          curFed.fedDate = titleLines.last
+          curFed.fedDate.gsub!(".", "")
+          titleLines.pop
+          i = i+1
+        else
+          curFed.fedTitle = titleLines.join("\n")
+          break
+        end
+      end
+    end
     def get_binding
       binding
     end
@@ -96,43 +140,11 @@ while (line = file.gets)
         # SET author
         curFed.fedAuthor = words.join(' ')
         readstate = 'b4Fed'
-        # CLEAN up title and publisher before setting to nil
 
-        titleLines = curFed.fedTitle.lines.map(&:chomp)
-        #while(titleLines)
-          #titleLines.strip!
-          #words = titleLines.split
+        # Clean up title, publisher, and author strings
+        curFed.clean_up(curFed)
 
-        #end
-        i = 1
-        until i > 2
-          if ((titleLines.last.include? "For") || (titleLines.last.include? "From")) then
-            curFed.fedPub = titleLines.last
-            curFed.fedPub.gsub!("For ", "")
-            curFed.fedPub.gsub!("From ", "")
-            curFed.fedPub.gsub!("the ", "")
-            #curFed.fedPub = titleLines.last
-            list1 = curFed.fedPub.split(".")
-            curFed.fedPub = list1[0]
-            if(curFed.fedDate.empty?) then
-              curFed.fedDate = list1[1]
-
-            end
-            titleLines.pop
-            curFed.fedTitle = titleLines.join("\n")
-            break
-          elsif ((titleLines.last.include? "Tuesday") || (titleLines.last.include? "Wednesday") || (titleLines.last.include? "Thursday") || (titleLines.last.include? "Friday") || (titleLines.last.include? "January")) then
-            curFed.fedDate = titleLines.last
-            curFed.fedDate.gsub!(".", "")
-            titleLines.pop
-            i = i+1
-          else
-            curFed.fedTitle = titleLines.join("\n")
-            break
-          end
-        end
-
-        # SET object to nil
+        # Set object to nil
         curFed = nil
         next
       end
@@ -141,21 +153,20 @@ while (line = file.gets)
 
 end # End of reading
 
-file.close
+file.close # close the file
 
 
 
 # Apply the prt (print) method to each Fed object in the feds array
-feds.each{|f| f.prt}
+#feds.each{|f| f.prt}
+# Create a new ERB template (read from file template.html.erb)
 template = File.read("./template.html.erb")
-#rhtml = ERB.new(template)
+# Create a new ERB object
 renderer = ERB.new(template)
-#result = renderer.result(feds[0].get_binding)
 
-#feds.each{|f| rhtml.run(f.get_binding)}
-
+# Open a new file to store the html in
 File.open('fed.html', 'w+' ) do |temp|
-  #f.write(rhtml.run(feds[0].get_binding))
+  # Write the heading info for the HTML file
   temp.write("<!DOCTYPE html>
 
   <html>
@@ -174,13 +185,15 @@ File.open('fed.html', 'w+' ) do |temp|
         <th>Date</th>
       </tr>")
 
+  # Append the information from each fed object
   feds.each{|f| temp << renderer.result(f.get_binding)}
-  #f.write renderer.result(feds[0].get_binding)
+  # Append the end of the HTML file information
   temp << ("
     </table>
   </body>
 </html>")
-end
 
-system("open fed.html")
+end # end reading
+
+system("open fed.html") # Open the HTML file (MAC ONLY)
 #puts"#{readstate}"
