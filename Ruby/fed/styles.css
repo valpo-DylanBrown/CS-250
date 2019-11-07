@@ -1,8 +1,31 @@
 table, th, td{
-  border: 1px solid black;
+  background-color: black;
+  /*border: 0px solid black;*/
 }
 th, td{
   text-align: center;
   vertical-align: middle;
   padding: 5px;
+  font-family: "Arial", sans-serif;
+}
+h3{
+  width: 300px;
+  /*background-image: linear-gradient(to right, red, white, blue);*/
+  /*background-image: radial-gradient(blue, white, red);*/
+}
+body{
+  background-color: LightGray;
+}
+th{
+  background-color: LightBlue;
+}
+td{
+  background-color: Cornsilk;
+}
+.author{
+  font-weight: bold;
+}
+.title{
+  font-style: italic;
+
 }

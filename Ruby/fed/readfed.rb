@@ -23,61 +23,92 @@ class Fed
     end
 
     # Method to print data on one Fed object
+    # Obsolete
     def prt
-       puts "Federalist #@fedNum"
+       puts "Federalist #{@fedNum}"
        puts "Title: #{@fedTitle}"
        puts "Pub: #{@fedPub}"
        puts "Author: #{@fedAuthor}"
        puts "Date: #{@fedDate}"
-       puts "\n\n\n"
+       puts "\n"
     end
+
+    # Method that returns the binding of the object.
+    # This is needed for an ERB file.
+    def get_binding
+      binding
+    end
+
+    # Method to clean up the look of the data
     def clean_up(curFed)
       clean_author(curFed)
       clean_title_pub(curFed)
     end
-    def clean_author(curFed)
-      words = curFed.fedAuthor.split()
-      if words.size==1 then
+
+    # Start private methods
+
+    #helper method to clean author name
+    private def clean_author(curFed)
+      words = curFed.fedAuthor.split() #split the words up
+      if words.size==1 then   #if its only one name
         curFed.fedAuthor.capitalize!
+        curFed.fedAuthor = add_first_name(curFed.fedAuthor)
+
       else
-        words[0].capitalize!
+        words[0].capitalize!    #capitalize the last name
+        words[0] = add_first_name(words[0])
         words[1].downcase!
-        words[2].capitalize!
-        curFed.fedAuthor = words.join(' ')
+        words[2].capitalize!    #capitalize the last name
+        words[2] = add_first_name(words[2])
+        curFed.fedAuthor = words.join(' ')  #join them back with a space
       end
     end
-    def clean_title_pub(curFed)
-      titleLines = curFed.fedTitle.lines.map(&:chomp)
+
+    #helper method to clean title and publisher
+    private def clean_title_pub(curFed)
+      titleLines = curFed.fedTitle.lines.map(&:chomp) #split the title into lines
       i = 1
       until i > 2
-        if ((titleLines.last.include? "For") || (titleLines.last.include? "From")) then
+        if ((titleLines.last.include? "For") || (titleLines.last.include? "From")) then #if publisher is last line
           curFed.fedPub = titleLines.last
+          # Take out the words For/From and the
           curFed.fedPub.gsub!("For ", "")
           curFed.fedPub.gsub!("From ", "")
           curFed.fedPub.gsub!("the ", "")
           #curFed.fedPub = titleLines.last
-          list1 = curFed.fedPub.split(".")
-          curFed.fedPub = list1[0]
+          pubList = curFed.fedPub.split(".")
+          # Check if list contains a publisher and date
+          curFed.fedPub = pubList[0]
           if(curFed.fedDate.empty?) then
-            curFed.fedDate = list1[1]
-
+            curFed.fedDate = pubList[1]
           end
-          titleLines.pop
-          curFed.fedTitle = titleLines.join("\n")
+          titleLines.pop #take the publisher out of the title
+          curFed.fedTitle = titleLines.join("\n") # put the title back together
           break
         elsif ((titleLines.last.include? "Tuesday") || (titleLines.last.include? "Wednesday") || (titleLines.last.include? "Thursday") || (titleLines.last.include? "Friday") || (titleLines.last.include? "January")) then
+          #if the last line is the date, set the date and pop it out.
           curFed.fedDate = titleLines.last
           curFed.fedDate.gsub!(".", "")
           titleLines.pop
           i = i+1
-        else
+        else #if there is no publisher, join it back
           curFed.fedTitle = titleLines.join("\n")
           break
         end
       end
     end
-    def get_binding
-      binding
+
+    #helper method to add the first name to the author
+    private def add_first_name(last_name)
+      case(last_name)
+      when("Hamilton")
+          last_name = "Alexander " + last_name
+        when("Jay")
+          last_name = "John " + last_name
+        when("Madison")
+          last_name = "James " + last_name
+      end
+      last_name
     end
 end
 
@@ -96,10 +127,6 @@ readstate = 'b4Fed'
 while (line = file.gets)
     line.strip!            # Remove trailing white space
     words = line.split     # Split into array of words
-
-    #if words.length == 0 then
-      #next
-    #end
 
     if curFed.nil?
       # "FEDERALIST No. number" starts a new Fed object
@@ -196,4 +223,3 @@ File.open('fed.html', 'w+' ) do |temp|
 end # end reading
 
 system("open fed.html") # Open the HTML file (MAC ONLY)
-#puts"#{readstate}"
