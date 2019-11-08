@@ -15,22 +15,26 @@ import javafx.application.Platform;
 import paint_overhaul.other.Main;
 
 /**
- *
+ * Thread for auto-saving and logging of tools. 
  * @author dylan
  */
 public class AutoSaveThread {
     private final Thread thread;
     int timeElapsed = 0;
+    int saveInterval;
     private final File logFile;
     private final String logLocation = "src/paint_overhaul/logs/log.txt";
     String currentTool = "NONE";
-    //private final File file;
-    //private final String extension; 
-    
-    public AutoSaveThread(){
-        //System.out.println("Auto save thread created");
+    /**
+     * Thread constructor. Sets the log file location, enforces log rule, 
+     * creates a new thread and handles the auto-save always. Sets daemon to 
+     * true.
+     * @param saveInterval Desired interval to save (IN SECONDS)
+     */
+    public AutoSaveThread(int saveInterval){
         logFile = new File(logLocation);
         checkLogDeletion();
+        this.saveInterval = saveInterval;
         thread = new Thread(() -> {
             while(true){
                 handleAutoSave();
@@ -39,12 +43,19 @@ public class AutoSaveThread {
         thread.setDaemon(true);
         
     }
+    /**
+     * Safer way to start the thread.
+     */
     public void startAutoSaveThread(){
         thread.start();
     }
+    /**
+     * Handles the auto-save every x seconds according the the save interval.
+     * Keeps a count to send to the label, and sleeps the thread for one second.
+     */
     private void handleAutoSave(){
         try{
-            for(int i=60; i>0; i--){
+            for(int i=saveInterval; i>0; i--){
                 int currentCount=i;
                 timeElapsed++;
                 Platform.runLater(() -> {
@@ -53,9 +64,7 @@ public class AutoSaveThread {
                 Thread.sleep(1000);
             }
         }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        catch(Exception e){}
         try{
             Platform.runLater(() -> {
                 try{
@@ -68,26 +77,41 @@ public class AutoSaveThread {
         }
         catch(IllegalArgumentException e){
             System.out.println("No canvas");
-        }
-        
+        } 
     }
+    /**
+     * Getter for the log file
+     * @return Log File
+     */
     public File getLogFile(){
         return logFile;
     }
+    /**
+     * Getter for the time elapsed
+     * @return Time until next auto-save
+     */
     public int getTimeElapsed(){
         return timeElapsed;
     }
+    /**
+     * Logs the current tool in use.
+     * @param newTool Tool to log
+     * @throws IOException if file can not be opened
+     */
     public void logTool(String newTool) throws IOException{
         FileWriter fWriter;
         fWriter = new FileWriter(logFile,true);
         fWriter.append(currentTool + ": " + timeElapsed + " seconds" + System.getProperty("line.separator"));
         fWriter.close();
-        
         currentTool = newTool;
-        
         timeElapsed = 0;
     }
-    
+    /**
+     * Logs file opening and saving
+     * @param fileName Name of the file
+     * @param mode true if opening, false if saving
+     * @throws IOException if file can not be opened
+     */
     public void logFile(String fileName, boolean mode) throws IOException{
         FileWriter fWriter;
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -95,7 +119,6 @@ public class AutoSaveThread {
         
         fWriter = new FileWriter(logFile,true);
         if(mode){
-            
             fWriter.append(fileName + " Opened at: " + dateFormat.format(date) + System.getProperty( "line.separator" ));
             timeElapsed = 0;
         }
@@ -104,6 +127,10 @@ public class AutoSaveThread {
         }
         fWriter.close();
     }
+    /**
+     * Log Rule. If the log has been unmodified for three days, delete the log 
+     * file.
+     */
     private void checkLogDeletion(){
         long lastLogFileModification = new Date().getTime() - logFile.lastModified();
         int dayThreshold = 3*24*60*60*1000;
@@ -113,118 +140,4 @@ public class AutoSaveThread {
         }
         
     }
-    /*
-    //private final PaintCanvas paintCanvas;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    
-    private TimerTask autoSaveTask;
-    private Timer autoSaveTimer;
-    
-    private Timer labelTimer;
-    private TimerTask labelTask;
-    
-    private final long delayInSeconds = 30;
-    private final long delayInMilliseconds = delayInSeconds*1000;
-    private final long periodInSeconds = 30;
-    private final long periodInMilliseconds = periodInSeconds*1000;
-    private final String autoSaveLocation = "src/paint_overhaul/autosave/autosave.png";
-    private File file = new File(autoSaveLocation);
-    //long i = periodInSeconds;
-    private int count;
-    public AutoSaveThread(){
-        this.count = 30;
-        System.out.println("auto save thread created");
-        createAutoSaveTask();
-        createLabelTask();
-        createScheduledTimer();
-        createLabelTimer();
-        
-    }
-        //beepForAnHour();
-    private void createAutoSaveTask(){
-        autoSaveTask = new TimerTask(){
-            @Override
-            public void run(){
-                System.out.println("BEEP");
-                
-                //System.out.println(Main.paintController.getPaintCanvas().getCurrentZoom());
-                Platform.runLater(new Runnable(){
-                    @Override
-                    public void run(){
-                        
-                        try{
-                            if(Main.paintController.getPaintCanvas().getOpenedFile() != null){
-                                
-                                Main.paintController.getPaintCanvas().autoSaveCanvasToFile(file);
-                            }
-                            else{}
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                
-            }
-    };}
-    private void createScheduledTimer(){
-        autoSaveTimer = new Timer("Auto Save Timer", true);
-       
-        autoSaveTimer.scheduleAtFixedRate(autoSaveTask, delayInMilliseconds, periodInMilliseconds);
-    }
-    private void createLabelTimer(){ 
-        labelTimer = new Timer("Label Timer", false);
-        
-        labelTimer.schedule(labelTask, 0, 1000);
-    }
-    private void createLabelTask(){
-        
-        labelTask = new TimerTask(){
-            @Override
-            public void run(){
-                if(count==0){
-                    count = 30;
-                    System.out.println("RESET");
-                }
-                System.out.println(count +"s!");
-                count--;
-                
-            }
-    };}
-    public Timer getAutoSaveTimer(){
-        return autoSaveTimer;
-    }
-    */
-    /*
-    public AutoSaveThread(){
-        System.out.println("auto thread created");
-        
-        file = new File(autoSaveLocation);
-        //beepForAnHour();
-        
-    }
-    public void beepForAnHour() {
-     final Runnable beeper = new Runnable() {
-        @Override
-        public void run() { 
-            System.out.println("beep");
-            System.out.println(Main.paintController.getPaintCanvas().getCurrentZoom());
-            //Main.paintController.getPaintCanvas().autoSaveCanvasToFile(file);
-        }
-     };
-     final ScheduledFuture<?> beeperHandle =
-        scheduler.scheduleAtFixedRate(beeper, 10, 30, SECONDS);
-        scheduler.schedule(new Runnable() {
-            public void run() { beeperHandle.cancel(true); }
-     }, 60 * 60, SECONDS);     
-   }
-    public void shutdownThread(){
-        System.out.println("Shutting down");
-        scheduler.shutdownNow();
-    }
-    public ScheduledExecutorService getScheduler(){
-        return scheduler;
-    }
-*/
 }

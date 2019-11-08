@@ -2,8 +2,26 @@ Pain(t) Release Notes
 Author: Dylan Brown
 This program recreates the popular Microsoft Paint application using JavaFX.
 
-Last Updated: 10/06/19
+Last Updated: 10/18/2019
 
+------------------------------------------------------------------------------------------
+
+Version 6.0									10/18/2019
+
+New Features:
+	- Users can now copy their selection
+	- Selection rectangle cleaned up
+	- Users can now rotate the canvas to draw easier
+	- Users can now use the fill tool to fill the canvas with a color of their choice
+	- Status bar for current tool now shown in bottom left
+Known/Possible Issues:
+	- MacBook image blur (this does not affect windows users)
+	- Selection leaves behind dashed rectangle
+Upcoming:
+	- Clean, clean, clean
+	- Javadoc all functions
+	- Verify that no features are broken
+ 	- Verify log rule
 ------------------------------------------------------------------------------------------
 
 Version 5.0									10/06/2019

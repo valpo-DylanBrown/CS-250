@@ -246,3 +246,17 @@ rotatetest.jpeg Saved at: 14:50:32
 rotatetest.jpeg Opened at: 12:10:43
 NONE: 3 seconds
 SELECT: 6 seconds
+id.jpg Opened at: 17:25:35
+NONE: 1 seconds
+LINE: 2 seconds
+PENCIL: 2 seconds
+RECTANGLE: 1 seconds
+SQUARE: 2 seconds
+ELLIPSE: 3 seconds
+CIRCLE: 0 seconds
+TRIANGLE: 2 seconds
+POLYGON: 1 seconds
+STAR: 2 seconds
+EYEDROPPER: 5 seconds
+sm_5b0db20a1016b.png Opened at: 18:10:53
+NONE: 1 seconds

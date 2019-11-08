@@ -17,7 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- *
+ * This class creates a window to read the log file while in the application.
  * @author Dylan
  */
 public class LogAlert {
@@ -26,7 +26,7 @@ public class LogAlert {
     String filePath  = "src/paint_overhaul/logs/log.txt";
     String iconFilePath = "src/paint_overhaul/icons/alertIcon.png";
     /**
-     * Creates the alert for the release notes. Sets the icon, title, and header
+     * Creates the alert for the log file. Sets the icon, title, and header
      * information. It then shows the window to the user. 
      */
     public void createAlert(){

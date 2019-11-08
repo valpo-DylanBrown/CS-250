@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package paint_overhaul.alerts;
 
 import java.io.File;
@@ -19,6 +14,9 @@ import javafx.scene.image.ImageView;
  * @since 3.0
  */
 public class AboutAlert {
+    /*
+    * Relative path for file location
+    */
     String iconFilePath = "src/paint_overhaul/icons/alertIcon.png";
     /**
      * Setup for the alert. This function also shows the alert to the user. 

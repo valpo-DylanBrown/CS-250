@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package paint_overhaul.shapes;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- *
+ * Fill object.
  * @author Dylan
  */
 public class Fill extends PaintShape{
@@ -22,9 +17,7 @@ public class Fill extends PaintShape{
     public void draw(GraphicsContext gc) {
         gc.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
     }
-
     @Override
     public void draw(GraphicsContext gc, int sides) {}
-    
-    
+
 }

@@ -60,7 +60,7 @@ public class SmartSaveAlert {
         return alert;
     }
     /**
-     * 
+     * This function handles the logic for the buttons shown in the window. 
      * @param result Optional object
      * @param yesButton Yes button for the window.
      * @param noButton No button for the window. 

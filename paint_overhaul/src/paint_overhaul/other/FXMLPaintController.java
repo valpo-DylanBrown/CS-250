@@ -42,32 +42,14 @@ import paint_overhaul.threads.AutoSaveThread;
  * @since 1.0
  */
 public class FXMLPaintController extends DefaultController {
-    
+    /*
+    FXML vars
+    */
     @FXML private BorderPane borderPane;
     @FXML private Pane staticPane;
     @FXML private Canvas canvas;
-    @FXML private MenuBar menuBar;
-    //private AutoSaveThread autoSaveThread;
-    private ReleaseNotesAlert releaseNotesAlert;
-    private LogAlert logAlert;
-    private HelpAlert helpAlert;
-    private AboutAlert aboutAlert;
-    private SmartSaveAlert smartSaveAlert;
-    private ResizeCanvasAlert resizeCanvasAlert;
-    private PaintCanvas paintCanvas;
-    private LossWarning lossWarning;
-    
-    private BetterFileChooser openFileChooser;
-    private BetterFileChooser saveFileChooser;
-    
-    @FXML ColorPicker strokeColorPicker;
-    @FXML ColorPicker fillColorPicker;
-    public ColorPicker getStrokeColorPicker(){
-        return strokeColorPicker;
-    }
-    public ColorPicker getFillColorPicker(){
-        return fillColorPicker;
-    }
+    @FXML private ColorPicker strokeColorPicker;
+    @FXML private ColorPicker fillColorPicker;
     @FXML private ToggleButton drawButton;
     @FXML private ToggleButton lineButton;
     @FXML private ToggleButton fillButton;
@@ -82,26 +64,34 @@ public class FXMLPaintController extends DefaultController {
     @FXML private ToggleButton textButton;
     @FXML private ToggleButton eyedropperButton;
     @FXML private ToggleButton selectionRectangle;
-    
     @FXML private Button zoomInButton;
     @FXML private Button zoomOutButton;
     @FXML private Label zoomLabel;
     @FXML private Label autoSaveLabel; 
     @FXML private Label toolStatus;
-    @FXML private Button swapColors;
     @FXML private Button closeButton;
     @FXML private Button undoButton;
     @FXML private Button redoButton;
-    private boolean isVisible = true;
     @FXML private MenuItem saveAsMenu;
-    
-    @FXML private ToolBar toolBar;
     @FXML private ComboBox<String> fontChooser;
     @FXML private Spinner fontSizeSpinner;
     @FXML private TextField userText;
-    
     @FXML private Spinner polygonSpinner;
     @FXML private Spinner widthSpinner;
+    /*
+    Non-FXML vars
+    */
+    private boolean isVisible = true;
+    private ReleaseNotesAlert releaseNotesAlert;
+    private LogAlert logAlert;
+    private HelpAlert helpAlert;
+    private AboutAlert aboutAlert;
+    private SmartSaveAlert smartSaveAlert;
+    private ResizeCanvasAlert resizeCanvasAlert;
+    private PaintCanvas paintCanvas;
+    private LossWarning lossWarning;
+    private BetterFileChooser openFileChooser;
+    private BetterFileChooser saveFileChooser;
     
     /**
      * Constructor for Object.
@@ -116,6 +106,10 @@ public class FXMLPaintController extends DefaultController {
     public PaintCanvas getPaintCanvas(){
         return paintCanvas;
     }
+    /**
+     * Getter for the thread of the controller
+     * @return autoSaveThread
+     */
     public AutoSaveThread getAutoSaveThread(){
         return autoSaveThread;
     }
@@ -126,11 +120,9 @@ public class FXMLPaintController extends DefaultController {
      * loads it into the canvas, and enables the zoom buttons.
      * @see paint_overhaul.other.BetterFileChooser#getFileChooser() 
      * @see paint_overhaul.other.PaintCanvas#loadImageFromFille(File) 
-     * 
      */
     @FXML
     public void handleOpen(){
-        
         File fileToOpen = openFileChooser.getFileChooser().showOpenDialog(borderPane.getScene().getWindow());
         if(fileToOpen == null){
             return;
@@ -228,7 +220,6 @@ public class FXMLPaintController extends DefaultController {
     public void handleCopyButton(){
         paintCanvas.getSelectionRecatangle().setCopyMode(true);
     }
-    
     /**
      * FXML Function to undo the last action from Edit-&gt;Undo.
      * Fires the undo button.
@@ -310,6 +301,12 @@ public class FXMLPaintController extends DefaultController {
         paintCanvas.setStrokeColor(strokeColorPicker.getValue());
         tempColor = null; //destroy tempColor to save memory
     }
+    /**
+     * Logic to handle the application close button. If the canvas
+     * has been modified, the button opens the smart save alert. Otherwise,
+     * the program cleanly exits. 
+     * @see paint_overhaul.alerts.SmartSaveAlert
+     */
     @FXML
     private void handleCloseButton(){
         if(paintCanvas.getHasBeenModified()==true){
@@ -318,8 +315,10 @@ public class FXMLPaintController extends DefaultController {
         else{
             Platform.exit();
         }
-        //autoSaveThread.setAutoSaveFlag(false);
     }
+    /**
+     * Function to toggle visibility of auto-save label. 
+     */
     @FXML
     public void handleAutoSaveLabel(){
         if(isVisible == true){
@@ -331,16 +330,28 @@ public class FXMLPaintController extends DefaultController {
             isVisible = true;
         }
     }
+    /**
+     * Rotates the canvas.
+     * @see paint_overhaul.other.PaintCanvas#rotate() 
+     */
     @FXML
     public void handleRotate(){
         paintCanvas.rotate();
     }
+    /**
+     * Zooms the canvas in.
+     * @see paint_overhaul.other.PaintCanvas#zoomIn() 
+     */
     @FXML
     public void handleZoomInButton(){
         paintCanvas.zoomIn();
         zoomOutButton.setDisable(false);
         updateZoomLabel();
     }
+    /**
+     * Zooms the canvas out.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut() 
+     */
     @FXML
     public void handleZoomOutButton(){
         paintCanvas.zoomOut();
@@ -349,59 +360,111 @@ public class FXMLPaintController extends DefaultController {
         }
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * Fires zoomInButton.
+     */
     @FXML
     public void handleZoomInMenu(){
         handleZoomInButton();
     }
+    /**
+     * Zoom menu option.
+     * Fires zoomOutButton.
+     */
     @FXML
     public void handleZoomOutMenu(){
         handleZoomOutButton();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom25Menu(){
         paintCanvas.zoomToX(25);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom50Menu(){
         paintCanvas.zoomToX(50);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom75Menu(){
         paintCanvas.zoomToX(75);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom100Menu(){
         paintCanvas.zoomToX(100);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom200Menu(){
         paintCanvas.zoomToX(200);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom250Menu(){
         paintCanvas.zoomToX(250);
         updateZoomLabel();
     }
+    /**
+     * Zoom menu option.
+     * @see paint_overhaul.other.PaintCanvas#zoomOut()
+     */
     @FXML
     public void handleZoom300Menu(){
         paintCanvas.zoomToX(300);
         updateZoomLabel();
     }
+    /**
+     * Updates the zoom label. Shows user the current level of zoom.
+     * @see paint_overhaul.other.PaintCanvas#getCurrentZoom() 
+     */
     public void updateZoomLabel(){
         zoomLabel.setText(Math.round(paintCanvas.getCurrentZoom()*100)+"% ");
     }
-    
+    /**
+     * Updates the timer label, if visible, on the bottom bar 
+     * @param string Current Time
+     */
     public void setAutoSaveLabel(String string){
         autoSaveLabel.setText(string);
     }
+    /**
+     * Updates the current tool label.
+     * @param string Tool selected
+     */
     public void setToolStatus(String string){
         toolStatus.setText(string);
     }
+    /**
+     * Function to select the pencil tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleDrawToggle(){
         if(drawButton.isSelected()){
@@ -420,6 +483,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the star tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleStarButton(){
         if(starButton.isSelected()){
@@ -439,6 +507,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the line tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleLineToggle(){
         if(lineButton.isSelected()){
@@ -457,6 +530,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the fill tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     public void handleFillToggle(){
         if(fillButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
@@ -474,6 +552,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the eraser tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     public void handleEraserToggle(){
         if(eraserButton.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.DRAW);
@@ -491,6 +574,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the rectangle tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleRectToggle(){
         if(rectButton.isSelected()){
@@ -509,6 +597,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the circle tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleCircleToggle(){
        if(circleButton.isSelected()){
@@ -527,6 +620,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the square tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleSquareToggle(){
         if(squareButton.isSelected()){
@@ -545,6 +643,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the ellipse tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleOvalToggle(){
         if(ovalButton.isSelected()){
@@ -563,6 +666,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the triangle tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleTriangleToggle(){
         if(triangleButton.isSelected()){
@@ -581,6 +689,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the polygon tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handlePolygonButton(){
         if(polygonButton.isSelected()){
@@ -599,6 +712,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the text tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleTextToggle(){
         if(textButton.isSelected()){
@@ -617,6 +735,11 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the eyedropper tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
     @FXML
     public void handleEDToggle(){
         if(eyedropperButton.isSelected()){
@@ -635,6 +758,12 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Function to select the selection tool. It also sets
+     * the tool status bar at the bottom of the screen. It then logs tool using 
+     * the Auto-Save thread. 
+     */
+    @FXML
     public void handleSelectionRectangle(){
         if(selectionRectangle.isSelected()){
             paintCanvas.setDrawingMode(DrawingMode.SELECT);
@@ -652,15 +781,50 @@ public class FXMLPaintController extends DefaultController {
             Logger.getLogger(FXMLPaintController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public BorderPane getBorderPane(){
-        return borderPane;
+    /**
+     * Configures the width spinner object. Sets the values to only be integers.
+     * It also formats the text and watches for users not hitting enter. It sets
+     * the line width to the new value.
+     * @param spinner Spinner that is being analyzed
+     * @throws NumberFormatException in case user enters unexpected values
+     */
+    public void configureWidthSpinner(Spinner spinner) throws NumberFormatException{
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) spinner.getValue()));
     }
-    public Pane getStaticPane(){
-        return staticPane;
+    /**
+     * Configures the polygon spinner object. Sets the values to only be 
+     * integers. It also formats the text and watches for users not hitting 
+     * enter. It sets the number of polygon sides to the new value
+     * @param spinner Spinner that is being analyzed
+     * @throws NumberFormatException in case user enters unexpected values
+     */
+    public void configurePolygonSpinner(Spinner spinner) throws NumberFormatException{
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 99));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) spinner.getValue()));
     }
-    public LossWarning getLossWarning(){
-        return lossWarning;
+    /**
+     * Configures the font size spinner object. Sets the values to only be 
+     * integers. It also formats the text and watches for users not hitting 
+     * enter. It sets the font size to the new value
+     * @param spinner Spinner that is being analyzed
+     * @throws NumberFormatException in case user enters unexpected values
+     */
+    public void configureFontSizeSpinner(Spinner spinner) throws NumberFormatException{
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100));
+        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
+        spinner.getEditor().setTextFormatter(formatter);
+        // bidi-bind the values
+        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
+        spinner.valueProperty().addListener((e) -> paintCanvas.setFont(new Font(fontChooser.getValue(),(int) spinner.getValue())));
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -677,7 +841,7 @@ public class FXMLPaintController extends DefaultController {
         openFileChooser = new BetterFileChooser("Open Image: ");
         saveFileChooser = new BetterFileChooser("Save Canvas: ");
         
-        autoSaveThread = new AutoSaveThread();
+        autoSaveThread = new AutoSaveThread(60);
         autoSaveThread.startAutoSaveThread();
         
         paintCanvas = new PaintCanvas(canvas);
@@ -689,28 +853,39 @@ public class FXMLPaintController extends DefaultController {
         resizeCanvasAlert = new ResizeCanvasAlert(paintCanvas);
         lossWarning = new LossWarning(paintCanvas);
     }
-    public void configureWidthSpinner(Spinner spinner) throws NumberFormatException{
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100));
-        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
-        spinner.getEditor().setTextFormatter(formatter);
-        // bidi-bind the values
-        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
-        spinner.valueProperty().addListener((e) -> paintCanvas.setLineWidth((int) spinner.getValue()));
+    /**
+     * Getter for the stroke color picker.
+     * @return Stroke Color Picker
+     */
+    public ColorPicker getStrokeColorPicker(){
+        return strokeColorPicker;
     }
-    public void configurePolygonSpinner(Spinner spinner) throws NumberFormatException{
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 99));
-        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
-        spinner.getEditor().setTextFormatter(formatter);
-        // bidi-bind the values
-        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
-        spinner.valueProperty().addListener((e) -> paintCanvas.setNumSides((int) spinner.getValue()));
+    /**
+     * Getter for the fill color picker
+     * @return Fill Color Picker
+     */
+    public ColorPicker getFillColorPicker(){
+        return fillColorPicker;
     }
-    public void configureFontSizeSpinner(Spinner spinner) throws NumberFormatException{
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100));
-        TextFormatter formatter = new TextFormatter(spinner.getValueFactory().getConverter(), spinner.getValueFactory().getValue());
-        spinner.getEditor().setTextFormatter(formatter);
-        // bidi-bind the values
-        spinner.getValueFactory().valueProperty().bindBidirectional(formatter.valueProperty());
-        spinner.valueProperty().addListener((e) -> paintCanvas.setFont(new Font(fontChooser.getValue(),(int) spinner.getValue())));
+    /**
+     * Getter for the Border Pane of the controller
+     * @return Border Pane
+     */
+    public BorderPane getBorderPane(){
+        return borderPane;
+    }
+    /**
+     * Getter for the static grouping canvas pane
+     * @return Grouping Pane
+     */
+    public Pane getStaticPane(){
+        return staticPane;
+    }
+    /**
+     * Getter for the loss warning
+     * @return LossWarning object
+     */
+    public LossWarning getLossWarning(){
+        return lossWarning;
     }
 }  

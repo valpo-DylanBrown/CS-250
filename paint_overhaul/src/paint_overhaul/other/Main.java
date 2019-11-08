@@ -35,7 +35,6 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
-        //Parent root = FXMLLoader.load(getClass().getResource("fmxl_paint.fxml"));
         Scene scene = new Scene(root, DEFAULT_WIDTH , DEFAULT_HEIGHT);
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
@@ -49,13 +48,6 @@ public class Main extends Application {
         stage.getIcons().add(icon);
         stage.setMaximized(true);
         stage.show();
-        
-        /*
-        autoSaveThread.beepForAnHour();
-        stage.setOnCloseRequest(e -> {
-            //System.out.println("Shutting down");
-            autoSaveThread.shutdownThread();
-        });*/
     }
     
     /**

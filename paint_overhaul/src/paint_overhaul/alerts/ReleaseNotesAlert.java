@@ -25,7 +25,6 @@ import javafx.scene.image.ImageView;
  */
 public class ReleaseNotesAlert {
     public String content;
-    //public TextArea area;
     String filePath  = "src/paint_overhaul/other/releasenotes.txt";
     String iconFilePath = "src/paint_overhaul/icons/alertIcon.png";
     /**

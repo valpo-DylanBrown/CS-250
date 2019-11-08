@@ -12,16 +12,24 @@ import javafx.scene.image.WritableImage;
 import paint_overhaul.other.PaintCanvas;
 
 /**
- *
+ * This class creates a warning if a loss is going to occur when saving.
+ * This will only be called if a file, for example, is trying to be saved
+ * as a png when it was originally a jpg.
  * @author Dylan
  */
 public class LossWarning {
     private final PaintCanvas paintCanvas;
-
+    /**
+     * Constructor for the object
+     * @param paintCanvas PaintCanvas object for the application
+     */
     public LossWarning(PaintCanvas paintCanvas){
         this.paintCanvas = paintCanvas;
 
     }
+    /**
+     * Shows the loss warning to the user. 
+     */
     public void setLossWarningAlert(){
         Alert alert = createLossWarningAlert();
         ButtonType yesButton = new ButtonType("Yes");
@@ -47,7 +55,7 @@ public class LossWarning {
         return alert;
     }
     /**
-     * 
+     * This function handles the logic for the buttons shown in the window. 
      * @param result Optional object
      * @param yesButton Yes button for the window.
      * @param noButton No button for the window. 

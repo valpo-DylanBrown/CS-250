@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package paint_overhaul.other;
 
 import java.awt.Graphics2D;
@@ -34,7 +29,6 @@ import paint_overhaul.shapes.*;
 /**
  * This class is a better version of JavaFX's canvas. 
  * This class allows for easy drawing and zooming. 
- * 
  * @author dylan
  * @since 3.0
  * 
@@ -52,6 +46,7 @@ public class PaintCanvas {
     private PaintShape currentShape;
     private BetterRectangle rectangle;
     private ImageView currentSelection;
+    private WritableImage selectedImage;
     private boolean hasBeenModified = false;
     private boolean isPolygon = false;
     private Stack<Image> undoHistory;
@@ -65,7 +60,6 @@ public class PaintCanvas {
     private Font font;
     private String userText;
     private String autoSaveLocation;
-    
     
     /**
      * Constructor for PaintCanvas.
@@ -187,7 +181,7 @@ public class PaintCanvas {
                     return;
                 }
                 undoHistory.add(redrawnImage);
-                //redrawCanvas();
+                redrawCanvas();
                 
                 
                 if(drawMode!=DrawingMode.SELECT){
@@ -204,7 +198,7 @@ public class PaintCanvas {
                         rectangle.setEnd(e.getX(), e.getY());
                         rectangle.drawSelection(gc);
                         selection.setEnd(e.getX(), e.getY());
-                        selection.setImage(canvas, gc);
+                        selection.setImage(gc);
                         currentSelection = selection.getCurrentSelection();
                         
                         //selection.setImage(gc);
@@ -216,75 +210,6 @@ public class PaintCanvas {
                 redrawnImage = canvas.snapshot(null,null);
                 hasBeenModified = true;
             });
-    }
-    /**
-     * Sets the mode of the canvas.
-     * @param type Type of tool listed in DrawingTools.java
-     */
-    public void setDrawingTool(DrawingTools type){
-        this.drawTools=type;
-    }
-    public void setCurrentSelectionNulll(){
-        currentSelection = null;
-    }
-    public DrawingTools getDrawingTool(){
-        return drawTools;
-    }
-    public void setDrawingMode(DrawingMode mode){
-        this.drawMode=mode;
-    }
-    /**
-     * Sets the line width of the graphics context.
-     * @param width Desired line width
-     */
-    public void setLineWidth(double width){
-        gc.setLineWidth(width);
-    }
-    /**
-     * Sets number of sides for Polygon object.
-     * @param sides Desired number of sides for polygon object
-     */
-    public void setNumSides(int sides){
-        numSides = sides;
-    }
-    public int getNumSides(){
-        return numSides;
-    }
-    /**
-     * Sets the fill color of the graphics context.
-     * @param color Desired fill color
-     */
-    public void setFillColor(Color color){
-        this.fillColor = color;
-        gc.setFill(color);
-    }
-    public Color getFillColor(){
-        return fillColor;
-    }
-    /**
-     * Sets the stroke color for the graphics context
-     * @param color Desired stroke color
-     */
-    public void setStrokeColor(Color color){
-        this.strokeColor = color;
-        gc.setStroke(color);
-    }
-    /**
-     * Sets the font size.
-     * This function is not used.
-     * @param size Desired size of the font
-     * @deprecated 
-     */
-    public void setFontSize(int size){
-        this.fontSize=size;
-    }
-    /**
-     * Sets the font of the canvas
-     * @param font Desired font. This includes font family and size
-     */
-    public void setFont(Font font){
-        this.font = font;
-        gc.setFont(font);
     }
     /**
      * Un-does the last action.
@@ -316,86 +241,8 @@ public class PaintCanvas {
     /**
      * Redraws the canvas based off redrawnImage.
      */
-    private void redrawCanvas(){
+    public void redrawCanvas(){
         gc.drawImage(redrawnImage, 0, 0, redrawnImage.getWidth(), redrawnImage.getHeight());
-    }
-    /**
-     * Getter for the canvas;
-     * @return Canvas of the object
-     */
-    public Canvas getCanvas(){
-        return canvas;
-    }
-    /**
-     * Getter for the opened file.
-     * @return Opened file of the object
-     */
-    public File getOpenedFile(){
-        return openedFile;
-    }
-    /**
-     * Getter for the saved file.
-     * @return Saved file of the object
-     */
-    public File getSavedFile(){
-        return savedFile;
-    }
-    public String getFileExtension(File file){
-        String fileName = file.getName();
-        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
-            //ystem.out.println(fileName.substring(fileName.lastIndexOf(".") + 1));
-            return fileName.substring(fileName.lastIndexOf(".") + 1);
-        } else {
-            return "";
-        }
-            
-        /*if(file!=null){
-            String fileName = file.getName();
-            String ext = fileName.substring(1+fileName.lastIndexOf(".")).toLowerCase();
-            System.out.println(ext);
-            return ext;
-        }
-        else{
-            return "";
-        }*/
-    }
-    /**
-     * Setter for the saved file of the canvas
-     * @param file Desired save location
-     */
-    public void setSavedFile(File file){
-        this.savedFile = file;
-    }
-    /**
-     * Getter for the saved state of the canvas.
-     * @return Saved state of the canvas
-     */
-    public boolean getHasBeenModified(){
-        return hasBeenModified;                
-    }
-    /**
-     * Setter for the saved state of the canvas.
-     * @param bool Changed state of the canvas. True if modified, false if saved
-     */
-    public void setHasBeenModified(boolean bool){
-        this.hasBeenModified = bool;               
-    }
-    /**
-     * Setter for the text to be drawn
-     * @param text Desired text to be drawn
-     */
-    public void setUserText(String text){
-       this.userText = text;
-    }
-    /**
-     * Getter for isZoomedOut.
-     * @return True if currentZoom is less than 0.05. False otherwise.
-     */
-    public boolean getIsZoomedOut(){
-        return isZoomedOut;                
-    }
-    public BetterRectangle getRectangle(){
-        return rectangle;
     }
     /**
      * Function to open an image from file.
@@ -435,31 +282,24 @@ public class PaintCanvas {
      */
     public void saveCanvasToFile(File file) {
         setSavedFile(file);
-        
-        
-        //System.out.println(getFileExtension(savedFile));
         if(getFileExtension(file).equalsIgnoreCase(getFileExtension(openedFile))){
             WritableImage writableImage = snapshotCurrentCanvas();
-            //String ext = getFileExtension(file);
             if(getFileExtension(openedFile).equals("png")){
-                
                 savePNGImage(writableImage, file);
             }
             else{
-               
                 saveOtherImageTypes(writableImage, file);
             }
             hasBeenModified = false;
         }
         else{
-            
             Main.paintController.getLossWarning().setLossWarningAlert();
-        }
-        
-        
+        }    
     }
+    /**
+     * Auto-saves the canvas using the original file extension to preserve loss.
+     */
     public void autoSaveCanvasToFile() {
-        //setSavedFile(file);
         String fullPath = autoSaveLocation + getFileExtension(openedFile);
         File autoSavedFile = new File(fullPath);
         WritableImage writableImage = snapshotCurrentCanvas();
@@ -470,6 +310,11 @@ public class PaintCanvas {
             saveOtherImageTypes(writableImage, autoSavedFile);
         }
     }
+    /**
+     * Saving capability for PNG images. 
+     * @param writableImage Image to be saved.
+     * @param file File to be saved to.
+     */
     public void savePNGImage(WritableImage writableImage, File file){
         RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
             try{
@@ -479,18 +324,19 @@ public class PaintCanvas {
                 System.out.println("File not found");
             }
     }
+    /**
+     * Saving capability for other file types. This rips out the transparent 
+     * layer that is typically in the canvas. 
+     * @param writableImage Image to be saved.
+     * @param file File to be saved to.
+     */
     public void saveOtherImageTypes(WritableImage writableImage, File file){
-        // Get buffered image:
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null); 
-
-        // Remove alpha-channel from buffered image:
         BufferedImage imageRGB = new BufferedImage(
             image.getWidth(), 
             image.getHeight(), 
-            BufferedImage.OPAQUE); 
-
+            BufferedImage.OPAQUE);
         Graphics2D graphics = imageRGB.createGraphics();
-
         graphics.drawImage(image, 0, 0, null);
         try{
             ImageIO.write(imageRGB, getFileExtension(file), file);
@@ -513,34 +359,27 @@ public class PaintCanvas {
         canvas.snapshot(params, writableImage);
         return writableImage;
     }
+    /**
+     * Function that snapshots the current canvas with custom parameters, 
+     * width, and height.This function creates a new writable image the 
+     * size of the canvas.It sets the parameters to transparent and snapshots 
+     * the image.
+     * @param params Desired snapshot parameters
+     * @param width Desired width
+     * @param height Desired height
+     * @return Snapshot of the canvas
+     */
     public WritableImage snapshotCurrentCanvas(SnapshotParameters params, double width, double height){
         WritableImage writableImage = new WritableImage((int) width, (int) height);
         canvas.snapshot(params, writableImage);
         return writableImage;
     }
-    /**
-     * Getter for the graphics context.
-     * @return GraphicsContext for the object
-     */
-    public GraphicsContext getGraphicsContext(){
-        return gc;
-    }
-    /**
-     * Getter for the current zoom.
-     * @return Current zoom of the object.
-     */
-    public double getCurrentZoom(){
-        return currentZoom;
-    }
-    public SelectionRectangle getSelectionRecatangle(){
-        return selection;
-    }
+    
     /**
      * Function to zoom the canvas in.
      * This function gets the parent node of the canvas, removes the current 
      * transform, increases the current zoom by 5%, and applies the zoom to the
      * pane.
-     * 
      * @see #applyZoom(Parent, double) 
      */
     public void zoomIn(){
@@ -554,10 +393,8 @@ public class PaintCanvas {
      * Function to set the zoom of the canvas.
      * This function creates a new scale based off the current zoom.
      * It then adds the transformation to the parent pane.
-     * 
      * @param parent Parent of the canvas
      * @param zoom Desired zoom
-     * 
      * @see #zoomIn()
      * @see #zoomOut() 
      * @see #zoomToX(double) 
@@ -571,7 +408,6 @@ public class PaintCanvas {
      * This function gets the parent node of the canvas, removes the current 
      * transform, decreases the current zoom by 5%, and applies the zoom to the
      * pane.
-     * 
      * @see #applyZoom(Parent, double) 
      */
     public void zoomOut(){
@@ -598,11 +434,207 @@ public class PaintCanvas {
         parent.getTransforms().remove(zoomScale);
         currentZoom = zoom;
         applyZoom(parent, currentZoom);
-        //zoomLabel.setText(Math.round(currentZoom*100) + "%");
-        
     }
+    /**
+     * Rotates the canvas 90 degrees. Adds it to the transformation pane.
+     */
     public void rotate(){
         Rotate rotate = new Rotate(90,0,0);
         Main.paintController.getStaticPane().getTransforms().add(rotate);
     }
+    /**
+     * Getter for the canvas;
+     * @return Canvas of the object
+     */
+    public Canvas getCanvas(){
+        return canvas;
+    }
+    /**
+     * Getter for the opened file.
+     * @return Opened file of the object
+     */
+    public File getOpenedFile(){
+        return openedFile;
+    }
+    /**
+     * Getter for the saved file.
+     * @return Saved file of the object
+     */
+    public File getSavedFile(){
+        return savedFile;
+    }
+    /**
+     * Getter for a file extension of a given file. 
+     * @param file File to get the extension of
+     * @return String extension
+     */
+    public String getFileExtension(File file){
+        String fileName = file.getName();
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+            //ystem.out.println(fileName.substring(fileName.lastIndexOf(".") + 1));
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        } else {
+            return "";
+        }
+    }
+    /**
+     * Getter for the saved state of the canvas.
+     * @return Saved state of the canvas
+     */
+    public boolean getHasBeenModified(){
+        return hasBeenModified;                
+    }
+    /**
+     * Getter for isZoomedOut.
+     * @return True if currentZoom is less than 0.05. False otherwise.
+     */
+    public boolean getIsZoomedOut(){
+        return isZoomedOut;                
+    }
+    /**
+     * Getter for the rectangle
+     * @return BetterRectangle object
+     */
+    public BetterRectangle getRectangle(){
+        return rectangle;
+    }
+    /**
+     * Getter for the drawing tool.
+     * @return DrawTool
+     */
+    public DrawingTools getDrawingTool(){
+        return drawTools;
+    }
+    /**
+     * Getter for the number of sides
+     * @return Number of sides
+     */
+    public int getNumSides(){
+        return numSides;
+    }
+    /**
+     * Getter for the current fill color
+     * @return Fill Color
+     */
+    public Color getFillColor(){
+        return fillColor;
+    }
+    /**
+     * Getter for the graphics context.
+     * @return GraphicsContext for the object
+     */
+    public GraphicsContext getGraphicsContext(){
+        return gc;
+    }
+    /**
+     * Getter for the current zoom.
+     * @return Current zoom of the object.
+     */
+    public double getCurrentZoom(){
+        return currentZoom;
+    }
+    /**
+     * Getter for the current selection
+     * @return Current Selection
+     */
+    public SelectionRectangle getSelectionRecatangle(){
+        return selection;
+    }
+    /**
+     * Setter for the drawing mode
+     * @param mode Desired drawing mode
+     */
+    /**
+     * Setter for the saved file of the canvas
+     * @param file Desired save location
+     */
+    public void setSavedFile(File file){
+        this.savedFile = file;
+    }
+    /**
+     * Setter for the saved state of the canvas.
+     * @param bool Changed state of the canvas. True if modified, false if saved
+     */
+    public void setHasBeenModified(boolean bool){
+        this.hasBeenModified = bool;               
+    }
+    /**
+     * Setter for the text to be drawn
+     * @param text Desired text to be drawn
+     */
+    public void setUserText(String text){
+       this.userText = text;
+    }
+    
+    /**
+     * Sets the mode of the canvas.
+     * @param type Type of tool listed in DrawingTools.java
+     */
+    public void setDrawingTool(DrawingTools type){
+        this.drawTools=type;
+    }
+    /**
+     * Sets the current selection of the canvas to null.
+     */
+    public void setCurrentSelection(ImageView iv){
+        currentSelection = iv;
+    }
+    public void setDrawingMode(DrawingMode mode){
+        this.drawMode=mode;
+    }
+    /**
+     * Sets the redrawn image of the canvas
+     * @param image Image to be held in redrawn image
+     */
+    public void setRedrawnImage(Image image){
+        this.redrawnImage = image;
+    }
+    /**
+     * Sets the line width of the graphics context.
+     * @param width Desired line width
+     */
+    public void setLineWidth(double width){
+        gc.setLineWidth(width);
+    }
+    /**
+     * Sets number of sides for Polygon object.
+     * @param sides Desired number of sides for polygon object
+     */
+    public void setNumSides(int sides){
+        numSides = sides;
+    }
+    /**
+     * Sets the fill color of the graphics context.
+     * @param color Desired fill color
+     */
+    public void setFillColor(Color color){
+        this.fillColor = color;
+        gc.setFill(color);
+    }
+    /**
+     * Sets the stroke color for the graphics context
+     * @param color Desired stroke color
+     */
+    public void setStrokeColor(Color color){
+        this.strokeColor = color;
+        gc.setStroke(color);
+    }
+    /**
+     * Sets the font size.
+     * This function is not used.
+     * @param size Desired size of the font
+     * @deprecated 
+     */
+    public void setFontSize(int size){
+        this.fontSize=size;
+    }
+    /**
+     * Sets the font of the canvas
+     * @param font Desired font. This includes font family and size
+     */
+    public void setFont(Font font){
+        this.font = font;
+        gc.setFont(font);
+    }
+    
 }

@@ -41,14 +41,14 @@ public class AutoSaveThreadTest {
 
     @Test
     public void testTimeElapsedZero() throws InterruptedException{
-        AutoSaveThread instance = new AutoSaveThread();
+        AutoSaveThread instance = new AutoSaveThread(60);
         
         assertEquals(instance.getTimeElapsed(), 0);
     }
     
     @Test
     public void testLogFileLocation(){
-        AutoSaveThread instance = new AutoSaveThread();
+        AutoSaveThread instance = new AutoSaveThread(60);
         File file = new File("src/paint_overhaul/logs/log.txt");
         
         assertEquals(file, instance.getLogFile());
@@ -64,50 +64,3 @@ public class AutoSaveThreadTest {
         assertEquals(instance, DrawingTools.RECTANGLE.toString());
     }
 }
-/*
-public class TimerTest {
-    
-
-    /**
-     * Test of runTimer method, of class Timer.
-    @Test
-    public void testElapsedTime() throws Exception {
-        System.out.println("Test that elapsed time is counting upwards");
-        Timer instance = new Timer();
-        Thread timerThread = new Thread(instance);
-        timerThread.start();
-        
-        Thread.sleep(999L);
-        assertEquals(instance.getTimeElapsed(), 0);
-        Thread.sleep(100L);
-        assertEquals(instance.getTimeElapsed(), 1);
-    }
-
-    /**
-     * Test of setSeconds method, of class Timer.
-    @Test
-    public void testSetSeconds() {
-        System.out.println("Test that Seconds variable is properly adjusted when setting seconds, but MaxSeconds does not change");
-        Timer instance = new Timer();
-        Thread timerThread = new Thread(instance);
-        timerThread.start();
-        
-        instance.setSeconds(100);
-        assertFalse(instance.getSeconds() == instance.getMaxSeconds());
-    }
-
-    /**
-     * Test of setMaxSeconds method, of class Timer.
-    @Test
-    public void testSetMaxSeconds() {
-        System.out.println("Test that Max Seconds and Seconds are the same after changing value of MaxSeconds");
-        Timer instance = new Timer();
-        Thread timerThread = new Thread(instance);
-        timerThread.start();
-        
-        instance.setMaxSeconds(100);
-        assertEquals(instance.getSeconds(), instance.getMaxSeconds());
-    }
-    
-}
-*/
