@@ -1,3 +1,6 @@
+/**
+ * All alert objects for the application. 
+ */
 package paint_overhaul.alerts;
 
 import java.io.File;

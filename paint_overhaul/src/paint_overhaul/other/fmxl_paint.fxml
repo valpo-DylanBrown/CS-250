@@ -27,7 +27,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.control.Tooltip?>
 
-<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx/11.01" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint_overhaul.other.FXMLPaintController" >
+<BorderPane fx:id="borderPane" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="paint_overhaul.other.FXMLPaintController" >
     <top>
         <VBox>
             <children>
